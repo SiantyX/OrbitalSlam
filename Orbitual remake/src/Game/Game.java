@@ -16,8 +16,7 @@ public class Game extends BasicGame{
     @Override
     public void init(GameContainer gc) 
    throws SlickException {
- 
-    	//asd
+
     }
  
     @Override
@@ -39,6 +38,6 @@ public class Game extends BasicGame{
    new AppGameContainer(new Game());
  
          app.setDisplayMode(800, 600, false);
-         app.start();//testasdhaskhdgaskhd//asdasd
+         app.start();
     }
 }
