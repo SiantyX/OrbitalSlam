@@ -18,6 +18,8 @@ public class Game extends BasicGame{
  
     @Override
     public void init(GameContainer gc) throws SlickException {
+    	//gc.setShowFPS(false);
+    	gc.setTargetFrameRate(150);
     	
     	// ska vara i en egen klass (map) eller nått sen skapar en 4*3 stor map med anchors
     	w = Math.round(gc.getWidth());
