@@ -39,11 +39,22 @@ public class Entity {
 	
 	/**
 	 * Creates an entity that renders a shape.
-	 * @param sh Shape to render (only outlines)
+	 * @param sh Shape to render filled with standard color or color specified later.
 	 */
 	public Entity(Shape sh) {
 		this();
 		this.sh = sh;
+	}
+	
+	/**
+	 * Creates an entity that renders a shape filled with the specified color.
+	 * @param sh Shape to render
+	 * @param c Color to fill the shape with
+	 */
+	public Entity(Shape sh, Color c) {
+		this();
+		this.sh = sh;
+		this.c = c;
 	}
 	
 	/**
