@@ -8,7 +8,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.ShapeFill;
 import org.newdawn.slick.geom.Shape;
 
-public class Entity {
+public class Entity { // bajs
 	public static ArrayList<Entity> entityList = new ArrayList<Entity>();
 	
 	private Image im;
