@@ -18,6 +18,8 @@ public class Game extends BasicGame{
  
     @Override
     public void init(GameContainer gc) throws SlickException {
+    	
+    	// ska vara i en egen klass (map) eller nått sen
     	w = Math.round(gc.getWidth());
     	h = Math.round(gc.getHeight());
     	
