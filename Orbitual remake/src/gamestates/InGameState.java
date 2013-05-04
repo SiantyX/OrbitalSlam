@@ -45,6 +45,10 @@ public class InGameState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		
+		Input input = gc.getInput();
+		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+			System.exit(0);
+		}
 	}
 	
 	private boolean collisionCircle(Entity e1, Entity e2) {
