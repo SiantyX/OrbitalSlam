@@ -43,7 +43,7 @@ public class MenuButton extends Entity{
 			} else {
 				mousePressed = false;
 			}
-		} 
+		}
 	}
 
 	public boolean isMousePressed() {
