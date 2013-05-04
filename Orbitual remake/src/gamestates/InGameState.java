@@ -47,7 +47,7 @@ public class InGameState extends BasicGameState {
 		
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			System.exit(0);
+			sb.enterState(MenuState.ID);
 		}
 	}
 	
