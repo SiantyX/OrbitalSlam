@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import game.Game;
 import game.MenuButton;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,6 +13,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class MenuState extends BasicGameState{
 	public static final int ID = 2;
@@ -55,11 +58,13 @@ public class MenuState extends BasicGameState{
 		}
 		
 		if (playButton.isMousePressed()) {
-			sb.enterState(InGameState.ID);
+			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
 		}
 		
 		if (settingsButton.isMousePressed()) {
-			sb.enterState(DisplayModeState.ID);
+			sb.enterState(DisplayModeState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));;
 		}
 		
 		if (exitButton.isMousePressed()) {

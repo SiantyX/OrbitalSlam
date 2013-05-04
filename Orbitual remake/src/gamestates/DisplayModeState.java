@@ -9,12 +9,15 @@ import java.util.LinkedList;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class DisplayModeState extends BasicGameState{
 	public static final int ID = 3;
@@ -88,7 +91,8 @@ public class DisplayModeState extends BasicGameState{
 		}
 		
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			sb.enterState(MenuState.ID);
+			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
 		}
 
 	}

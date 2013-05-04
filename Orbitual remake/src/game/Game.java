@@ -47,7 +47,6 @@ public class Game extends StateBasedGame {
 			app.setSmoothDeltas(true);
 			app.start();
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

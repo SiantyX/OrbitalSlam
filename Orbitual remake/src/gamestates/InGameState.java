@@ -60,7 +60,8 @@ public class InGameState extends BasicGameState {
 		
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			sb.enterState(MenuState.ID);
+			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
 		}
 	}
 	
