@@ -44,4 +44,6 @@ public class ImageRenderComponent extends RenderComponent {
 	public Image getImage() {
 		return image;
 	}
+	
+	
 }
