@@ -14,6 +14,8 @@ import components.ImageRenderComponent;
 public class AnchorMap {
 	private ArrayList<Entity> entities;
 	
+	private int numPlayers;
+	
 	private int numAnc;
 	
 	private int startPosX;
@@ -39,13 +41,15 @@ public class AnchorMap {
 		startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 		numAncPerColumn = numAnc/numAncPerRow;
 		
+		numPlayers = 4;
+		
 		entities = new ArrayList<Entity>();
 		
 		createMap();
 	}
 	
 	// debug map
-	public AnchorMap(int numAnc, int startPercentX, int numAncPerRow, int startPercentY) throws SlickException {
+	public AnchorMap(int numAnc, int startPercentX, int numAncPerRow, int startPercentY, int numPlayers) throws SlickException {
 		this.numAnc = numAnc;
 		
 		this.startPercentX = startPercentX;
@@ -55,6 +59,8 @@ public class AnchorMap {
 		this.startPercentY = startPercentY;
 		this.startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 		this.numAncPerColumn = numAnc/numAncPerRow;
+		
+		this.numPlayers = numPlayers;
 		
 		entities = new ArrayList<Entity>();
 		
@@ -80,5 +86,21 @@ public class AnchorMap {
 		for(Entity e : entities) {
 			e.render(gc, sb, g);
 		}
+	}
+	
+	public int getNumAncPerRow() {
+		return numAncPerRow;
+	}
+	
+	public int getStartPosX() {
+		return startPosX;
+	}
+	
+	public int getStartPosY() {
+		return startPosY;
+	}
+	
+	public int getNumPlayers() {
+		return numPlayers;
 	}
 }

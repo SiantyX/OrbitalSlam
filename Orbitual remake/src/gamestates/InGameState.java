@@ -2,6 +2,7 @@ package gamestates;
 
 import game.AnchorMap;
 import game.Entity;
+import game.Game;
 import game.Player;
 
 import java.util.ArrayList;
@@ -25,11 +26,22 @@ public class InGameState extends BasicGameState {
 	public static final int ID = 1;
 	private AnchorMap map;
 	private ArrayList<Player> players;
+	private int numLocalPlayers;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		map = new AnchorMap();
 		players = new ArrayList<Player>();
+		
+		numLocalPlayers = 2;
+		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
+		
+		// players
+		for(int i = 0; i < numLocalPlayers; i++) {
+			//startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))
+			Vector2f v = new Vector2f(map.getStartPosX() + (i) * (((Game.WIDTH-(2*map.getStartPosX()))/(map.getNumAncPerRow()-1))) - Game.WIDTH/14, map.getStartPosY() - Game.HEIGHT/10);
+			players.add(new Player(i, v));
+		}
 	}
 
 	@Override
