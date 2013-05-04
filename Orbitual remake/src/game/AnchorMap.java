@@ -25,6 +25,7 @@ public class AnchorMap {
 	private int numAncPerColumn;
 	
 	private final String anchorPath = "res/sprites/anchorstar.png";
+	private final float stdScale = 0.0000375f;
 	
 	// default map
 	public AnchorMap() throws SlickException {
@@ -66,7 +67,8 @@ public class AnchorMap {
 			Image img = new Image(anchorPath);
 			ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
 			e.AddComponent(c);
-			e.setScale(0.03f); // trololol
+			// homemade
+			e.setScale(stdScale*Game.WIDTH); // trololol
 			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
 			e.setPosition(pos);
 			entities.add(e);
