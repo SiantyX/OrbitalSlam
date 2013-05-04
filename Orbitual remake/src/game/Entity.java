@@ -102,7 +102,7 @@ public class Entity {
 			radius = irc.getRadius();
 		}
 		
-		return radius;
+		return radius*scale;
 	}
 	
 	public void setRadius(float radius){
