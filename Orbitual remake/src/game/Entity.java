@@ -9,6 +9,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import components.Component;
 import components.RenderComponent;
+import components.ImageRenderComponent;
 
 public class Entity {
 
@@ -77,6 +78,10 @@ public class Entity {
 
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+	
+	public void setDim(float width, float height) {
+		(ImageRenderComponent) getComponent(id);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {

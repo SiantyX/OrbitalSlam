@@ -1,5 +1,6 @@
 package gamestates;
 
+import game.AnchorMap;
 import game.Entity;
 
 import java.util.ArrayList;
@@ -22,14 +23,18 @@ public class InGameState extends BasicGameState {
 
 	public static final int ID = 1;
 	private ArrayList<Entity> entities;
+	private AnchorMap map;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
+		map = new AnchorMap();
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		map.render(gc, sb, g);
+		
 		for (Entity e : entities) {
 			e.render(gc, sb, g);
 		}
