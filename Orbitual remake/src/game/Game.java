@@ -15,6 +15,9 @@ public class Game extends StateBasedGame {
 	private final static boolean fullscreen = false;
 	public static boolean showHitbox;
 	
+	public static int centerHeight;
+	public static int centerWidth;
+	
 	
 	public Game() {
 		super("Orbitual remake");
@@ -23,6 +26,8 @@ public class Game extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer arg0) throws SlickException {
+		centerHeight = app.getHeight() / 2;
+		centerWidth = app.getWidth() / 2;
 		//addState(new InGameState());
 		//addState(new MenuState());
 	}
