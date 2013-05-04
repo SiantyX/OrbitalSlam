@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -32,6 +33,7 @@ public class Entity {
 		position = new Vector2f(0, 0);
 		scale = 1;
 		rotation = 0;
+		
 		radius = 0;
 		
 	}
@@ -81,12 +83,6 @@ public class Entity {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
-	
-	public void setDim(float width, float height) {
-		ImageRenderComponent test = (ImageRenderComponent) getComponent(id);
-		
-		//(ImageRenderComponent) getComponent(id);
-	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
 		for (Component component : components) {
@@ -101,6 +97,11 @@ public class Entity {
 	}
 	
 	public float getRadius(){
+		if(radius == 0) {
+			ImageRenderComponent irc = (ImageRenderComponent) getComponent(id);
+			radius = irc.getRadius();
+		}
+		
 		return radius;
 	}
 	
