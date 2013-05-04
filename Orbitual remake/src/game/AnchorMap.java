@@ -6,6 +6,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import components.ImageRenderComponent;
@@ -60,6 +61,8 @@ public class AnchorMap {
 			ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
 			e.AddComponent(c);
 			e.setScale(0.03f); // trololol
+			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
+			e.setPosition(pos);
 			entities.add(e);
 		}
 	}

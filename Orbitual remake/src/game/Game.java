@@ -10,9 +10,9 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Game extends StateBasedGame {
 
 	public static AppGameContainer app;
-	private final static int WIDTH = 800;
-	private final static int HEIGHT = 600;
-	private final static boolean fullscreen = false;
+	public final static int WIDTH = 800;
+	public final static int HEIGHT = 600;
+	public final static boolean fullscreen = false;
 	public static boolean showHitbox;
 	
 	public static int centerHeight;
