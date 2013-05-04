@@ -2,6 +2,7 @@ package gamestates;
 
 import java.util.ArrayList;
 
+import game.Game;
 import game.MenuButton;
 
 import org.newdawn.slick.GameContainer;
@@ -16,19 +17,23 @@ public class MenuState extends BasicGameState{
 	public static final int ID = 2;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton playButton, settingsButton, exitButton;
-	
+	private Image playImage;
+
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		
-		playButton = new MenuButton("play", new Vector2f(100, 100), new Image("res/buttons/play.png"));
+		playImage = new Image("res/buttons/play.png");
+		
+		
+		playButton = new MenuButton("play", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/play.png"));
 		buttons.add(playButton);
 	
-		settingsButton = new MenuButton("settings", new Vector2f(100, 200), new Image("res/buttons/settings.png"));
+		settingsButton = new MenuButton("settings", new Vector2f(Game.centerWidth -100 , Game.centerHeight), new Image("res/buttons/settings.png"));
 		buttons.add(settingsButton);
 		
-		exitButton = new MenuButton("exit", new Vector2f(100, 300), new Image("res/buttons/exit.png"));
+		exitButton = new MenuButton("exit", new Vector2f(Game.centerWidth -100, Game.centerHeight + 125), new Image("res/buttons/exit.png"));
 		buttons.add(exitButton);
 		
 	}
@@ -51,6 +56,10 @@ public class MenuState extends BasicGameState{
 		
 		if (playButton.isMousePressed()) {
 			sb.enterState(InGameState.ID);
+		}
+		
+		if (settingsButton.isMousePressed()) {
+			sb.enterState(DisplayModeState.ID);
 		}
 		
 		if (exitButton.isMousePressed()) {
