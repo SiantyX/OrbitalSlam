@@ -17,9 +17,11 @@ public class AnchorMap {
 	private int numAnc;
 	
 	private int startPosX;
+	private double startPercentX;
 	private int numAncPerRow;
 	
 	private int startPosY;
+	private double startPercentY;
 	private int numAncPerColumn;
 	
 	private final String anchorPath = "res/sprites/anchorstar.png";
@@ -28,10 +30,12 @@ public class AnchorMap {
 	public AnchorMap() throws SlickException {
 		numAnc = 12;
 		
-		startPosX = 120;
+		startPercentX = 0.15;
+		startPosX = (int)Math.round(Game.WIDTH * startPercentX);
 		numAncPerRow = 4;
 		
-		startPosY = 150;
+		startPercentY = 0.1875;
+		startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 		numAncPerColumn = numAnc/numAncPerRow;
 		
 		entities = new ArrayList<Entity>();
@@ -40,13 +44,15 @@ public class AnchorMap {
 	}
 	
 	// debug map
-	public AnchorMap(int numAnc, int startPosX, int numAncPerRow, int startPosY) throws SlickException {
+	public AnchorMap(int numAnc, int startPercentX, int numAncPerRow, int startPercentY) throws SlickException {
 		this.numAnc = numAnc;
 		
-		this.startPosX = startPosX;
+		this.startPercentX = startPercentX;
+		this.startPosX = (int)Math.round(Game.WIDTH * startPercentX);
 		this.numAncPerRow = numAncPerRow;
 		
-		this.startPosY = startPosY;
+		this.startPercentY = startPercentY;
+		this.startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 		this.numAncPerColumn = numAnc/numAncPerRow;
 		
 		entities = new ArrayList<Entity>();
