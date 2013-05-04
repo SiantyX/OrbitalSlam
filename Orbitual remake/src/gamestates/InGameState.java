@@ -36,9 +36,9 @@ public class InGameState extends BasicGameState {
 		numLocalPlayers = 2;
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
 		
+		Player.anchorList = map.getEntities();
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
-			//startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))
 			Vector2f v = new Vector2f(map.getStartPosX() + (i) * (((Game.WIDTH-(2*map.getStartPosX()))/(map.getNumAncPerRow()-1))) - Game.WIDTH/14, map.getStartPosY() - Game.HEIGHT/10);
 			players.add(new Player(i, v));
 		}
@@ -57,11 +57,15 @@ public class InGameState extends BasicGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
+		}
+		
+		if(players.isEmpty()) return;
+		for(Player player : players) {
+			player.update(gc, sb, delta);
 		}
 	}
 	

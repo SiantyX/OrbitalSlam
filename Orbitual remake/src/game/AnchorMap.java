@@ -88,6 +88,10 @@ public class AnchorMap {
 		}
 	}
 	
+	public ArrayList<Entity> getEntities() {
+		return entities;
+	}
+	
 	public int getNumAncPerRow() {
 		return numAncPerRow;
 	}

@@ -59,6 +59,10 @@ public class Entity {
 	public Vector2f getPosition() {
 		return position;
 	}
+	
+	public Vector2f getCenterPosition() {
+		return new Vector2f(getPosition().x + getRadius(), getPosition().y + getRadius());
+	}
 
 	public float getScale() {
 		return scale;
