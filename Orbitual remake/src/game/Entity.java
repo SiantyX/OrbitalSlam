@@ -34,7 +34,7 @@ public class Entity {
 		scale = 1;
 		rotation = 0;
 		
-		radius = 
+		radius = 0;
 		
 	}
 
@@ -97,16 +97,15 @@ public class Entity {
 	}
 	
 	public float getRadius(){
+		if(radius == 0) {
+			ImageRenderComponent irc = (ImageRenderComponent) getComponent(id);
+			radius = irc.getRadius();
+		}
+		
 		return radius;
 	}
 	
 	public void setRadius(float radius){
-		ImageRenderComponent irc = (ImageRenderComponent) getComponent(id);
-		
-		Image img = irc.getImage();
-		
-		
-		
 		this.radius = radius;
 	}
 	
