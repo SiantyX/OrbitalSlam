@@ -25,7 +25,7 @@ public class AnchorMap {
 	private int numAncPerColumn;
 	
 	private final String anchorPath = "res/sprites/anchorstar.png";
-	private final float stdScale = 0.0000375f;
+	private final float stdScale = 0.00002f;
 	
 	// default map
 	public AnchorMap() throws SlickException {
