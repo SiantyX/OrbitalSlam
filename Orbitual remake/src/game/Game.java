@@ -1,5 +1,6 @@
 package game;
 
+import gamestates.DisplayModeState;
 import gamestates.InGameState;
 import gamestates.MenuState;
 
@@ -11,9 +12,9 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Game extends StateBasedGame {
 
 	public static AppGameContainer app;
-	public final static int WIDTH = 800;
-	public final static int HEIGHT = 600;
-	public final static boolean fullscreen = false;
+	public static int WIDTH = 1920;
+	public static int HEIGHT = 1080;
+	public final static boolean fullscreen = true;
 	public static boolean showHitbox;
 	
 	public static int centerHeight;
@@ -27,9 +28,10 @@ public class Game extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer arg0) throws SlickException {
-		centerHeight = app.getHeight() / 2;
-		centerWidth = app.getWidth() / 2;
+		centerHeight = app.getHeight()/2;
+		centerWidth = app.getWidth()/2;
 		addState(new MenuState());
+		addState(new DisplayModeState());
 		addState(new InGameState());
 		
 	}
