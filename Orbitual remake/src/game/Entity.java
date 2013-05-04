@@ -81,7 +81,9 @@ public class Entity {
 	}
 	
 	public void setDim(float width, float height) {
-		(ImageRenderComponent) getComponent(id);
+		ImageRenderComponent test = (ImageRenderComponent) getComponent(id);
+		
+		
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
