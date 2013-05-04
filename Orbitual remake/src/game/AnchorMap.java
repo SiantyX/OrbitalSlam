@@ -19,9 +19,9 @@ public class AnchorMap {
 	private int numAncPerRow;
 	
 	private int startPosY;
-	private int numAncPerColumn = numAnc/numAncPerRow;
+	private int numAncPerColumn;
 	
-	private final String anchorPath = "res/sprites/achorstar.png";
+	private final String anchorPath = "res/sprites/anchorstar.png";
 	
 	// default map
 	public AnchorMap() throws SlickException {
@@ -32,6 +32,8 @@ public class AnchorMap {
 		
 		startPosY = 150;
 		numAncPerColumn = numAnc/numAncPerRow;
+		
+		entities = new ArrayList<Entity>();
 		
 		createMap();
 	}
@@ -45,6 +47,8 @@ public class AnchorMap {
 		
 		this.startPosY = startPosY;
 		this.numAncPerColumn = numAnc/numAncPerRow;
+		
+		entities = new ArrayList<Entity>();
 		
 		createMap();
 	}
