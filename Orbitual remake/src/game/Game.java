@@ -28,7 +28,7 @@ public class Game extends StateBasedGame {
 	public void initStatesList(GameContainer arg0) throws SlickException {
 		centerHeight = app.getHeight() / 2;
 		centerWidth = app.getWidth() / 2;
-		//addState(new InGameState());
+		addState(new InGameState());
 		//addState(new MenuState());
 	}
 	

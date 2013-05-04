@@ -27,6 +27,7 @@ public class InGameState extends BasicGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
+		entities = new ArrayList<Entity>();
 		map = new AnchorMap();
 	}
 
@@ -35,6 +36,7 @@ public class InGameState extends BasicGameState {
 			throws SlickException {
 		map.render(gc, sb, g);
 		
+		if(entities.isEmpty()) return;
 		for (Entity e : entities) {
 			e.render(gc, sb, g);
 		}
