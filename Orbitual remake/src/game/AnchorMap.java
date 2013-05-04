@@ -59,6 +59,7 @@ public class AnchorMap {
 			Image img = new Image(anchorPath);
 			ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
 			e.AddComponent(c);
+			e.setScale(0.03f);
 			entities.add(e);
 		}
 	}
