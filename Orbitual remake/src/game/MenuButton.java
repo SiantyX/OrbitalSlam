@@ -1,7 +1,6 @@
 package game;
 
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;

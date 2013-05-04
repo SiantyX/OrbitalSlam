@@ -24,7 +24,7 @@ public class ImageRenderComponent extends RenderComponent {
 		float scale = owner.getScale();
 
 		image.draw(pos.x, pos.y, scale);
-		if(game.hitBox){
+		if(Game.showHitbox){
 			gr.setColor(Color.red);
 			gr.drawOval(pos.x, pos.y, owner.getRadius()*2, owner.getRadius()*2);
 		}

@@ -1,5 +1,7 @@
 package game;
 
+import gamestates.InGameState;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -11,10 +13,12 @@ public class Game extends StateBasedGame {
 	private final static int WIDTH = 800;
 	private final static int HEIGHT = 600;
 	private final static boolean fullscreen = false;
+	public static boolean showHitbox;
 	
 	
 	public Game() {
 		super("Orbitual remake");
+		showHitbox = false;
 	}
 
 	@Override
@@ -24,13 +28,19 @@ public class Game extends StateBasedGame {
 	}
 	
 	
-	public static void main(String[] args) throws SlickException {
+	public static void main(String[] args) {
 		
-		app = new AppGameContainer(new Game());
-		app.setDisplayMode(WIDTH, HEIGHT, fullscreen);
-		app.setTargetFrameRate(60);
-		app.setShowFPS(false);
-		app.setSmoothDeltas(true);
-		app.start();
+		try {
+			app = new AppGameContainer(new Game());
+			app.setDisplayMode(WIDTH, HEIGHT, fullscreen);
+			app.setTargetFrameRate(60);
+			app.setShowFPS(false);
+			app.setSmoothDeltas(true);
+			app.start();
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+		
 }
