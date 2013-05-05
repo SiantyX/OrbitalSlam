@@ -33,11 +33,11 @@ public class AnchorMap {
 	public AnchorMap() throws SlickException {
 		numAnc = 12;
 		
-		startPercentX = 0.15;
+		startPercentX = 0.2;
 		startPosX = (int)Math.round(Game.WIDTH * startPercentX);
 		numAncPerRow = 4;
 		
-		startPercentY = 0.1875;
+		startPercentY = 0.23;
 		startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 		numAncPerColumn = numAnc/numAncPerRow;
 		

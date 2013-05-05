@@ -47,7 +47,7 @@ public class Player {
 	
 	public static ArrayList<Entity> anchorList;
 	
-	private final float gravity = 0.03f;
+	private final float gravity = 0.02f;
 	
 	public Player(int num, Vector2f startPos) throws SlickException {
 		dead = false;
