@@ -39,15 +39,15 @@ public class Player {
 	private double hookLength;
 	
 	private boolean clockWise;
-	// -----------------------
 	
-	//tmp
-	private Vector2f tmpPos;
-	private double tmpDeg;
+	private double centriAcc;
+	private final double MAXSPINSPEED = 16;
+	private final double ACC_CONST = 300;
+	// -----------------------
 	
 	public static ArrayList<Entity> anchorList;
 	
-	private final float gravity = 0.01f;
+	private final float gravity = 0.03f;
 	
 	public Player(int num, Vector2f startPos) throws SlickException {
 		dead = false;
@@ -69,6 +69,8 @@ public class Player {
 		hookLength = 0;
 		
 		clockWise = false;
+		
+		centriAcc = 0;
 		// -----------------
 		
 		this.num = num;
@@ -87,36 +89,21 @@ public class Player {
 			dy += gravity*delta;
 		
 		else {
-			// SNURRA
-			/*double cosOldV = Math.cos(degrees*Math.PI/180);
-			double sinOldV = Math.sin(degrees*Math.PI/180);
-			
 			if(clockWise) {
-				double cosNewV = Math.cos((degrees-wSpeed)*Math.PI/180);
-				double sinNewV = Math.sin((degrees-wSpeed)*Math.PI/180);
-				
-				dx = hookLength * cosNewV - hookLength * cosOldV;
-				dy = hookLength * sinOldV - hookLength * sinNewV;
 				degrees -= wSpeed;
 			}
 			else {
-				double cosNewV = Math.cos((degrees+wSpeed)*Math.PI/180);
-				double sinNewV = Math.sin((degrees+wSpeed)*Math.PI/180);
-				
-				dx = hookLength * cosNewV - hookLength * cosOldV;
-				dy = hookLength * sinOldV - hookLength * sinNewV;
 				degrees += wSpeed;
 			}
-			*/
-			
-			/*
-			degrees += wSpeed;
-			dx = (Math.cos(degrees*Math.PI/180)-1) * hookLength;
-			dy = -Math.sin(degrees*Math.PI/180) * hookLength;*/
-			
-			degrees += wSpeed;
 			dx = hookedTo.getCenterPosition().x + Math.cos(degrees*Math.PI/180) * hookLength - entity.getCenterPosition().x;
 			dy = hookedTo.getCenterPosition().y - Math.sin(degrees*Math.PI/180) * hookLength - entity.getCenterPosition().y;
+			
+			if(wSpeed >= MAXSPINSPEED) {
+				wSpeed = MAXSPINSPEED;
+			}
+			else {
+				wSpeed += centriAcc;
+			}
 		}
 		
 		entity.setCenterPosition(new Vector2f( entity.getCenterPosition().x + (float)dx, entity.getCenterPosition().y + (float)dy));
@@ -137,9 +124,7 @@ public class Player {
 		wSpeed = speed / hookLength * 180/Math.PI;
 		degrees = Math.atan2(hookedTo.getCenterPosition().y - entity.getCenterPosition().y + entity.getRadius(), 
 				-(hookedTo.getCenterPosition().x - entity.getCenterPosition().x + entity.getRadius())) * 180/Math.PI;
-		
-		tmpPos = entity.getPosition();
-		tmpDeg = degrees;
+		centriAcc = ACC_CONST/(hookLength*hookLength);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
@@ -147,7 +132,6 @@ public class Player {
 		
 		if(hooked) {
 			g.drawLine(entity.getCenterPosition().x, entity.getCenterPosition().y, hookedTo.getCenterPosition().x, hookedTo.getCenterPosition().y);
-			g.drawOval(tmpPos.x + -(float)hookLength * (float)Math.cos(tmpDeg*Math.PI/180), tmpPos.y + (float)hookLength * (float)Math.sin(tmpDeg*Math.PI/180), (float)hookLength, (float)hookLength);
 		}
 		entity.render(gc, sb, g);
 	}
