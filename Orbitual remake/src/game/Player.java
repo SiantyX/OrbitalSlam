@@ -123,7 +123,7 @@ public class Player {
 		speed = Math.hypot(dx, dy);
 		wSpeed = speed / hookLength * 180/Math.PI;
 		degrees = Math.atan2(hookedTo.getPosition().y - entity.getPosition().y + entity.getRadius(), 
-				hookedTo.getPosition().x - entity.getPosition().x + entity.getRadius()) * 180/Math.PI;
+				-(hookedTo.getPosition().x - entity.getPosition().x + entity.getRadius())) * 180/Math.PI;
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
