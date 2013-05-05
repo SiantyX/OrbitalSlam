@@ -79,6 +79,11 @@ public class Entity {
 	public void setPosition(Vector2f position) {
 		this.position = position;
 	}
+	
+	public void setCenterPosition(Vector2f position) {
+		Vector2f v = new Vector2f(position.x - getRadius(), position.y - getRadius());
+		this.position = v;
+	}
 
 	public void setRotation(float rotate) {
 		rotation = rotate;

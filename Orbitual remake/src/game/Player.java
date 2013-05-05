@@ -41,6 +41,10 @@ public class Player {
 	private boolean clockWise;
 	// -----------------------
 	
+	//tmp
+	private Vector2f tmpPos;
+	private double tmpDeg;
+	
 	public static ArrayList<Entity> anchorList;
 	
 	private final float gravity = 0.01f;
@@ -84,7 +88,7 @@ public class Player {
 		
 		else {
 			// SNURRA
-			double cosOldV = Math.cos(degrees*Math.PI/180);
+			/*double cosOldV = Math.cos(degrees*Math.PI/180);
 			double sinOldV = Math.sin(degrees*Math.PI/180);
 			
 			if(clockWise) {
@@ -103,17 +107,26 @@ public class Player {
 				dy = hookLength * sinOldV - hookLength * sinNewV;
 				degrees += wSpeed;
 			}
+			*/
 			
+			/*
+			degrees += wSpeed;
+			dx = (Math.cos(degrees*Math.PI/180)-1) * hookLength;
+			dy = -Math.sin(degrees*Math.PI/180) * hookLength;*/
+			
+			degrees += wSpeed;
+			dx = hookedTo.getCenterPosition().x + Math.cos(degrees*Math.PI/180) * hookLength - entity.getCenterPosition().x;
+			dy = hookedTo.getCenterPosition().y - Math.sin(degrees*Math.PI/180) * hookLength - entity.getCenterPosition().y;
 		}
 		
-		entity.setPosition(new Vector2f( entity.getPosition().x + (float)dx, entity.getPosition().y + (float)dy));
+		entity.setCenterPosition(new Vector2f( entity.getCenterPosition().x + (float)dx, entity.getCenterPosition().y + (float)dy));
 	}
 	
 	private void hook() {
 		// get closest anchor
 		hookLength = 10000;
 		for(Entity e : anchorList) {
-			double eHypot = Math.hypot(e.getPosition().x - entity.getPosition().x, e.getPosition().y - entity.getPosition().y);
+			double eHypot = Math.hypot(e.getCenterPosition().x - entity.getCenterPosition().x, e.getCenterPosition().y - entity.getCenterPosition().y);
 			if(eHypot < hookLength) {
 				hookLength = eHypot;
 				hookedTo = e;
@@ -122,13 +135,19 @@ public class Player {
 		
 		speed = Math.hypot(dx, dy);
 		wSpeed = speed / hookLength * 180/Math.PI;
-		degrees = Math.atan2(hookedTo.getPosition().y - entity.getPosition().y + entity.getRadius(), 
-				-(hookedTo.getPosition().x - entity.getPosition().x + entity.getRadius())) * 180/Math.PI;
+		degrees = Math.atan2(hookedTo.getCenterPosition().y - entity.getCenterPosition().y + entity.getRadius(), 
+				-(hookedTo.getCenterPosition().x - entity.getCenterPosition().x + entity.getRadius())) * 180/Math.PI;
+		
+		tmpPos = entity.getPosition();
+		tmpDeg = degrees;
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
+		if(dead) return;
+		
 		if(hooked) {
 			g.drawLine(entity.getCenterPosition().x, entity.getCenterPosition().y, hookedTo.getCenterPosition().x, hookedTo.getCenterPosition().y);
+			g.drawOval(tmpPos.x + -(float)hookLength * (float)Math.cos(tmpDeg*Math.PI/180), tmpPos.y + (float)hookLength * (float)Math.sin(tmpDeg*Math.PI/180), (float)hookLength, (float)hookLength);
 		}
 		entity.render(gc, sb, g);
 	}
