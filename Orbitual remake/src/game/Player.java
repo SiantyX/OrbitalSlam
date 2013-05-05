@@ -25,13 +25,21 @@ public class Player {
 	private final float stdScale = 0.0005208f;
 	private int num;
 	
-	private float dx;
-	private float dy;
+	private double dx;
+	private double dy;
 	
-	private float speed;
+	private double speed;
 	
+	// hook variables
 	private boolean hooked;
 	private Entity hookedTo;
+	
+	private double wSpeed;
+	private double degrees;
+	private double hookLength;
+	
+	private boolean clockWise;
+	// -----------------------
 	
 	public static ArrayList<Entity> anchorList;
 	
@@ -48,9 +56,16 @@ public class Player {
 		dy = 0;
 		speed = 0;
 		
+		// hook variables
 		hookedTo = null;
-		
 		hooked = false;
+		
+		wSpeed = 0;
+		degrees = 0;
+		hookLength = 0;
+		
+		clockWise = false;
+		// -----------------
 		
 		this.num = num;
 	}
@@ -61,7 +76,6 @@ public class Player {
 			hooked = !hooked;
 			if(hooked) {
 				hook();
-				speed = (float) Math.hypot(dx, dy);
 			}
 		}
 		
@@ -70,22 +84,46 @@ public class Player {
 		
 		else {
 			// SNURRA
+			double cosOldV = Math.cos(degrees*Math.PI/180);
+			double sinOldV = Math.sin(degrees*Math.PI/180);
+			
+			if(clockWise) {
+				double cosNewV = Math.cos((degrees-wSpeed)*Math.PI/180);
+				double sinNewV = Math.sin((degrees-wSpeed)*Math.PI/180);
+				
+				dx = hookLength * cosNewV - hookLength * cosOldV;
+				dy = hookLength * sinOldV - hookLength * sinNewV;
+				degrees -= wSpeed;
+			}
+			else {
+				double cosNewV = Math.cos((degrees+wSpeed)*Math.PI/180);
+				double sinNewV = Math.sin((degrees+wSpeed)*Math.PI/180);
+				
+				dx = hookLength * cosNewV - hookLength * cosOldV;
+				dy = hookLength * sinOldV - hookLength * sinNewV;
+				degrees += wSpeed;
+			}
 			
 		}
 		
-		entity.setPosition(new Vector2f(entity.getPosition().x + dx, entity.getPosition().y + dy));
+		entity.setPosition(new Vector2f( entity.getPosition().x + (float)dx, entity.getPosition().y + (float)dy));
 	}
 	
 	private void hook() {
 		// get closest anchor
-		float closest = 10000;
+		hookLength = 10000;
 		for(Entity e : anchorList) {
-			float eHypot = (float) Math.hypot(e.getPosition().x, e.getPosition().y);
-			if(eHypot < closest) {
-				closest = eHypot;
+			double eHypot = Math.hypot(e.getPosition().x - entity.getPosition().x, e.getPosition().y - entity.getPosition().y);
+			if(eHypot < hookLength) {
+				hookLength = eHypot;
 				hookedTo = e;
 			}
 		}
+		
+		speed = Math.hypot(dx, dy);
+		wSpeed = speed / hookLength * 180/Math.PI;
+		degrees = Math.atan2(hookedTo.getPosition().y - entity.getPosition().y + entity.getRadius(), 
+				hookedTo.getPosition().x - entity.getPosition().x + entity.getRadius()) * 180/Math.PI;
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
