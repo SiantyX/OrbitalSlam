@@ -3,6 +3,7 @@ package game;
 import gamestates.DisplayModeState;
 import gamestates.InGameState;
 import gamestates.MenuState;
+import gamestates.PauseMenuState;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -20,6 +21,8 @@ public class Game extends StateBasedGame {
 	public static int centerHeight;
 	public static int centerWidth;
 	
+	public static int LASTID;
+	
 	
 	public Game() {
 		super("Orbitual remake");
@@ -33,6 +36,7 @@ public class Game extends StateBasedGame {
 		addState(new MenuState());
 		addState(new DisplayModeState());
 		addState(new InGameState());
+		addState(new PauseMenuState());
 		
 	}
 	

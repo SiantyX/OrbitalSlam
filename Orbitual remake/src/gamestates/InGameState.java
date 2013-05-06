@@ -33,7 +33,7 @@ public class InGameState extends BasicGameState {
 		map = new AnchorMap();
 		players = new ArrayList<Player>();
 		
-		numLocalPlayers = 2;
+		numLocalPlayers = 1;
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
 		
 		Player.anchorList = map.getEntities();
@@ -59,13 +59,33 @@ public class InGameState extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			Game.LASTID = getID();
+			sb.enterState(PauseMenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
+		ArrayList<Player> playersAlive = new ArrayList<Player>();
 		if(players.isEmpty()) return;
 		for(Player player : players) {
+			if(!player.isDead()) {
+				playersAlive.add(player);
+			}
 			player.update(gc, sb, delta);
+		}
+		
+		if(playersAlive.size() == 1 && numLocalPlayers > 1) {
+			// player wins
+			// playersAlive.get(0)
+			Game.LASTID = getID();
+			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
+		}
+		else if(playersAlive.size() < 1) {
+			// draw should not happen
+			// happens when playing alone
+			Game.LASTID = getID();
+			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
 		}
 	}
 	

@@ -77,6 +77,12 @@ public class Player {
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
+		if(entity.getCenterPosition().x < 0 || entity.getCenterPosition().x > Game.WIDTH
+				|| entity.getCenterPosition().y < 0 || entity.getCenterPosition().y > Game.HEIGHT) {
+			dead = true;
+		}
+		if(dead) return;
+		
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_S)) {
 			hooked = !hooked;
@@ -184,5 +190,9 @@ public class Player {
 			g.drawLine(entity.getCenterPosition().x, entity.getCenterPosition().y, hookedTo.getCenterPosition().x, hookedTo.getCenterPosition().y);
 		}
 		entity.render(gc, sb, g);
+	}
+	
+	public boolean isDead() {
+		return dead;
 	}
 }

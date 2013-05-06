@@ -18,10 +18,10 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
-public class MenuState extends BasicGameState{
-	public static final int ID = 2;
+public class PauseMenuState extends BasicGameState{
+	public static final int ID = 4;
 	private ArrayList<MenuButton> buttons;
-	private MenuButton playButton, settingsButton, quitButton;
+	private MenuButton continueButton, settingsButton, exitButton;
 	private Image playImage;
 	private TrueTypeFont ttf;
 
@@ -31,26 +31,31 @@ public class MenuState extends BasicGameState{
 		buttons = new ArrayList<MenuButton>();
 		
 		playImage = new Image("res/buttons/play.png");
+	
 		
-		
-		playButton = new MenuButton("play", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/play.png"));
-		buttons.add(playButton);
+		continueButton = new MenuButton("continue", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/continue.png"));
+		buttons.add(continueButton);
 	
 		settingsButton = new MenuButton("settings", new Vector2f(Game.centerWidth -100 , Game.centerHeight), new Image("res/buttons/settings.png"));
 		buttons.add(settingsButton);
 		
-		quitButton = new MenuButton("quit", new Vector2f(Game.centerWidth -100, Game.centerHeight + 125), new Image("res/buttons/quit.png"));
-		buttons.add(quitButton);
+		exitButton = new MenuButton("exit", new Vector2f(Game.centerWidth -100, Game.centerHeight + 125), new Image("res/buttons/exit.png"));
+		buttons.add(exitButton);
 		
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
+		
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		sb.getState(InGameState.ID).render(gc, sb, g);
 		
-		ttf.drawString(Game.centerWidth - 140, Game.centerHeight/3, "Orbital Slam");
+		g.setColor(new Color(0, 0, 0, 125));
+		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
+		
+		ttf.drawString(Game.centerWidth - 90, Game.centerHeight/3, "Paused");
 		
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
@@ -65,9 +70,8 @@ public class MenuState extends BasicGameState{
 			button.update(gc, sb, delta);
 		}
 		
-		if (playButton.isMousePressed()) {
+		if (continueButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.getState(InGameState.ID).init(gc, sb);
 			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
@@ -78,9 +82,10 @@ public class MenuState extends BasicGameState{
 					100));;
 		}
 		
-		if (quitButton.isMousePressed()) {
+		if (exitButton.isMousePressed()) {
 			Game.LASTID = getID();
-			System.exit(0);
+			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
 		}
 	}
 

@@ -35,7 +35,6 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		
-		
 		try {
 			DisplayMode[] temp = Display.getAvailableDisplayModes();
 			resolutions = new LinkedList<DisplayMode>();
@@ -104,13 +103,15 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 		}
 		
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.LASTID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
+			Game.LASTID = getID();
 			sb.closeRequested();
 		}
 
 	}
 	
+	// endast för displaymodes
 	public int compare(Object o1, Object o2) {
 		DisplayMode e1 = (DisplayMode) o1;
 		DisplayMode e2 = (DisplayMode) o2;
