@@ -120,14 +120,14 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 			sb.closeRequested();
 		}
 		
-		if (input.isMousePressed(1)) {
+		if (input.isMousePressed(1) || input.isKeyPressed(Input.KEY_RIGHT)) {
 			if (!(index-1 < 0)) {
 				DisplayMode = resolutions.get(index-1).toString();
 				index--;
 			}
 		}
 		
-		if (input.isMousePressed(0)) {
+		if (input.isMousePressed(0) || input.isKeyPressed(Input.KEY_LEFT)) {
 			if (!(index+1 >= resolutions.size())) {
 				DisplayMode = resolutions.get(index+1).toString();
 				index++;
