@@ -10,6 +10,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
@@ -61,12 +62,20 @@ public class MenuState extends BasicGameState{
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
+		InGameState.finished = true;
+		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}
 		
+		Input input = gc.getInput();
+		/*if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+			System.exit(0);
+		}*/
+		
 		if (playButton.isMousePressed()) {
 			Game.LASTID = getID();
+			InGameState.finished = true;
 			sb.getState(InGameState.ID).init(gc, sb);
 			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));

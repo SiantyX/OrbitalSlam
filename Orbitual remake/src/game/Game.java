@@ -15,18 +15,16 @@ public class Game extends StateBasedGame {
 	public static AppGameContainer app;
 	public static int WIDTH = 1920;
 	public static int HEIGHT = 1080;
-	public final static boolean fullscreen = false;
-	public static boolean showHitbox;
+	public static boolean fullscreen = false;
+	public static boolean showHitbox = false;
 	
 	public static int centerHeight;
 	public static int centerWidth;
 	
 	public static int LASTID;
 	
-	
 	public Game() {
-		super("Orbitual remake");
-		showHitbox = false;
+		super("Orbital Slam");
 	}
 
 	@Override
@@ -37,7 +35,6 @@ public class Game extends StateBasedGame {
 		addState(new DisplayModeState());
 		addState(new InGameState());
 		addState(new PauseMenuState());
-		
 	}
 	
 	
@@ -54,5 +51,4 @@ public class Game extends StateBasedGame {
 			e.printStackTrace();
 		}
 	}
-		
 }

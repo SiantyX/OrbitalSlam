@@ -17,8 +17,10 @@ import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -29,12 +31,17 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 	private LinkedList<DisplayMode> resolutions;
 	private String DisplayMode;
 	private int index;
+	private ArrayList<MenuButton> buttons;
+	private MenuButton okButton, cancelButton;
+	
+	public static int OLD_WIDTH;
+	public static int OLD_HEIGHT;
 	
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
-		
+		// get all resolutions
 		try {
 			DisplayMode[] temp = Display.getAvailableDisplayModes();
 			resolutions = new LinkedList<DisplayMode>();
@@ -54,6 +61,7 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 		
 		Collections.sort(resolutions, this);
 		
+		// get current res
 		index = 0;
 		DisplayMode = resolutions.get(index).toString();
 		for(int i = 0; i < resolutions.size(); i++) {
@@ -67,21 +75,50 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 			System.out.println(resolutions.get(i).toString());
 		}
 		
+		// buttons
+		buttons = new ArrayList<MenuButton>();
+		okButton = new MenuButton("ok", new Vector2f(Game.centerWidth -300 , Game.centerHeight +125), new Image("res/buttons/ok.png"));
+		buttons.add(okButton);
+		
+		cancelButton = new MenuButton("cancel", new Vector2f(Game.centerWidth +100 , Game.centerHeight +125), new Image("res/buttons/cancel.png"));
+		buttons.add(cancelButton);
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		g.setColor(Color.white);
 		g.drawString(DisplayMode, Game.centerWidth-100, Game.centerHeight );
-	
 		
+		for (MenuButton button : buttons) {
+			button.render(gc, sb, g);
+		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
+		for (MenuButton button : buttons) {
+			button.update(gc, sb, delta);
+		}
 		
 		Input input = gc.getInput();
+		
+		if (input.isKeyPressed(Input.KEY_ENTER) || okButton.isMousePressed()) {
+			Game.app.setDisplayMode(resolutions.get(index).getWidth(), resolutions.get(index).getHeight(), Game.fullscreen);
+			try {
+				initAll(gc, sb);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (input.isKeyPressed(Input.KEY_ESCAPE) || cancelButton.isMousePressed()) {
+			sb.enterState(Game.LASTID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
+			Game.LASTID = getID();
+			sb.closeRequested();
+		}
 		
 		if (input.isMousePressed(1)) {
 			if (!(index-1 < 0)) {
@@ -95,20 +132,21 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 				DisplayMode = resolutions.get(index+1).toString();
 				index++;
 			}
-			
 		}
+	}
+	
+	public void initAll(GameContainer gc, StateBasedGame sb) throws SlickException, InterruptedException {
+		OLD_WIDTH = Game.WIDTH;
+		OLD_HEIGHT = Game.HEIGHT;
 		
-		if (input.isKeyPressed(Input.KEY_ENTER)) {
-			Game.app.setDisplayMode(resolutions.get(index).getWidth(), resolutions.get(index).getHeight(), Game.fullscreen);
-		}
+		Game.WIDTH = resolutions.get(index).getWidth();
+		Game.HEIGHT = resolutions.get(index).getHeight();
+		Game.centerWidth = resolutions.get(index).getWidth()/2;
+		Game.centerHeight = resolutions.get(index).getHeight()/2;
 		
-		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			sb.enterState(Game.LASTID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
-			Game.LASTID = getID();
-			sb.closeRequested();
+		for(int i = 0; i < sb.getStateCount(); i++) {
+			sb.getState(i).init(gc, sb);
 		}
-
 	}
 	
 	// endast för displaymodes

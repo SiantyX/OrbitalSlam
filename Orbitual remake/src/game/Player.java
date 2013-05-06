@@ -22,7 +22,7 @@ public class Player {
 	private boolean dead;
 	private Entity entity;
 	private final String[] playerImg = new String[]{"res/sprites/smiley1.png", "res/sprites/smiley2.png", "res/sprites/smiley3.png", "res/sprites/smiley4.png", "res/sprites/smiley5.png", "res/sprites/smiley6.png", "res/sprites/smiley7.png", "res/sprites/smiley8.png"};
-	private final float stdScale = 0.0005208f;
+	public static final float stdScale = 0.0005208f;
 	private int num;
 	
 	private double dx;
@@ -49,12 +49,14 @@ public class Player {
 	
 	private final float gravity = 0.015f;
 	
-	public Player(int num, Vector2f startPos) throws SlickException {
-		dead = false;
+	public Player(int num, AnchorMap map) throws SlickException {
+		Vector2f startPos = new Vector2f(map.getStartPosX() + (num) * (((Game.WIDTH-(2*map.getStartPosX()))/(map.getNumAncPerRow()-1))) - Game.WIDTH/14, map.getStartPosY() - Game.HEIGHT/10);
 		entity = new Entity("Player");
 		entity.AddComponent(new ImageRenderComponent("Player", new Image(playerImg[num])));
 		entity.setPosition(startPos);
 		entity.setScale(stdScale*Game.WIDTH);
+		
+		dead = false;
 		
 		dx = 0;
 		dy = 0;
@@ -76,13 +78,15 @@ public class Player {
 		this.num = num;
 	}
 	
-	public void update(GameContainer gc, StateBasedGame sb, int delta) {
+	public void update(GameContainer gc, StateBasedGame sb, int delta) {		
+		// check if dead
 		if(entity.getCenterPosition().x < 0 || entity.getCenterPosition().x > Game.WIDTH
 				|| entity.getCenterPosition().y < 0 || entity.getCenterPosition().y > Game.HEIGHT) {
 			dead = true;
 		}
 		if(dead) return;
 		
+		// hook button
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_S)) {
 			hooked = !hooked;
@@ -91,9 +95,10 @@ public class Player {
 			}
 		}
 		
+		// fall
 		if(!hooked)
 			dy += gravity*delta;
-		
+		// spin
 		else {
 			if(clockWise) {
 				degrees -= wSpeed;
@@ -112,6 +117,7 @@ public class Player {
 			}
 		}
 		
+		// move
 		speed = Math.hypot(dx, dy);
 		entity.setCenterPosition(new Vector2f( entity.getCenterPosition().x + (float)dx, entity.getCenterPosition().y + (float)dy));
 	}
@@ -187,12 +193,22 @@ public class Player {
 		if(dead) return;
 		
 		if(hooked) {
+			g.setColor(Color.white);
 			g.drawLine(entity.getCenterPosition().x, entity.getCenterPosition().y, hookedTo.getCenterPosition().x, hookedTo.getCenterPosition().y);
 		}
 		entity.render(gc, sb, g);
 	}
 	
+	@Override
+	public String toString() {
+		return "Player " + new Integer(num + 1).toString();
+	}
+	
 	public boolean isDead() {
 		return dead;
+	}
+	
+	public Entity getEntity() {
+		return entity;
 	}
 }

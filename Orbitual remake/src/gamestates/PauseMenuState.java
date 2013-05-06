@@ -10,6 +10,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
@@ -19,7 +20,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class PauseMenuState extends BasicGameState{
-	public static final int ID = 4;
+	public static final int ID = 0;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton continueButton, settingsButton, exitButton;
 	private Image playImage;
@@ -70,10 +71,16 @@ public class PauseMenuState extends BasicGameState{
 			button.update(gc, sb, delta);
 		}
 		
-		if (continueButton.isMousePressed()) {
+		Input input = gc.getInput();
+
+		if (continueButton.isMousePressed() || input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
-			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
+			sb.enterState(InGameState.ID);
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		if (settingsButton.isMousePressed()) {

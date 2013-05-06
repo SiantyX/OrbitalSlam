@@ -5,6 +5,7 @@ import game.Entity;
 import game.Game;
 import game.Player;
 
+import java.awt.Font;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
@@ -13,6 +14,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -27,9 +29,21 @@ public class InGameState extends BasicGameState {
 	private AnchorMap map;
 	private ArrayList<Player> players;
 	private int numLocalPlayers;
+	
+	public static boolean finished = true;
+	
+	private TrueTypeFont ttf;
+	
+	private ArrayList<Player> playersAlive;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
+		if(!finished) {
+			reInit(gc, sb);
+			return;
+		}
+		
+		playersAlive = new ArrayList<Player>();
 		map = new AnchorMap();
 		players = new ArrayList<Player>();
 		
@@ -39,8 +53,37 @@ public class InGameState extends BasicGameState {
 		Player.anchorList = map.getEntities();
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
-			Vector2f v = new Vector2f(map.getStartPosX() + (i) * (((Game.WIDTH-(2*map.getStartPosX()))/(map.getNumAncPerRow()-1))) - Game.WIDTH/14, map.getStartPosY() - Game.HEIGHT/10);
-			players.add(new Player(i, v));
+			players.add(new Player(i, map));
+			playersAlive.add(players.get(i));
+		}
+		
+		// font for winner
+		Font f = new Font("Comic Sans", Font.ITALIC, 50);
+		ttf = new TrueTypeFont(f, true);
+		
+		finished = false;
+	}
+	
+	/**
+	 * Runs if the game is initiated when not finished.
+	 * Happens if you change resolution.
+	 * 
+	 * @param gc
+	 * @param sb
+	 * @throws SlickException
+	 */
+	private void reInit(GameContainer gc, StateBasedGame sb) throws SlickException {
+		for(Player player : players) {
+			Entity e = player.getEntity();
+			Vector2f v = new Vector2f(e.getPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
+			e.setPosition(v);
+			e.setScale(Player.stdScale*Game.WIDTH);
+		}
+		
+		ArrayList<Entity> anchors = map.getEntities();
+		for(Entity e : anchors) {
+			Vector2f v = new Vector2f(e.getPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
+			e.setPosition(v);
 		}
 	}
 
@@ -53,39 +96,61 @@ public class InGameState extends BasicGameState {
 		for(Player player : players) {
 			player.render(gc, sb, g);
 		}
+		
+		if(finished) {
+			g.setColor(new Color(0, 0, 0, 125));
+			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
+			g.setColor(Color.white);
+			if(playersAlive.size() < 1) {
+				ttf.drawString(Game.centerWidth - 130, Game.centerHeight - 42, "It's a Draw!");
+			}
+			else {
+				ttf.drawString(Game.centerWidth - 130, Game.centerHeight - 42, playersAlive.get(0).toString() + " Wins!");
+			}
+		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
+		if(finished) return;
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
-			sb.enterState(PauseMenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
+			finished = false;
+			sb.enterState(PauseMenuState.ID);
 		}
 		
-		ArrayList<Player> playersAlive = new ArrayList<Player>();
 		if(players.isEmpty()) return;
-		for(Player player : players) {
-			if(!player.isDead()) {
-				playersAlive.add(player);
+		if(!playersAlive.isEmpty()) {
+			ArrayList<Player> tmpPlayers = new ArrayList<Player>();
+			for(Player player : playersAlive) {
+				tmpPlayers.add(player);
 			}
-			player.update(gc, sb, delta);
+			for(Player player : tmpPlayers) {
+				if(player.isDead()) {
+					playersAlive.remove(player);
+				}
+				else {
+					player.update(gc, sb, delta);
+				}
+			}
 		}
 		
 		if(playersAlive.size() == 1 && numLocalPlayers > 1) {
 			// player wins
 			// playersAlive.get(0)
 			Game.LASTID = getID();
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
+			finished = true;
+			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
+					2000));
 		}
 		else if(playersAlive.size() < 1) {
 			// draw should not happen
 			// happens when playing alone
 			Game.LASTID = getID();
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
+			finished = true;
+			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
+					2000));
 		}
 	}
 	
