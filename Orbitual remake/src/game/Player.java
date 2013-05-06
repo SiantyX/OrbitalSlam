@@ -47,7 +47,7 @@ public class Player {
 	
 	public static ArrayList<Entity> anchorList;
 	
-	private final float gravity = 0.02f;
+	private final float gravity = 0.015f;
 	
 	public Player(int num, Vector2f startPos) throws SlickException {
 		dead = false;
@@ -106,6 +106,7 @@ public class Player {
 			}
 		}
 		
+		speed = Math.hypot(dx, dy);
 		entity.setCenterPosition(new Vector2f( entity.getCenterPosition().x + (float)dx, entity.getCenterPosition().y + (float)dy));
 	}
 	
@@ -120,10 +121,59 @@ public class Player {
 			}
 		}
 		
-		speed = Math.hypot(dx, dy);
-		wSpeed = speed / hookLength * 180/Math.PI;
-		degrees = Math.atan2(hookedTo.getCenterPosition().y - entity.getCenterPosition().y + entity.getRadius(), 
-				-(hookedTo.getCenterPosition().x - entity.getCenterPosition().x + entity.getRadius())) * 180/Math.PI;
+		degrees = Math.atan2(hookedTo.getCenterPosition().y - entity.getCenterPosition().y, 
+				-(hookedTo.getCenterPosition().x - entity.getCenterPosition().x)) * 180/Math.PI;
+		
+		// --------------
+		// clockwise
+		double e1x, e1y, e2x, e2y;
+		double p1x, p1y, p2x, p2y, p3x, p3y;
+		p1x = entity.getCenterPosition().x;
+		p1y = entity.getCenterPosition().y;
+		p2x = entity.getCenterPosition().x + 99999*dx;
+		p2y = entity.getCenterPosition().y + 99999*dy;
+		p3x = hookedTo.getCenterPosition().x;
+		p3y = hookedTo.getCenterPosition().y;
+		
+		e1x = p1x-p2x;
+		e1y = p1y-p2y;
+		e2x = p3x-p2x;
+		e2y = p3y-p2y;
+		
+		if((e1x * e2y - e1y * e2x) >= 0) {
+			clockWise = false;
+		}
+		else {
+			clockWise = true;
+		}
+		// ----------
+		// speed reduction at weird angles
+		double tmpSpeed = Math.hypot(Math.cos(degrees*Math.PI/180) * dy, Math.sin(degrees*Math.PI/180) * dx);
+		wSpeed = tmpSpeed / hookLength * 180/Math.PI;
+		
+		p1x = hookedTo.getCenterPosition().x;
+		p1y = hookedTo.getCenterPosition().y;
+		
+		p2x = entity.getCenterPosition().x;
+		p2y = entity.getCenterPosition().y;
+		
+		p3x = entity.getCenterPosition().x + 100*dx;
+		p3y = entity.getCenterPosition().y + 100*dy;
+		
+		e1x = p2x - p1x;
+		e1y = p2y - p1y;
+		
+		e2x = p2x - p3x;
+		e2y = p2y - p3y;
+		
+		double test = ((e1x*e2x) + (e1y*e2y)) / (Math.hypot(e1x, e1y) * Math.hypot(e2x, e2y));
+		test = Math.acos(test) * 180/Math.PI;
+		if(test > 90) {
+			test = Math.abs(test - 180);
+		}
+		wSpeed = test/90 * wSpeed;
+		// ----------------------------------
+		
 		centriAcc = ACC_CONST/(hookLength*hookLength);
 	}
 	
