@@ -18,6 +18,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.FontUtils;
 
 public class PauseMenuState extends BasicGameState{
 	public static final int ID = 0;
@@ -56,7 +57,7 @@ public class PauseMenuState extends BasicGameState{
 		g.setColor(new Color(0, 0, 0, 125));
 		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 		
-		ttf.drawString(Game.centerWidth - 90, Game.centerHeight/3, "Paused");
+		FontUtils.drawCenter(ttf, "Paused", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
@@ -85,7 +86,7 @@ public class PauseMenuState extends BasicGameState{
 		
 		if (settingsButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(DisplayModeState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));;
 		}
 		

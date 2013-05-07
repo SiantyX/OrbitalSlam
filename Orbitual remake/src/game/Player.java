@@ -47,6 +47,8 @@ public class Player {
 	
 	public static ArrayList<Entity> anchorList;
 	
+	public int KEYBIND;
+	
 	private final float gravity = 0.015f;
 	
 	public Player(int num, AnchorMap map) throws SlickException {
@@ -88,7 +90,7 @@ public class Player {
 		
 		// hook button
 		Input input = gc.getInput();
-		if (input.isKeyPressed(Input.KEY_S)) {
+		if (input.isKeyPressed(KEYBIND)) {
 			hooked = !hooked;
 			if(hooked) {
 				hook();

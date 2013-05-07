@@ -3,6 +3,7 @@ package gamestates;
 import game.Game;
 import game.MenuButton;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,24 +20,32 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.MouseListener;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.FontUtils;
 
-public class DisplayModeState extends BasicGameState implements Comparator{
+public class DisplayModeState extends BasicGameState implements Comparator {
 	public static final int ID = 3;
 	private LinkedList<DisplayMode> resolutions;
-	private String DisplayMode;
-	private int index;
+	private int index, currentResIndex;
 	private ArrayList<MenuButton> buttons;
-	private MenuButton okButton, cancelButton;
+	private MenuButton okButton, cancelButton, fullscreenButton, resButton;
 	
 	public static int OLD_WIDTH;
 	public static int OLD_HEIGHT;
 	
+	private TrueTypeFont bigText, ttf;
+	
+	private boolean fullscreen;
+	
+	private int lastClicked;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
@@ -50,7 +59,7 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 			}
 			
 			for (int i=0; i < resolutions.size(); i ++) {
-				if (resolutions.get(i).toString().contains("x 16") || !(resolutions.get(i).toString().contains("@60"))) {
+				if (resolutions.get(i).toString().contains("x 16") || (!(resolutions.get(i).toString().contains("@60")) && !(resolutions.get(i).toString().contains("@120")))) {
 					resolutions.remove(i);
 					i--;
 				}
@@ -62,33 +71,56 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 		Collections.sort(resolutions, this);
 		
 		// get current res
-		index = 0;
-		DisplayMode = resolutions.get(index).toString();
+		index = currentResIndex = 0;
+		String DisplayMode = resolutions.get(index).toString();
 		for(int i = 0; i < resolutions.size(); i++) {
 			if(resolutions.get(i).toString().contains(new Integer(Game.WIDTH).toString()) && resolutions.get(i).toString().contains(new Integer(Game.HEIGHT).toString())) {
 				DisplayMode = resolutions.get(i).toString();
-				index = i;
+				index = currentResIndex = i;
 			}
 		}
 		
+		// debug
 		for (int i=0; i < resolutions.size(); i ++) {
 			System.out.println(resolutions.get(i).toString());
 		}
 		
 		// buttons
 		buttons = new ArrayList<MenuButton>();
-		okButton = new MenuButton("ok", new Vector2f(Game.centerWidth -300 , Game.centerHeight +125), new Image("res/buttons/ok.png"));
+		okButton = new MenuButton("ok", new Vector2f(Game.centerWidth -300 , Game.centerHeight +200), new Image("res/buttons/ok.png"));
 		buttons.add(okButton);
 		
-		cancelButton = new MenuButton("cancel", new Vector2f(Game.centerWidth +100 , Game.centerHeight +125), new Image("res/buttons/cancel.png"));
+		cancelButton = new MenuButton("cancel", new Vector2f(Game.centerWidth +100 , Game.centerHeight +200), new Image("res/buttons/cancel.png"));
 		buttons.add(cancelButton);
+		
+		// fullscreen button
+		ttf = new TrueTypeFont(new Font("Arial", Font.PLAIN, 22), true);
+		fullscreen = Game.fullscreen;
+		if(fullscreen) {
+			fullscreenButton = new MenuButton("fullscreen", new Rectangle(Game.centerWidth - 25, Game.centerHeight + 50, 50, 40), new Color(0, 0, 0, 0), "On", ttf);
+		}
+		else {
+			fullscreenButton = new MenuButton("fullscreen", new Rectangle(Game.centerWidth - 25, Game.centerHeight + 50, 50, 40), new Color(0, 0, 0, 0), "Off", ttf);
+		}
+		buttons.add(fullscreenButton);
+		
+		// resolution button
+		resButton = new MenuButton("resoluton", new Rectangle(Game.centerWidth - 50, Game.centerHeight - 60, 100, 40), new Color(0, 0, 0, 0), "", ttf);
+		resButton.setText(DisplayMode);
+		buttons.add(resButton);
+		
+		bigText = new TrueTypeFont(new Font("Comic Sans", Font.ITALIC, 50), true);
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		FontUtils.drawCenter(bigText, "Video", Game.centerWidth - 300, Game.centerHeight/3, 600);
+		
 		g.setColor(Color.white);
-		g.drawString(DisplayMode, Game.centerWidth-100, Game.centerHeight );
+		FontUtils.drawCenter(ttf, "Resolution", Game.centerWidth - 50, Game.centerHeight - 90, 100);
+		
+		FontUtils.drawCenter(ttf, "Fullscreen", Game.centerWidth - 50, Game.centerHeight + 20, 100);
 		
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
@@ -105,6 +137,7 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 		Input input = gc.getInput();
 		
 		if (input.isKeyPressed(Input.KEY_ENTER) || okButton.isMousePressed()) {
+			Game.fullscreen = fullscreen;
 			Game.app.setDisplayMode(resolutions.get(index).getWidth(), resolutions.get(index).getHeight(), Game.fullscreen);
 			try {
 				initAll(gc, sb);
@@ -114,22 +147,32 @@ public class DisplayModeState extends BasicGameState implements Comparator{
 		}
 		
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || cancelButton.isMousePressed()) {
-			sb.enterState(Game.LASTID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
-			Game.LASTID = getID();
+			resButton.setText(resolutions.get(currentResIndex).toString());
 			sb.closeRequested();
 		}
 		
-		if (input.isMousePressed(1) || input.isKeyPressed(Input.KEY_RIGHT)) {
+		if(fullscreenButton.isMousePressed()) {
+			fullscreen = !fullscreen;
+			if(fullscreen) {
+				fullscreenButton.setText("On");
+			}
+			else {
+				fullscreenButton.setText("Off");
+			}
+		}
+		
+		if (resButton.isMousePressed(1) || input.isKeyPressed(Input.KEY_RIGHT)) {
 			if (!(index-1 < 0)) {
-				DisplayMode = resolutions.get(index-1).toString();
+				resButton.setText(resolutions.get(index-1).toString());
 				index--;
 			}
 		}
 		
-		if (input.isMousePressed(0) || input.isKeyPressed(Input.KEY_LEFT)) {
+		if (resButton.isMousePressed(0) || input.isKeyPressed(Input.KEY_LEFT)) {
 			if (!(index+1 >= resolutions.size())) {
-				DisplayMode = resolutions.get(index+1).toString();
+				resButton.setText(resolutions.get(index+1).toString());
 				index++;
 			}
 		}

@@ -53,7 +53,9 @@ public class InGameState extends BasicGameState {
 		Player.anchorList = map.getEntities();
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
-			players.add(new Player(i, map));
+			Player p = new Player(i, map);
+			p.KEYBIND = ControlsSettingsState.KEYBINDS[i];
+			players.add(p);
 			playersAlive.add(players.get(i));
 		}
 		
@@ -62,6 +64,9 @@ public class InGameState extends BasicGameState {
 		ttf = new TrueTypeFont(f, true);
 		
 		finished = false;
+		
+		DisplayModeState.OLD_WIDTH = Game.WIDTH;
+		DisplayModeState.OLD_HEIGHT = Game.HEIGHT;
 	}
 	
 	/**
@@ -84,6 +89,10 @@ public class InGameState extends BasicGameState {
 		for(Entity e : anchors) {
 			Vector2f v = new Vector2f(e.getPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
 			e.setPosition(v);
+		}
+		
+		for(int i = 0; i < numLocalPlayers; i++) {
+			players.get(i).KEYBIND = ControlsSettingsState.KEYBINDS[i];
 		}
 	}
 

@@ -1,9 +1,12 @@
 package game;
 
+import gamestates.AudioSettingsState;
+import gamestates.ControlsSettingsState;
 import gamestates.DisplayModeState;
 import gamestates.InGameState;
 import gamestates.MenuState;
 import gamestates.PauseMenuState;
+import gamestates.SettingsState;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -23,6 +26,8 @@ public class Game extends StateBasedGame {
 	
 	public static int LASTID;
 	
+	public static final int MAX_PLAYERS = 8;
+	
 	public Game() {
 		super("Orbital Slam");
 	}
@@ -35,6 +40,9 @@ public class Game extends StateBasedGame {
 		addState(new DisplayModeState());
 		addState(new InGameState());
 		addState(new PauseMenuState());
+		addState(new SettingsState());
+		addState(new AudioSettingsState());
+		addState(new ControlsSettingsState());
 	}
 	
 	

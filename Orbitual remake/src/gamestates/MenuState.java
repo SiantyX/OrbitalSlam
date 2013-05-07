@@ -18,6 +18,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.FontUtils;
 
 public class MenuState extends BasicGameState{
 	public static final int ID = 2;
@@ -51,7 +52,7 @@ public class MenuState extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
 		
-		ttf.drawString(Game.centerWidth - 140, Game.centerHeight/3, "Orbital Slam");
+		FontUtils.drawCenter(ttf, "Orbital Slam", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
@@ -83,7 +84,7 @@ public class MenuState extends BasicGameState{
 		
 		if (settingsButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(DisplayModeState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));;
 		}
 		
