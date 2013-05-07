@@ -93,7 +93,7 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 		}
 
 		if(lastPressed == pressed) {
-			bigText.drawString(Game.centerWidth - 90, Game.centerHeight, "Press A Key");
+			FontUtils.drawCenter(bigText, "Press A Key", Game.centerWidth - 200, Game.centerHeight, 400);
 		}
 	}
 

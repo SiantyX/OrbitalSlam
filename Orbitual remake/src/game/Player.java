@@ -272,6 +272,10 @@ public class Player {
 	public void setStunTime(double time) {
 		stunTime = time;
 	}
+	
+	public void setHooked(boolean h) {
+		hooked = h;
+	}
 
 	// COLLISION PHYSICS
 	public void collision(Player player) {
@@ -321,17 +325,18 @@ public class Player {
 		// ------------------------------------------------------------------------------------------------------
 
 		hooked = false;
+		player.setHooked(false);
 
 		double dSpeed = 0;
 		if(getSpeed() < player.getSpeed()) {
 			// this stunnad
-			// stunduration i skildnad
+			// stunduration i skillnad
 			dSpeed = Math.abs(getSpeed() - player.getSpeed());
 			stunTime = dSpeed*STUN_LENGTH;
 		}
 		else if(getSpeed() > player.getSpeed()){
 			// player stunnad
-			// stunduration i skildnad
+			// stunduration i skillnad
 			dSpeed = Math.abs(getSpeed() - player.getSpeed());
 			player.setStunTime(dSpeed*STUN_LENGTH);
 		}

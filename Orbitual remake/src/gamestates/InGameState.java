@@ -20,6 +20,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.FontUtils;
 
 import components.*;
 
@@ -111,10 +112,10 @@ public class InGameState extends BasicGameState {
 			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 			g.setColor(Color.white);
 			if(playersAlive.size() < 1) {
-				ttf.drawString(Game.centerWidth - 130, Game.centerHeight - 42, "It's a Draw!");
+				FontUtils.drawCenter(ttf, "It's a Draw!", Game.centerWidth - 200, Game.centerHeight - 25, 400);
 			}
 			else {
-				ttf.drawString(Game.centerWidth - 130, Game.centerHeight - 42, playersAlive.get(0).toString() + " Wins!");
+				FontUtils.drawCenter(ttf, playersAlive.get(0).toString() + " Wins!", Game.centerWidth - 200, Game.centerHeight - 25, 400);
 			}
 		}
 	}
