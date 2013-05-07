@@ -76,8 +76,8 @@ public class Player {
 
 		dead = false;
 
-		dx = 20 + num * -15;
-		dy = num * -1;
+		dx = 0;
+		dy = 0;
 		speed = 0;
 		mass = 1;
 		stunTime = 0;
