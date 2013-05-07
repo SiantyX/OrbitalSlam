@@ -45,8 +45,6 @@ public class DisplayModeState extends BasicGameState implements Comparator {
 	
 	private boolean fullscreen;
 	
-	private int lastClicked;
-	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
