@@ -29,11 +29,11 @@ public class InGameState extends BasicGameState {
 	private AnchorMap map;
 	private ArrayList<Player> players;
 	private int numLocalPlayers;
-	
+
 	public static boolean finished = true;
-	
+
 	private TrueTypeFont ttf;
-	
+
 	private ArrayList<Player> playersAlive;
 
 	@Override
@@ -42,14 +42,14 @@ public class InGameState extends BasicGameState {
 			reInit(gc, sb);
 			return;
 		}
-		
+
 		playersAlive = new ArrayList<Player>();
 		map = new AnchorMap();
 		players = new ArrayList<Player>();
-		
-		numLocalPlayers = 1;
+
+		numLocalPlayers = 2;
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
-		
+
 		Player.anchorList = map.getEntities();
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
@@ -58,17 +58,17 @@ public class InGameState extends BasicGameState {
 			players.add(p);
 			playersAlive.add(players.get(i));
 		}
-		
+
 		// font for winner
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
-		
+
 		finished = false;
-		
+
 		DisplayModeState.OLD_WIDTH = Game.WIDTH;
 		DisplayModeState.OLD_HEIGHT = Game.HEIGHT;
 	}
-	
+
 	/**
 	 * Runs if the game is initiated when not finished.
 	 * Happens if you change resolution.
@@ -84,13 +84,13 @@ public class InGameState extends BasicGameState {
 			e.setPosition(v);
 			e.setScale(Player.stdScale*Game.WIDTH);
 		}
-		
+
 		ArrayList<Entity> anchors = map.getEntities();
 		for(Entity e : anchors) {
 			Vector2f v = new Vector2f(e.getPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
 			e.setPosition(v);
 		}
-		
+
 		for(int i = 0; i < numLocalPlayers; i++) {
 			players.get(i).KEYBIND = ControlsSettingsState.KEYBINDS[i];
 		}
@@ -100,12 +100,12 @@ public class InGameState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
 		map.render(gc, sb, g);
-		
+
 		if(players.isEmpty()) return;
 		for(Player player : players) {
 			player.render(gc, sb, g);
 		}
-		
+
 		if(finished) {
 			g.setColor(new Color(0, 0, 0, 125));
 			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
@@ -128,7 +128,7 @@ public class InGameState extends BasicGameState {
 			finished = false;
 			sb.enterState(PauseMenuState.ID);
 		}
-		
+
 		if(players.isEmpty()) return;
 		if(!playersAlive.isEmpty()) {
 			ArrayList<Player> tmpPlayers = new ArrayList<Player>();
@@ -144,7 +144,7 @@ public class InGameState extends BasicGameState {
 				}
 			}
 		}
-		
+
 		if(playersAlive.size() == 1 && numLocalPlayers > 1) {
 			// player wins
 			// playersAlive.get(0)
@@ -161,8 +161,20 @@ public class InGameState extends BasicGameState {
 			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
 					2000));
 		}
+
+
+		// check for collision
+		if(!playersAlive.isEmpty() && playersAlive.size() > 1) {
+			for(int i = 0; i < playersAlive.size() - 1; i++) {
+				for(int j = i+1; j < playersAlive.size(); j++) {
+					if(collisionCircle(playersAlive.get(i).getEntity(), playersAlive.get(j).getEntity())) {
+						playersAlive.get(i).collision(playersAlive.get(j));
+					}
+				}
+			}
+		}
 	}
-	
+
 	private boolean collisionCircle(Entity e1, Entity e2) {
 		float radii = e1.getRadius() + e2.getRadius();
 		float dx = e2.getPosition().x + e2.getRadius() - e1.getPosition().x - e1.getRadius();

@@ -84,6 +84,10 @@ public class Entity {
 		Vector2f v = new Vector2f(position.x - getRadius(), position.y - getRadius());
 		this.position = v;
 	}
+	
+	public void translate(float dx, float dy) {
+		this.position = new Vector2f(position.x + dx, position.y + dy);
+	}
 
 	public void setRotation(float rotate) {
 		rotation = rotate;

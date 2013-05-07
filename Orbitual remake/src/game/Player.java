@@ -29,6 +29,7 @@ public class Player {
 	private double dy;
 	
 	private double speed;
+	private double mass;
 	
 	// hook variables
 	private boolean hooked;
@@ -43,6 +44,7 @@ public class Player {
 	private double centriAcc;
 	private final double MAXSPINSPEED = 16;
 	private final double ACC_CONST = 300;
+	private final float SPEED_LOST = 0.6f;
 	// -----------------------
 	
 	public static ArrayList<Entity> anchorList;
@@ -51,18 +53,30 @@ public class Player {
 	
 	private final float gravity = 0.015f;
 	
+	public Player(Player player) throws SlickException {
+		entity = new Entity(player.getEntity().getId());
+		entity.AddComponent(new ImageRenderComponent("Player " + num, new Image(playerImg[num])));
+		entity.setCenterPosition(player.getEntity().getPosition());
+		entity.setScale(stdScale*Game.WIDTH);
+		dx = player.getDx();
+		dy = player.getDy();
+		mass = 1;
+		speed = player.getSpeed();
+	}
+	
 	public Player(int num, AnchorMap map) throws SlickException {
 		Vector2f startPos = new Vector2f(map.getStartPosX() + (num) * (((Game.WIDTH-(2*map.getStartPosX()))/(map.getNumAncPerRow()-1))) - Game.WIDTH/14, map.getStartPosY() - Game.HEIGHT/10);
-		entity = new Entity("Player");
-		entity.AddComponent(new ImageRenderComponent("Player", new Image(playerImg[num])));
-		entity.setPosition(startPos);
+		entity = new Entity("Player " + num);
+		entity.AddComponent(new ImageRenderComponent("Player " + num, new Image(playerImg[num])));
+		entity.setCenterPosition(startPos);
 		entity.setScale(stdScale*Game.WIDTH);
 		
 		dead = false;
 		
-		dx = 0;
-		dy = 0;
+		dx = 10 + num * -15;
+		dy = num * -1;
 		speed = 0;
+		mass = 1;
 		
 		// hook variables
 		hookedTo = null;
@@ -98,8 +112,9 @@ public class Player {
 		}
 		
 		// fall
-		if(!hooked)
+		if(!hooked) {
 			dy += gravity*delta;
+		}
 		// spin
 		else {
 			if(clockWise) {
@@ -121,7 +136,8 @@ public class Player {
 		
 		// move
 		speed = Math.hypot(dx, dy);
-		entity.setCenterPosition(new Vector2f( entity.getCenterPosition().x + (float)dx, entity.getCenterPosition().y + (float)dy));
+		entity.translate((float)dx, (float)dy);
+		//entity.setCenterPosition(new Vector2f( entity.getCenterPosition().x + (float)dx, entity.getCenterPosition().y + (float)dy));
 	}
 	
 	private void hook() {
@@ -212,5 +228,78 @@ public class Player {
 	
 	public Entity getEntity() {
 		return entity;
+	}
+	
+	public double getDx() {
+		return dx;
+	}
+	
+	public double getDy() {
+		return dy;
+	}
+	
+	public double getSpeed() {
+		return speed;
+	}
+	
+	public double getMass() {
+		return mass;
+	}
+	
+	public Vector2f getVelocity() {
+		return new Vector2f((float)dx, (float)dy);
+	}
+	
+	public void setVelocity(Vector2f v) {
+		dx = v.x;
+		dy = v.y;
+	}
+	
+	// COLLISION PHYSICS
+	public void collision(Player player) {
+		// ------------------------------------------------------------------------------------------------------
+		// TAKEN FROM http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling user Simucal
+		// ------------------------------------------------------------------------------------------------------
+		Vector2f delta = new Vector2f(entity.getCenterPosition().x - player.getEntity().getCenterPosition().x, entity.getCenterPosition().y - player.getEntity().getCenterPosition().y);
+		float r = entity.getRadius() + player.entity.getRadius();
+		float dist2 = delta.dot(delta);
+		
+		if(dist2 > r*r) return;
+		
+		float d = delta.length();
+		
+		Vector2f mtd;
+		if(d == 0.0f) {
+			d = player.entity.getRadius() + entity.getRadius() - 1;
+			delta = new Vector2f(player.entity.getRadius() + entity.getRadius(), 0);
+		}
+		
+		mtd = new Vector2f(delta.x * (((entity.getRadius() + player.entity.getRadius()) - d)/d), delta.y * (((entity.getRadius() + player.entity.getRadius()) - d)/d));
+		
+		float im1 = (float) (1 / getMass());
+		float im2 = (float) (1 / player.getMass());
+		
+		Vector2f mtdScaled1 = new Vector2f(mtd.x * (im1 / (im1 + im2)), mtd.y * (im1 / (im1 + im2)));
+		Vector2f mtdScaled2 = new Vector2f(mtd.x * (im2 / (im1 + im2)), mtd.y * (im2 / (im1 + im2)));
+		entity.setCenterPosition(new Vector2f(entity.getCenterPosition().x + mtdScaled1.x, entity.getCenterPosition().y + mtdScaled1.y));
+		player.getEntity().setCenterPosition(new Vector2f(player.getEntity().getCenterPosition().x + mtdScaled2.x, player.getEntity().getCenterPosition().y + mtdScaled2.y));
+		
+		Vector2f v = new Vector2f((float)dx - player.getVelocity().x, (float)dy - player.getVelocity().y);
+		
+		float vn = v.dot(mtd.normalise());
+		
+		if(vn > 0.0f) return;
+		
+		// impulse
+		float i = (-(1.0f + SPEED_LOST) * vn) / (im1 + im2);
+		Vector2f impulse = new Vector2f(mtd.x * i, mtd.y * i);
+				
+		// momentum
+		Vector2f dim1 = new Vector2f(impulse.x * im1, impulse.y * im1);
+		Vector2f dim2 = new Vector2f(impulse.x * im2, impulse.y * im2);
+		setVelocity(new Vector2f((float)dx + dim1.x, (float)dy + dim1.y));
+		player.setVelocity(new Vector2f(player.getVelocity().x - dim2.x, player.getVelocity().y - dim2.y));
+		// ------------------------------------------------------------------------------------------------------
+		// ------------------------------------------------------------------------------------------------------
 	}
 }
