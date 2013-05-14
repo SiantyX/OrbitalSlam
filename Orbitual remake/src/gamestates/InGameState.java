@@ -40,8 +40,8 @@ public class InGameState extends BasicGameState {
 
 	private ArrayList<Player> playersAlive;
 	
-	private double countDown;
-	private boolean onCountDown;
+	private static double countDown;
+	private static boolean onCountDown;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
@@ -261,7 +261,7 @@ public class InGameState extends BasicGameState {
 		}
 	}
 	
-	private void startCountDown() {
+	public static void startCountDown() {
 		countDown = 3000;
 		onCountDown = true;
 	}

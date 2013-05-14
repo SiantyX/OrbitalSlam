@@ -75,18 +75,15 @@ public class PauseMenuState extends BasicGameState{
 
 		if (continueButton.isMousePressed() || input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
-			sb.enterState(InGameState.ID);
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
+			InGameState.startCountDown();
 		}
 		
 		if (settingsButton.isMousePressed()) {
 			Game.LASTID = getID();
 			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));;
+					100));
 		}
 		
 		if (exitButton.isMousePressed()) {
