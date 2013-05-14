@@ -23,7 +23,9 @@ public class Player {
 	private Entity entity;
 	private final String[] playerImg = new String[]{"res/sprites/smiley1.png", "res/sprites/smiley2.png", "res/sprites/smiley3.png", "res/sprites/smiley4.png", "res/sprites/smiley5.png", "res/sprites/smiley6.png", "res/sprites/smiley7.png", "res/sprites/smiley8.png"};
 	public static final float stdScale = 0.0005208f;
+	public static final Color[] PLAYER_COLORS = new Color[]{Color.red, Color.blue, new Color(25, 235, 184), new Color(84, 0, 140), Color.yellow, Color.orange, Color.green, Color.pink, Color.gray, new Color(89, 42, 4)};
 	private int num;
+	private int score;
 
 	private double dx;
 	private double dy;
@@ -81,6 +83,7 @@ public class Player {
 		speed = 0;
 		mass = 1;
 		stunTime = 0;
+		score = 0;
 
 		// hook variables
 		hookedTo = null;
@@ -100,10 +103,10 @@ public class Player {
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {		
 		// check if dead
-		if(entity.getCenterPosition().x < 0 || entity.getCenterPosition().x > Game.WIDTH
+		/*if(entity.getCenterPosition().x < 0 || entity.getCenterPosition().x > Game.WIDTH
 				|| entity.getCenterPosition().y < 0 || entity.getCenterPosition().y > Game.HEIGHT) {
 			dead = true;
-		}
+		}*/
 		if(dead) return;
 
 		if(stunTime != 0) {
@@ -256,9 +259,18 @@ public class Player {
 		return speed;
 	}
 
+	public double getDegSpeed(double deg) {
+		return Math.hypot(dx*Math.cos(deg), dy*Math.sin(deg));
+	}
+
 	public double getMass() {
 		return mass;
 	}
+	
+	public int getScore() {
+		return score;
+	}
+	
 
 	public Vector2f getVelocity() {
 		return new Vector2f((float)dx, (float)dy);
@@ -275,6 +287,18 @@ public class Player {
 	
 	public void setHooked(boolean h) {
 		hooked = h;
+	}
+	
+	public void die() {
+		dead = true;
+	}
+	
+	public void addScore(int score) {
+		this.score += score;
+	}
+	
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 	// COLLISION PHYSICS
@@ -328,16 +352,21 @@ public class Player {
 		player.setHooked(false);
 
 		double dSpeed = 0;
-		if(getSpeed() < player.getSpeed()) {
+		double deg1 = Math.atan2(player.entity.getCenterPosition().y - entity.getCenterPosition().y, 
+				-(player.entity.getCenterPosition().x - entity.getCenterPosition().x)) * 180/Math.PI;
+		
+		double deg2 = Math.atan2(entity.getCenterPosition().y - player.entity.getCenterPosition().y, 
+				-(entity.getCenterPosition().x - player.entity.getCenterPosition().x)) * 180/Math.PI;
+		if(getDegSpeed(deg1) < player.getDegSpeed(deg2)) {
 			// this stunnad
 			// stunduration i skillnad
-			dSpeed = Math.abs(getSpeed() - player.getSpeed());
+			dSpeed = Math.abs(getDegSpeed(deg1) - player.getDegSpeed(deg2));
 			stunTime = dSpeed*STUN_LENGTH;
 		}
-		else if(getSpeed() > player.getSpeed()){
+		else if(getDegSpeed(deg1) > player.getDegSpeed(deg2)){
 			// player stunnad
 			// stunduration i skillnad
-			dSpeed = Math.abs(getSpeed() - player.getSpeed());
+			dSpeed = Math.abs(getDegSpeed(deg1) - player.getDegSpeed(deg2));
 			player.setStunTime(dSpeed*STUN_LENGTH);
 		}
 

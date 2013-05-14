@@ -62,7 +62,6 @@ public class PauseMenuState extends BasicGameState{
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
 		}
-		
 	}
 
 	@Override

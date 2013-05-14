@@ -27,6 +27,7 @@ public class Game extends StateBasedGame {
 	public static int LASTID;
 	
 	public static final int MAX_PLAYERS = 8;
+	public static int SCORE_LIMIT = 3;
 	
 	public Game() {
 		super("Orbital Slam");

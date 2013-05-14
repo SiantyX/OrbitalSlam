@@ -3,6 +3,7 @@ package gamestates;
 import game.AnchorMap;
 import game.Entity;
 import game.Game;
+import game.MenuButton;
 import game.Player;
 
 import java.awt.Font;
@@ -15,6 +16,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -34,8 +36,12 @@ public class InGameState extends BasicGameState {
 	public static boolean finished = true;
 
 	private TrueTypeFont ttf;
+	private TrueTypeFont scoreFont;
 
 	private ArrayList<Player> playersAlive;
+	
+	private double countDown;
+	private boolean onCountDown;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
@@ -63,11 +69,16 @@ public class InGameState extends BasicGameState {
 		// font for winner
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
+		
+		scoreFont = new TrueTypeFont(new Font("Arial", Font.BOLD, 18), true);
 
 		finished = false;
 
 		DisplayModeState.OLD_WIDTH = Game.WIDTH;
 		DisplayModeState.OLD_HEIGHT = Game.HEIGHT;
+		
+		countDown = 3 * 1000;
+		onCountDown = true;
 	}
 
 	/**
@@ -96,6 +107,27 @@ public class InGameState extends BasicGameState {
 			players.get(i).KEYBIND = ControlsSettingsState.KEYBINDS[i];
 		}
 	}
+	
+	private void newRound() throws SlickException {
+		ArrayList<Integer> tmpAL = new ArrayList<Integer>();
+		
+		for(Player player : players) {
+			tmpAL.add(player.getScore());
+		}
+		
+		// players
+		playersAlive.clear();
+		players.clear();
+		for(int i = 0; i < numLocalPlayers; i++) {
+			Player p = new Player(i, map);
+			p.KEYBIND = ControlsSettingsState.KEYBINDS[i];
+			p.setScore(tmpAL.get(i));
+			players.add(p);
+			playersAlive.add(players.get(i));
+		}
+	
+		startCountDown();
+	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
@@ -105,6 +137,14 @@ public class InGameState extends BasicGameState {
 		if(players.isEmpty()) return;
 		for(Player player : players) {
 			player.render(gc, sb, g);
+		}
+		
+		for(int i = 0; i < numLocalPlayers; i++) {
+			FontUtils.drawCenter(scoreFont, "Player " + (i+1) + ": " + players.get(i).getScore(), 200 + i * ((Game.WIDTH - 200) / (Game.MAX_PLAYERS-1)), 40, 100, Player.PLAYER_COLORS[i]);
+		}
+		
+		if(onCountDown) {
+			FontUtils.drawCenter(ttf, new Integer(((int)countDown/1000) + 1).toString(), Game.centerWidth, Game.centerHeight - 100, 20);
 		}
 
 		if(finished) {
@@ -122,6 +162,13 @@ public class InGameState extends BasicGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
+		if(onCountDown) {
+			countDown -= delta;
+			if(countDown <= 0) {
+				onCountDown = false;
+			}
+			return;
+		}
 		if(finished) return;
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
@@ -145,24 +192,36 @@ public class InGameState extends BasicGameState {
 				}
 			}
 		}
-
-		if(playersAlive.size() == 1 && numLocalPlayers > 1) {
-			// player wins
-			// playersAlive.get(0)
-			Game.LASTID = getID();
-			finished = true;
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
-					2000));
+		
+		deathCheck();
+		
+		ArrayList<Player> winners = new ArrayList<Player>();
+		
+		if((playersAlive.size() == 1 && numLocalPlayers > 1) || (playersAlive.size() < 1)) {
+			for(Player player : players) {
+				if(player.getScore() >= Game.SCORE_LIMIT) {
+					winners.add(player);
+				}
+			}
+			
+			if(!winners.isEmpty()) {
+				Player bestScore = winners.get(0);
+				for(Player p : winners) {
+					if(p.getScore() > bestScore.getScore()) {
+						bestScore = p;
+					}
+				}
+				// player wins
+				// playersAlive.get(0)
+				Game.LASTID = getID();
+				finished = true;
+				sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
+						2000));
+			}
+			else {
+				newRound();
+			}
 		}
-		else if(playersAlive.size() < 1) {
-			// draw should not happen
-			// happens when playing alone
-			Game.LASTID = getID();
-			finished = true;
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
-					2000));
-		}
-
 
 		// check for collision
 		if(!playersAlive.isEmpty() && playersAlive.size() > 1) {
@@ -186,6 +245,27 @@ public class InGameState extends BasicGameState {
 		return false;
 	}
 
+	private void deathCheck() {
+		// check if dead
+		for(Player player : playersAlive) {
+			if(player.getEntity().getCenterPosition().x < 0 || player.getEntity().getCenterPosition().x > Game.WIDTH
+					|| player.getEntity().getCenterPosition().y < 0 || player.getEntity().getCenterPosition().y > Game.HEIGHT) {
+				player.die();
+				for(Player otherPlayer : playersAlive) {
+					if(otherPlayer.equals(player)) continue;
+					otherPlayer.addScore(1);
+				}
+				
+				// SCREEN FLASH HERE
+			}
+		}
+	}
+	
+	private void startCountDown() {
+		countDown = 3000;
+		onCountDown = true;
+	}
+	
 	@Override
 	public int getID() {
 		return ID;
