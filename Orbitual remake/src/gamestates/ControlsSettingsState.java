@@ -28,8 +28,8 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 	private TrueTypeFont ttf;
 	private TrueTypeFont bigText;
 
-	public static int[] KEYBINDS = {Input.KEY_S, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5};
-	private int[] keyBindChanges = {Input.KEY_S, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5};
+	public static int[] KEYBINDS = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5};
+	private int[] keyBindChanges = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5};
 
 	private int lastPressed;
 	private int pressed;
