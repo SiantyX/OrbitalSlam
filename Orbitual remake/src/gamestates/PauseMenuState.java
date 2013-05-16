@@ -24,16 +24,12 @@ public class PauseMenuState extends BasicGameState{
 	public static final int ID = 0;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton continueButton, settingsButton, exitButton;
-	private Image playImage;
 	private TrueTypeFont ttf;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
-		
-		playImage = new Image("res/buttons/play.png");
-	
 		
 		continueButton = new MenuButton("continue", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/continue.png"));
 		buttons.add(continueButton);

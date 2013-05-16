@@ -3,7 +3,6 @@ package gamestates;
 import game.AnchorMap;
 import game.Entity;
 import game.Game;
-import game.MenuButton;
 import game.Player;
 
 import java.awt.Font;
@@ -12,11 +11,10 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -24,14 +22,13 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-import components.*;
-
-public class InGameState extends BasicGameState {
+public class InGameState extends BasicGameState implements KeyListener {
 
 	public static final int ID = 1;
 	private AnchorMap map;
-	private ArrayList<Player> players;
-	private int numLocalPlayers;
+	public static ArrayList<Player> players;
+	static int numLocalPlayers = 2;
+	private static boolean numPlayersChanged = false;
 
 	public static boolean finished = true;
 
@@ -54,7 +51,6 @@ public class InGameState extends BasicGameState {
 		map = new AnchorMap();
 		players = new ArrayList<Player>();
 
-		numLocalPlayers = 2;
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
 
 		Player.anchorList = map.getEntities();
@@ -144,6 +140,7 @@ public class InGameState extends BasicGameState {
 		}
 		
 		if(onCountDown) {
+			FontUtils.drawCenter(scoreFont, "Press F1 - F8 to change number of players", Game.centerWidth - 300, 10, 600);
 			FontUtils.drawCenter(ttf, new Integer((((int)countDown/1000) + 1) == 4 ? 3 : (((int)countDown/1000) + 1)).toString(), Game.centerWidth, Game.centerHeight - 100, 20);
 		}
 		
@@ -152,10 +149,14 @@ public class InGameState extends BasicGameState {
 			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 			g.setColor(Color.white);
 			if(playersAlive.size() < 1) {
-				FontUtils.drawCenter(ttf, "It's a Draw!", Game.centerWidth - 200, Game.centerHeight - 25, 400);
+				if(sb.getCurrentStateID() != AfterGameState.ID) {
+					FontUtils.drawCenter(ttf, "It's a Draw!", Game.centerWidth - 200, Game.centerHeight - 25, 400);
+				}
 			}
 			else {
-				FontUtils.drawCenter(ttf, playersAlive.get(0).toString() + " Wins!", Game.centerWidth - 200, Game.centerHeight - 25, 400, Player.PLAYER_COLORS[players.indexOf(playersAlive.get(0))]);
+				if(sb.getCurrentStateID() != AfterGameState.ID) {
+					FontUtils.drawCenter(ttf, playersAlive.get(0).toString() + " Wins!", Game.centerWidth - 200, Game.centerHeight - 25, 400, Player.PLAYER_COLORS[players.indexOf(playersAlive.get(0))]);
+				}
 			}
 		}
 	}
@@ -168,6 +169,12 @@ public class InGameState extends BasicGameState {
 			Game.LASTID = getID();
 			finished = false;
 			sb.enterState(PauseMenuState.ID);
+		}
+		
+		if(numPlayersChanged) {
+			finished = true;
+			numPlayersChanged = false;
+			init(gc, sb);
 		}
 		
 		// 3 sec countdown stop update
@@ -218,7 +225,8 @@ public class InGameState extends BasicGameState {
 				// playersAlive.get(0)
 				Game.LASTID = getID();
 				finished = true;
-				sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
+				sb.getState(AfterGameState.ID).init(gc, sb);
+				sb.enterState(AfterGameState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
 						2000));
 			}
 			else {
@@ -267,6 +275,13 @@ public class InGameState extends BasicGameState {
 	public static void startCountDown() {
 		countDown = 3000;
 		onCountDown = true;
+	}
+	
+	public void keyPressed(int key, char c) {
+		if(key >= Input.KEY_F1 && key <= Input.KEY_F8) {
+			numLocalPlayers = key - Input.KEY_F1 + 1;
+			numPlayersChanged = true;
+		}
 	}
 	
 	@Override

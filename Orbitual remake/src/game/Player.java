@@ -2,19 +2,14 @@ package game;
 
 import java.util.ArrayList;
 
-import gamestates.MenuState;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import components.ImageRenderComponent;
 
@@ -24,6 +19,7 @@ public class Player {
 	private final String[] playerImg = new String[]{"res/sprites/smiley1.png", "res/sprites/smiley2.png", "res/sprites/smiley3.png", "res/sprites/smiley4.png", "res/sprites/smiley5.png", "res/sprites/smiley6.png", "res/sprites/smiley7.png", "res/sprites/smiley8.png"};
 	public static final float stdScale = 0.0005208f;
 	public static final Color[] PLAYER_COLORS = new Color[]{Color.red, Color.blue, new Color(25, 235, 184), new Color(84, 0, 140), Color.yellow, Color.orange, Color.green, Color.pink, Color.gray, new Color(89, 42, 4)};
+	public Color myColor;
 	private int num;
 	private int score;
 
@@ -84,6 +80,7 @@ public class Player {
 		mass = 1;
 		stunTime = 0;
 		score = 0;
+		myColor = PLAYER_COLORS[num];
 
 		// hook variables
 		hookedTo = null;

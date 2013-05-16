@@ -24,16 +24,12 @@ public class MenuState extends BasicGameState{
 	public static final int ID = 2;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton playButton, settingsButton, quitButton;
-	private Image playImage;
 	private TrueTypeFont ttf;
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
-		
-		playImage = new Image("res/buttons/play.png");
-		
 		
 		playButton = new MenuButton("play", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/play.png"));
 		buttons.add(playButton);
@@ -70,9 +66,6 @@ public class MenuState extends BasicGameState{
 		}
 		
 		Input input = gc.getInput();
-		/*if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			System.exit(0);
-		}*/
 		
 		if (playButton.isMousePressed()) {
 			Game.LASTID = getID();
@@ -88,8 +81,7 @@ public class MenuState extends BasicGameState{
 					100));;
 		}
 		
-		if (quitButton.isMousePressed()) {
-			Game.LASTID = getID();
+		if (quitButton.isMousePressed() || input.isKeyPressed(Input.KEY_ESCAPE)) {
 			System.exit(0);
 		}
 	}

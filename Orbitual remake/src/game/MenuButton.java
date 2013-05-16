@@ -1,7 +1,5 @@
 package game;
 
-import java.awt.Font;
-
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -9,7 +7,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
@@ -161,5 +158,13 @@ public class MenuButton extends Entity{
 	
 	public String getText() {
 		return this.text;
+	}
+	
+	public Color getBackColor() {
+		return color;
+	}
+	
+	public void setBackColor(Color color) {
+		this.color = color;
 	}
 }

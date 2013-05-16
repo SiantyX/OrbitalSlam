@@ -5,12 +5,9 @@ import game.MenuButton;
 
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map.Entry;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -20,7 +17,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.MouseListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
@@ -31,7 +27,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class DisplayModeState extends BasicGameState implements Comparator {
+public class DisplayModeState extends BasicGameState implements Comparator<DisplayMode> {
 	public static final int ID = 3;
 	private LinkedList<DisplayMode> resolutions;
 	private int index, currentResIndex;
@@ -191,10 +187,7 @@ public class DisplayModeState extends BasicGameState implements Comparator {
 	}
 	
 	// endast för displaymodes
-	public int compare(Object o1, Object o2) {
-		DisplayMode e1 = (DisplayMode) o1;
-		DisplayMode e2 = (DisplayMode) o2;
-		
+	public int compare(DisplayMode e1, DisplayMode e2) {
 		if(e1.getWidth() < e2.getWidth()) {
 			return -1;
 		}
