@@ -135,6 +135,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 			player.render(gc, sb, g);
 		}
 		
+		FontUtils.drawCenter(scoreFont, "Score limit: " + Game.SCORE_LIMIT, 10, 10, 200);
+		
 		for(int i = 0; i < numLocalPlayers; i++) {
 			FontUtils.drawCenter(scoreFont, "Player " + (i+1) + ": " + players.get(i).getScore(), 200 + i * ((Game.WIDTH - 200) / (Game.MAX_PLAYERS-1)), 40, 100, Player.PLAYER_COLORS[i]);
 		}
