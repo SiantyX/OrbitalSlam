@@ -1,5 +1,6 @@
 package game;
 
+import gamestates.AfterGameState;
 import gamestates.AudioSettingsState;
 import gamestates.ControlsSettingsState;
 import gamestates.DisplayModeState;
@@ -44,6 +45,7 @@ public class Game extends StateBasedGame {
 		addState(new SettingsState());
 		addState(new AudioSettingsState());
 		addState(new ControlsSettingsState());
+		addState(new AfterGameState());
 	}
 	
 	

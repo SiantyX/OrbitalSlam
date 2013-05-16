@@ -68,10 +68,16 @@ public class MenuButton extends Entity{
 			super.render(gc, sb, g);
 		}
 		else {
+			if(shape == null || ttf == null || txtColor == null) return;
 			g.setColor(color);
 			g.fill(shape);
 			g.setColor(txtColor);
-			FontUtils.drawCenter(ttf, text, (int)shape.getX(), (int)shape.getCenterY() - ttf.getHeight()/2, (int)shape.getWidth(), txtColor);
+			try {
+				FontUtils.drawCenter(ttf, text, (int)shape.getX(), (int)shape.getCenterY() - ttf.getHeight()/2, (int)shape.getWidth(), txtColor);
+			}
+			catch(NullPointerException e) {
+				
+			}
 		}
 	}
 	

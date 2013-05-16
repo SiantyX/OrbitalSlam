@@ -28,7 +28,7 @@ public class PauseMenuState extends BasicGameState{
 	private TrueTypeFont ttf;
 
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
+	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		

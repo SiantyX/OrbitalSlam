@@ -93,7 +93,7 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 		}
 
 		if(lastPressed == pressed) {
-			FontUtils.drawCenter(bigText, "Press A Key", Game.centerWidth - 200, Game.centerHeight, 400);
+			FontUtils.drawCenter(bigText, "Press a key", Game.centerWidth - 200, Game.centerHeight, 400);
 		}
 	}
 
@@ -133,6 +133,15 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 	public void keyPressed(int key, char c) {
 		if(lastPressed == pressed) {
 			if(pressed != Input.KEY_ESCAPE) {
+				for(int i = 0; i < keyBindChanges.length; i++) {
+					if(keyBindChanges[i] == key) {
+						int j = i;
+						j = (j >= 3 ? j+1 : j);
+						j = (j > 6 ? j+1 : j);
+						keyBindChanges[i] = Input.KEY_NUMPAD7 + j;
+						playerCButtons[i].setText(Input.getKeyName(keyBindChanges[i]));
+					}
+				}
 				keyBindChanges[lastId] = key;
 				playerCButtons[lastId].setText(Input.getKeyName(key));
 			}

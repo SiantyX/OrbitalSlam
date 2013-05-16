@@ -144,9 +144,9 @@ public class InGameState extends BasicGameState {
 		}
 		
 		if(onCountDown) {
-			FontUtils.drawCenter(ttf, new Integer(((int)countDown/1000) + 1).toString(), Game.centerWidth, Game.centerHeight - 100, 20);
+			FontUtils.drawCenter(ttf, new Integer((((int)countDown/1000) + 1) == 4 ? 3 : (((int)countDown/1000) + 1)).toString(), Game.centerWidth, Game.centerHeight - 100, 20);
 		}
-
+		
 		if(finished) {
 			g.setColor(new Color(0, 0, 0, 125));
 			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
@@ -155,26 +155,29 @@ public class InGameState extends BasicGameState {
 				FontUtils.drawCenter(ttf, "It's a Draw!", Game.centerWidth - 200, Game.centerHeight - 25, 400);
 			}
 			else {
-				FontUtils.drawCenter(ttf, playersAlive.get(0).toString() + " Wins!", Game.centerWidth - 200, Game.centerHeight - 25, 400);
+				FontUtils.drawCenter(ttf, playersAlive.get(0).toString() + " Wins!", Game.centerWidth - 200, Game.centerHeight - 25, 400, Player.PLAYER_COLORS[players.indexOf(playersAlive.get(0))]);
 			}
 		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		if(onCountDown) {
-			countDown -= delta;
-			if(countDown <= 0) {
-				onCountDown = false;
-			}
-			return;
-		}
 		if(finished) return;
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
 			finished = false;
 			sb.enterState(PauseMenuState.ID);
+		}
+		
+		// 3 sec countdown stop update
+		if(onCountDown) {
+			countDown -= delta;
+			if(countDown <= 0) {
+				onCountDown = false;
+			}
+			input.clearKeyPressedRecord();
+			return;
 		}
 
 		if(players.isEmpty()) return;
