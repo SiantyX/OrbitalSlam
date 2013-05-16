@@ -170,6 +170,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
 			finished = false;
+			Game.MENU_MUSIC.loop();
+			Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(PauseMenuState.ID);
 		}
 		

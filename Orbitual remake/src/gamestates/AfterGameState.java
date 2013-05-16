@@ -95,6 +95,7 @@ public class AfterGameState extends BasicGameState implements Comparator<Player>
 			Game.LASTID = getID();
 			InGameState.finished = true;
 			sb.getState(InGameState.ID).init(gc, sb);
+			Game.INGAME_MUSIC.play();
 			sb.enterState(InGameState.ID);
 		}
 	}

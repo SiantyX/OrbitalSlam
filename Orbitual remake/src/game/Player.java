@@ -1,5 +1,7 @@
 package game;
 
+import gamestates.AudioSettingsState;
+
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
@@ -8,6 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -22,6 +25,7 @@ public class Player {
 	public Color myColor;
 	private int num;
 	private int score;
+	private Sound sound;
 
 	private double dx;
 	private double dy;
@@ -38,7 +42,7 @@ public class Player {
 	private double wSpeed;
 	private double degrees;
 	private double hookLength;
-
+	
 	private boolean clockWise;
 
 	private double centriAcc;
@@ -81,6 +85,8 @@ public class Player {
 		stunTime = 0;
 		score = 0;
 		myColor = PLAYER_COLORS[num];
+		
+		sound = new Sound("res/audio/sound/hit.ogg");
 
 		// hook variables
 		hookedTo = null;
@@ -146,6 +152,8 @@ public class Player {
 			}
 		}
 
+		dx = dx / (1920 / Game.WIDTH);
+		dy = dy / (1080 / Game.HEIGHT);
 		// move
 		speed = Math.hypot(dx, dy);
 		entity.translate((float)dx, (float)dy);
@@ -369,5 +377,7 @@ public class Player {
 
 		setVelocity(newV);
 		player.setVelocity(otherNewV);
+		
+		sound.play(1, AudioSettingsState.SOUND_LEVEL*AudioSettingsState.MASTER_LEVEL);
 	}
 }

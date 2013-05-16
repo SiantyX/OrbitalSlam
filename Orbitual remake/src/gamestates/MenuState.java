@@ -11,6 +11,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
@@ -42,6 +43,12 @@ public class MenuState extends BasicGameState{
 		
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
+		
+		Game.MENU_MUSIC = new Music("res/audio/music/menu.ogg");
+		Game.MENU_MUSIC.loop();
+		Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
+		
+		Game.INGAME_MUSIC = new Music("res/audio/music/ingame.ogg");
 	}
 
 	@Override
@@ -71,6 +78,8 @@ public class MenuState extends BasicGameState{
 			Game.LASTID = getID();
 			InGameState.finished = true;
 			sb.getState(InGameState.ID).init(gc, sb);
+			Game.INGAME_MUSIC.loop();
+			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}

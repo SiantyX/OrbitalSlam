@@ -1,11 +1,15 @@
 package game;
 
+import gamestates.AudioSettingsState;
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -30,7 +34,9 @@ public class MenuButton extends Entity{
 	private Color txtColor;
 	private TrueTypeFont ttf;
 	
-	public MenuButton(String id, Shape shape, Color color, String text, TrueTypeFont ttf) {
+	private Sound sound;
+	
+	public MenuButton(String id, Shape shape, Color color, String text, TrueTypeFont ttf) throws SlickException {
 		super(id);
 		setPosition(pos);
 		mousePressed = false;
@@ -42,14 +48,15 @@ public class MenuButton extends Entity{
 		h = shape.getHeight();
 		this.pos = new Vector2f(shape.getX(), shape.getY());
 		this.txtColor = new Color(1 - color.r, 1 - color.g, 1 - color.b);
+		sound = new Sound("res/audio/sound/klick.ogg");
 	}
 	
-	public MenuButton(String id, Shape shape, Color color, String text, TrueTypeFont ttf, Color txtColor) {
+	public MenuButton(String id, Shape shape, Color color, String text, TrueTypeFont ttf, Color txtColor) throws SlickException {
 		this(id, shape, color, text, ttf);
 		this.txtColor = txtColor;
 	}
 
-	public MenuButton(String id, Vector2f pos, Image image) {
+	public MenuButton(String id, Vector2f pos, Image image) throws SlickException {
 		super(id);
 		setPosition(pos);
 		this.image = image;
@@ -58,6 +65,7 @@ public class MenuButton extends Entity{
 		AddComponent(new ImageRenderComponent("button_image", image));
 		mousePressed = false;
 		this.shape = null;
+		sound = new Sound("res/audio/sound/klick.ogg");
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
@@ -131,6 +139,9 @@ public class MenuButton extends Entity{
 	public boolean isMousePressed() {
 		boolean temp = mousePressed;
 		mousePressed = false;
+		if(temp) {
+			sound.play(1, AudioSettingsState.SOUND_LEVEL*AudioSettingsState.MASTER_LEVEL);
+		}
 		return temp;
 	}
 	

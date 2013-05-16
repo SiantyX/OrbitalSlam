@@ -71,6 +71,9 @@ public class PauseMenuState extends BasicGameState{
 
 		if (continueButton.isMousePressed() || input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
+			Game.MENU_MUSIC.stop();
+			Game.INGAME_MUSIC.resume();
+			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 			InGameState.startCountDown();

@@ -11,6 +11,7 @@ import gamestates.SettingsState;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -29,6 +30,9 @@ public class Game extends StateBasedGame {
 	
 	public static final int MAX_PLAYERS = 8;
 	public static int SCORE_LIMIT = 20;
+	
+	public static Music MENU_MUSIC;
+	public static Music INGAME_MUSIC;
 	
 	public Game() {
 		super("Orbital Slam");
