@@ -27,6 +27,7 @@ public class AudioSettingsState extends BasicGameState {
 	private MenuButton musicButton, masterButton, soundButton;
 	private Circle musicCircle, masterCircle, soundCircle;
 	private String overMusic, overMaster, overSound;
+	private boolean masterPressed, musicPressed, soundPressed;
 	
 	private TrueTypeFont bigText;
 	private TrueTypeFont ttf;
@@ -39,6 +40,8 @@ public class AudioSettingsState extends BasicGameState {
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
+		
+		masterPressed = musicPressed = soundPressed = false;
 
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		bigText = new TrueTypeFont(f, true);
@@ -117,14 +120,64 @@ public class AudioSettingsState extends BasicGameState {
 		if (masterButton.isMousePressed()) {
 			masterCircle.setLocation(input.getMouseX() - masterCircle.getRadius(), masterCircle.getY());
 			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
+			masterPressed = true;
 		}
 		
 		if (musicButton.isMousePressed()) {
 			musicCircle.setLocation(input.getMouseX() - musicCircle.getRadius(), musicCircle.getY());
 			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
+			musicPressed = true;
 		}
 		if (soundButton.isMousePressed()) {
 			soundCircle.setLocation(input.getMouseX() - soundCircle.getRadius(), soundCircle.getY());
+			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
+			soundPressed = true;
+		}
+		
+		if(!input.isMouseButtonDown(0)) {
+			masterPressed = musicPressed = soundPressed = false;
+		}
+		
+		if(masterPressed) {
+			masterCircle.setLocation(input.getMouseX() - masterCircle.getRadius(), masterCircle.getY());
+			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
+		}
+		else if(musicPressed) {
+			musicCircle.setLocation(input.getMouseX() - musicCircle.getRadius(), musicCircle.getY());
+			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
+		}
+		else if(soundPressed) {
+			soundCircle.setLocation(input.getMouseX() - soundCircle.getRadius(), soundCircle.getY());
+			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
+		}
+		
+		// keep the circle within bounds master
+		if(masterCircle.getCenterX() < masterButton.getPosition().x) {
+			masterCircle.setCenterX(masterButton.getPosition().x);
+			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
+		}
+		if(masterCircle.getCenterX() > (masterButton.getPosition().x + masterButton.getWidth())) {
+			masterCircle.setCenterX(masterButton.getPosition().x + masterButton.getWidth());
+			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
+		}	
+		
+		//music
+		if(musicCircle.getCenterX() < musicButton.getPosition().x) {
+			musicCircle.setCenterX(musicButton.getPosition().x);
+			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
+		}
+		if(musicCircle.getCenterX() > (musicButton.getPosition().x + musicButton.getWidth())) {
+			musicCircle.setCenterX(musicButton.getPosition().x + musicButton.getWidth());
+			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
+		}
+		
+		// sound
+		if(soundCircle.getCenterX() < soundButton.getPosition().x) {
+			soundCircle.setCenterX(soundButton.getPosition().x);
+			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
+		}
+		if(soundCircle.getCenterX() > (soundButton.getPosition().x + soundButton.getWidth())) {
+			soundCircle.setCenterX(soundButton.getPosition().x + soundButton.getWidth());
 			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
 		}
 	}

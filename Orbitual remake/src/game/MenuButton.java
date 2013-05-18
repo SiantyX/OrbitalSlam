@@ -178,4 +178,12 @@ public class MenuButton extends Entity{
 	public void setBackColor(Color color) {
 		this.color = color;
 	}
+	
+	public float getWidth() {
+		return shape.getWidth();
+	}
+	
+	public float getHeight() {
+		return shape.getHeight();
+	}
 }
