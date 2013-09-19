@@ -39,7 +39,7 @@ public class NetHandler {
 			if(sc.isConnected()) return true;
 			sc = SocketChannel.open();
 			sc.configureBlocking(false);
-			sc.connect(new InetSocketAddress(currentLobby.getIpAddress(), 7662));
+			sc.connect(new InetSocketAddress(currentLobby.getIpAddress(), port));
 			long oldTime = System.currentTimeMillis();
 			while(!sc.finishConnect() && ((System.currentTimeMillis() - oldTime) < 5000)) {
 			}
