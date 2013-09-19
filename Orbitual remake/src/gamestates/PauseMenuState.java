@@ -20,7 +20,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class PauseMenuState extends BasicGameState{
+public class PauseMenuState extends BasicGameState {
 	public static final int ID = 0;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton continueButton, settingsButton, exitButton;

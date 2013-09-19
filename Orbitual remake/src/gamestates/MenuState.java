@@ -14,6 +14,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -24,7 +25,7 @@ import org.newdawn.slick.util.FontUtils;
 public class MenuState extends BasicGameState{
 	public static final int ID = 2;
 	private ArrayList<MenuButton> buttons;
-	private MenuButton playButton, settingsButton, quitButton;
+	private MenuButton playButton, multiButton, settingsButton, quitButton;
 	private TrueTypeFont ttf;
 
 	@Override
@@ -32,7 +33,11 @@ public class MenuState extends BasicGameState{
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		
-		playButton = new MenuButton("play", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/play.png"));
+		/*
+		playButton = new MenuButton("Local Multiplayer", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/play.png"));
+		buttons.add(playButton);
+		
+		multiButton = new MenuButton("Local Multiplayer", new Vector2f(Game.centerWidth -100 , Game.centerHeight -125), new Image("res/buttons/play.png"));
 		buttons.add(playButton);
 	
 		settingsButton = new MenuButton("settings", new Vector2f(Game.centerWidth -100 , Game.centerHeight), new Image("res/buttons/settings.png"));
@@ -40,8 +45,22 @@ public class MenuState extends BasicGameState{
 		
 		quitButton = new MenuButton("quit", new Vector2f(Game.centerWidth -100, Game.centerHeight + 125), new Image("res/buttons/quit.png"));
 		buttons.add(quitButton);
+		*/
+		Font f = new Font("Arial", Font.PLAIN, 18);
+		ttf = new TrueTypeFont(f, true);
+		// --------
+		playButton = new MenuButton("Local Multiplayer", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 150, 200, 50), Color.white, "Local Multiplayer", ttf);
+		multiButton = new MenuButton("Online Multiplayer", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 50, 200, 50), Color.white, "Online Multiplayer", ttf);
+		settingsButton = new MenuButton("Settings", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 50, 200, 50), Color.white, "Settings", ttf);
+		quitButton = new MenuButton("Quit", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 150, 200, 50), Color.white, "Quit", ttf);
 		
-		Font f = new Font("Comic Sans", Font.ITALIC, 50);
+		buttons.add(playButton);
+		buttons.add(multiButton);
+		buttons.add(settingsButton);
+		buttons.add(quitButton);
+		//-------------------
+		
+		f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
 		
 		Game.MENU_MUSIC = new Music("res/audio/music/menu.ogg");
@@ -84,10 +103,16 @@ public class MenuState extends BasicGameState{
 					100));
 		}
 		
+		if(multiButton.isMousePressed()) {
+			Game.LASTID = getID();
+			InGameState.finished = true;
+			sb.enterState(BrowserState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black));
+		}
+		
 		if (settingsButton.isMousePressed()) {
 			Game.LASTID = getID();
 			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));;
+					100));
 		}
 		
 		if (quitButton.isMousePressed() || input.isKeyPressed(Input.KEY_ESCAPE)) {

@@ -47,7 +47,8 @@ public class Player {
 
 	private double centriAcc;
 	private final double MAXSPINSPEED = 16;
-	private final double ACC_CONST = 300;
+	private final double ACC_CONST = 600;
+	private final double TIME_CONST = 16.6;
 	// -----------------------
 
 	public static ArrayList<Entity> anchorList;
@@ -57,6 +58,13 @@ public class Player {
 	private final float gravity = 0.015f;
 	private final float SPEED_LOST = 0.6f;
 	private final double STUN_LENGTH = 50;
+	
+	//-------------------------
+	// Online multiplayer
+	private String username;
+	private String ipaddr;
+	
+	//--------------------------
 
 	public Player(Player player) throws SlickException {
 		entity = new Entity(player.getEntity().getId());
@@ -103,6 +111,12 @@ public class Player {
 
 		this.num = num;
 	}
+	
+	public Player(int num, AnchorMap map, String username, String ipaddr) throws SlickException {
+		this(num, map);
+		this.username = username;
+		this.ipaddr = ipaddr;
+	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {		
 		// check if dead
@@ -136,10 +150,10 @@ public class Player {
 		// spin
 		else {
 			if(clockWise) {
-				degrees -= wSpeed;
+				degrees -= wSpeed*delta/TIME_CONST;
 			}
 			else {
-				degrees += wSpeed;
+				degrees += wSpeed*delta/TIME_CONST;
 			}
 			dx = hookedTo.getCenterPosition().x + Math.cos(degrees*Math.PI/180) * hookLength - entity.getCenterPosition().x;
 			dy = hookedTo.getCenterPosition().y - Math.sin(degrees*Math.PI/180) * hookLength - entity.getCenterPosition().y;
@@ -148,7 +162,7 @@ public class Player {
 				wSpeed = MAXSPINSPEED;
 			}
 			else {
-				wSpeed += centriAcc;
+				wSpeed += centriAcc*delta/TIME_CONST;
 			}
 		}
 
@@ -156,7 +170,7 @@ public class Player {
 		dy = dy / (1080 / Game.HEIGHT);
 		// move
 		speed = Math.hypot(dx, dy);
-		entity.translate((float)dx, (float)dy);
+		entity.translate((float)(dx*delta/TIME_CONST), (float)(dy*delta/TIME_CONST));
 	}
 
 	private void hook() {
@@ -304,6 +318,14 @@ public class Player {
 	
 	public void setScore(int score) {
 		this.score = score;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public String getIpaddr() {
+		return ipaddr;
 	}
 
 	// COLLISION PHYSICS

@@ -2,10 +2,14 @@ package game;
 
 import gamestates.AfterGameState;
 import gamestates.AudioSettingsState;
+import gamestates.BrowserState;
+import gamestates.ClientLobbyState;
 import gamestates.ControlsSettingsState;
 import gamestates.DisplayModeState;
+import gamestates.HostLobbyState;
 import gamestates.InGameState;
 import gamestates.MenuState;
+import gamestates.MultiplayerState;
 import gamestates.PauseMenuState;
 import gamestates.SettingsState;
 
@@ -28,8 +32,10 @@ public class Game extends StateBasedGame {
 	
 	public static int LASTID;
 	
-	public static final int MAX_PLAYERS = 8;
+	public static final int MAX_PLAYERS = 4;//8;
 	public static int SCORE_LIMIT = 20;
+	
+	public static String username = "Player";
 	
 	public static Music MENU_MUSIC;
 	public static Music INGAME_MUSIC;
@@ -50,6 +56,10 @@ public class Game extends StateBasedGame {
 		addState(new AudioSettingsState());
 		addState(new ControlsSettingsState());
 		addState(new AfterGameState());
+		addState(new BrowserState());
+		addState(new HostLobbyState());
+		addState(new MultiplayerState());
+		addState(new ClientLobbyState());
 	}
 	
 	
@@ -58,7 +68,7 @@ public class Game extends StateBasedGame {
 		try {
 			app = new AppGameContainer(new Game());
 			app.setDisplayMode(WIDTH, HEIGHT, fullscreen);
-			app.setTargetFrameRate(60);
+			app.setTargetFrameRate(120);
 			app.setShowFPS(false);
 			app.setSmoothDeltas(true);
 			app.start();

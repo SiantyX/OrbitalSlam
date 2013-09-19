@@ -84,8 +84,8 @@ public class SettingsState extends BasicGameState implements KeyListener{
 				oldColor = scoreLimitButton.getBackColor();
 				scoreLimitButton.setBackColor(new Color(40, 40, 40));
 			}
-			
 		}
+		
 		else {
 			if(scoreLimitButton.getBackColor().equals(new Color(40, 40, 40))) {
 				scoreLimitButton.setBackColor(oldColor);
@@ -139,7 +139,13 @@ public class SettingsState extends BasicGameState implements KeyListener{
 		if(changeScoreLimit) {
 			if(key == Input.KEY_ENTER) {
 				changeScoreLimit = false;
-				Game.SCORE_LIMIT = Integer.parseInt(scoreLimitButton.getText()) < 1 ? 1 : Integer.parseInt(scoreLimitButton.getText());
+				int oldscore = Game.SCORE_LIMIT;
+				try {
+					Game.SCORE_LIMIT = Integer.parseInt(scoreLimitButton.getText()) < 1 ? 1 : Integer.parseInt(scoreLimitButton.getText());
+				}
+				catch(NumberFormatException e) {
+					Game.SCORE_LIMIT = oldscore;
+				}
 				scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
 			}
 			else if(key == Input.KEY_ESCAPE) {

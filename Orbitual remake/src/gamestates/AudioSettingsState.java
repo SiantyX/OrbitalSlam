@@ -24,10 +24,12 @@ public class AudioSettingsState extends BasicGameState {
 	public static final int ID = 6;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton okButton, cancelButton;
-	private MenuButton musicButton, masterButton, soundButton;
-	private Circle musicCircle, masterCircle, soundCircle;
-	private String overMusic, overMaster, overSound;
-	private boolean masterPressed, musicPressed, soundPressed;
+	private MenuButton[] sliders;//musicButton, masterButton, soundButton;
+	private Circle[] circles;//musicCircle, masterCircle, soundCircle;
+	private String[] overhead;//overMusic, overMaster, overSound;
+	private String[] overheadHelper;
+	private boolean[] pressed; //masterPressed, musicPressed, soundPressed;
+
 	
 	private TrueTypeFont bigText;
 	private TrueTypeFont ttf;
@@ -40,8 +42,13 @@ public class AudioSettingsState extends BasicGameState {
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
+		overhead = new String[3];
+		circles = new Circle[3];
+		pressed = new boolean[3];
+		sliders = new MenuButton[3];
+		overheadHelper = new String[]{"Master level: ","Music level: ","Sound level: "};
 		
-		masterPressed = musicPressed = soundPressed = false;
+		pressed[0] = pressed[1] = pressed[2] = false;
 
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		bigText = new TrueTypeFont(f, true);
@@ -52,24 +59,24 @@ public class AudioSettingsState extends BasicGameState {
 		okButton = new MenuButton("ok", new Rectangle(Game.centerWidth - 250, Game.centerHeight + 200, 200, 50), Color.white, "Ok", ttf);
 		cancelButton = new MenuButton("cancel", new Rectangle(Game.centerWidth + 50, Game.centerHeight + 200, 200, 50), Color.white, "Cancel", ttf);
 		
-		masterButton = new MenuButton("master", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 200, 200, 50), new Color(255, 255, 255, 30), "", ttf);
-		musicButton = new MenuButton("music", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 100, 200, 50), new Color(255, 255, 255, 30), "", ttf);
-		soundButton = new MenuButton("sound", new Rectangle(Game.centerWidth - 100, Game.centerHeight, 200, 50), new Color(255, 255, 255, 30), "", ttf);
+		sliders[0] = new MenuButton("master", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 200, 200, 50), new Color(255, 255, 255, 30), "", ttf);
+		sliders[1] = new MenuButton("music", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 100, 200, 50), new Color(255, 255, 255, 30), "", ttf);
+		sliders[2] = new MenuButton("sound", new Rectangle(Game.centerWidth - 100, Game.centerHeight, 200, 50), new Color(255, 255, 255, 30), "", ttf);
 		
-		masterCircle = new Circle(Game.centerWidth + (MASTER_LEVEL*200-100), Game.centerHeight - 175, 5);
-		musicCircle = new Circle(Game.centerWidth + (MUSIC_LEVEL*200-100), Game.centerHeight - 75, 5);
-		soundCircle = new Circle(Game.centerWidth + (SOUND_LEVEL*200-100), Game.centerHeight + 25, 5);
+		circles[0] = new Circle(Game.centerWidth + (MASTER_LEVEL*200-100), Game.centerHeight - 175, 5);
+		circles[1] = new Circle(Game.centerWidth + (MUSIC_LEVEL*200-100), Game.centerHeight - 75, 5);
+		circles[2] = new Circle(Game.centerWidth + (SOUND_LEVEL*200-100), Game.centerHeight + 25, 5);
 		
-		overMaster = "Master level: " + (int)(MASTER_LEVEL*100);
-		overMusic = "Music level: " + (int)(MUSIC_LEVEL*100);
-		overSound = "Sound level: " + (int)(SOUND_LEVEL*100);
+		overhead[0] = "Master level: " + (int)(MASTER_LEVEL*100);
+		overhead[1] = "Music level: " + (int)(MUSIC_LEVEL*100);
+		overhead[2] = "Sound level: " + (int)(SOUND_LEVEL*100);
 
 		buttons.add(okButton);
 		buttons.add(cancelButton);
 		
-		buttons.add(masterButton);
-		buttons.add(musicButton);
-		buttons.add(soundButton);
+		buttons.add(sliders[0]);
+		buttons.add(sliders[1]);
+		buttons.add(sliders[2]);
 	}
 
 	@Override
@@ -81,14 +88,14 @@ public class AudioSettingsState extends BasicGameState {
 			button.render(gc, sb, g);
 		}
 		
-		FontUtils.drawCenter(ttf, overMaster, Game.centerWidth - 100, Game.centerHeight - 225, 200);
-		FontUtils.drawCenter(ttf, overMusic, Game.centerWidth - 100, Game.centerHeight - 125, 200);
-		FontUtils.drawCenter(ttf, overSound, Game.centerWidth - 100, Game.centerHeight - 25, 200);
+		FontUtils.drawCenter(ttf, overhead[0], Game.centerWidth - 100, Game.centerHeight - 225, 200);
+		FontUtils.drawCenter(ttf, overhead[1], Game.centerWidth - 100, Game.centerHeight - 125, 200);
+		FontUtils.drawCenter(ttf, overhead[2], Game.centerWidth - 100, Game.centerHeight - 25, 200);
 		
 		g.setColor(Color.white);
-		g.fill(masterCircle);
-		g.fill(musicCircle);
-		g.fill(soundCircle);
+		g.fill(circles[0]);
+		g.fill(circles[1]);
+		g.fill(circles[2]);
 	}
 
 	@Override
@@ -101,9 +108,9 @@ public class AudioSettingsState extends BasicGameState {
 		Input input = gc.getInput();
 		
 		if (input.isKeyPressed(Input.KEY_ENTER) || okButton.isMousePressed()) {
-			MASTER_LEVEL = ((masterCircle.getCenterX() - masterButton.getPosition().x) / 200);
-			MUSIC_LEVEL = ((musicCircle.getCenterX() - musicButton.getPosition().x) / 200);
-			SOUND_LEVEL = ((soundCircle.getCenterX() - soundButton.getPosition().x) / 200);
+			MASTER_LEVEL = ((circles[0].getCenterX() - sliders[0].getPosition().x) / 200);
+			MUSIC_LEVEL = ((circles[1].getCenterX() - sliders[1].getPosition().x) / 200);
+			SOUND_LEVEL = ((circles[2].getCenterX() - sliders[2].getPosition().x) / 200);
 			
 			Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*MASTER_LEVEL);
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*MASTER_LEVEL);
@@ -116,69 +123,28 @@ public class AudioSettingsState extends BasicGameState {
 					100));
 		}
 		
-		// sound editor
-		if (masterButton.isMousePressed()) {
-			masterCircle.setLocation(input.getMouseX() - masterCircle.getRadius(), masterCircle.getY());
-			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
-			masterPressed = true;
-		}
-		
-		if (musicButton.isMousePressed()) {
-			musicCircle.setLocation(input.getMouseX() - musicCircle.getRadius(), musicCircle.getY());
-			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
-			musicPressed = true;
-		}
-		if (soundButton.isMousePressed()) {
-			soundCircle.setLocation(input.getMouseX() - soundCircle.getRadius(), soundCircle.getY());
-			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
-			soundPressed = true;
-		}
 		
 		if(!input.isMouseButtonDown(0)) {
-			masterPressed = musicPressed = soundPressed = false;
+			pressed[0] = pressed[1] = pressed[2] = false;
 		}
-		
-		if(masterPressed) {
-			masterCircle.setLocation(input.getMouseX() - masterCircle.getRadius(), masterCircle.getY());
-			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
-		}
-		else if(musicPressed) {
-			musicCircle.setLocation(input.getMouseX() - musicCircle.getRadius(), musicCircle.getY());
-			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
-		}
-		else if(soundPressed) {
-			soundCircle.setLocation(input.getMouseX() - soundCircle.getRadius(), soundCircle.getY());
-			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
-		}
-		
-		// keep the circle within bounds master
-		if(masterCircle.getCenterX() < masterButton.getPosition().x) {
-			masterCircle.setCenterX(masterButton.getPosition().x);
-			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
-		}
-		if(masterCircle.getCenterX() > (masterButton.getPosition().x + masterButton.getWidth())) {
-			masterCircle.setCenterX(masterButton.getPosition().x + masterButton.getWidth());
-			overMaster = "Master level: " + (int)((masterCircle.getCenterX() - masterButton.getPosition().x) / 2);
-		}	
-		
-		//music
-		if(musicCircle.getCenterX() < musicButton.getPosition().x) {
-			musicCircle.setCenterX(musicButton.getPosition().x);
-			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
-		}
-		if(musicCircle.getCenterX() > (musicButton.getPosition().x + musicButton.getWidth())) {
-			musicCircle.setCenterX(musicButton.getPosition().x + musicButton.getWidth());
-			overMusic = "Music level: " + (int)((musicCircle.getCenterX() - musicButton.getPosition().x) / 2);
-		}
-		
-		// sound
-		if(soundCircle.getCenterX() < soundButton.getPosition().x) {
-			soundCircle.setCenterX(soundButton.getPosition().x);
-			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
-		}
-		if(soundCircle.getCenterX() > (soundButton.getPosition().x + soundButton.getWidth())) {
-			soundCircle.setCenterX(soundButton.getPosition().x + soundButton.getWidth());
-			overSound = "Sound level: " + (int)((soundCircle.getCenterX() - soundButton.getPosition().x) / 2);
+		for(int i = 0; i < 3; i++) {
+			if(sliders[i].isMousePressed()) {
+				circles[i].setLocation(input.getMouseX() - circles[i].getRadius(), circles[i].getY());
+				overhead[i] = overheadHelper[i] + (int)((circles[i].getCenterX() - sliders[i].getPosition().x) / 2);
+				pressed[i] = true;
+			}
+			if(pressed[i]) {
+				circles[i].setLocation(input.getMouseX() - circles[i].getRadius(), circles[i].getY());
+				overhead[i] = overheadHelper[i] + (int)((circles[i].getCenterX() - sliders[i].getPosition().x) / 2);
+			}
+			if(circles[i].getCenterX() < sliders[i].getPosition().x) {
+				circles[i].setCenterX(sliders[i].getPosition().x);
+				overhead[i] = overheadHelper[i] + (int)((circles[i].getCenterX() - sliders[i].getPosition().x) / 2);
+			}
+			if(circles[i].getCenterX() > (sliders[i].getPosition().x + sliders[i].getWidth())) {
+				circles[i].setCenterX(sliders[i].getPosition().x + sliders[i].getWidth());
+				overhead[i] = overheadHelper[i] + (int)((circles[i].getCenterX() - sliders[i].getPosition().x) / 2);
+			}
 		}
 	}
 
