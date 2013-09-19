@@ -3,12 +3,14 @@ package gamestates;
 import java.io.IOException;
 
 import game.Game;
+import game.MenuButton;
 import networking.LobbyHosting;
 import networking.NetHandler;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
@@ -40,6 +42,12 @@ public class ClientLobbyState extends LobbyState {
 			hndlr = null;
 			sb.enterState(BrowserState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
+		}
+		
+		users.clear();
+		for(String player : players) {
+			users.add(new MenuButton(player, new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (users.size()*50), 100, 30), Color.black,
+					player.split("\\@")[0].length() < 1 ? "Unknown" : player.split("\\@")[0], ttf, Color.yellow));
 		}
 	}
 

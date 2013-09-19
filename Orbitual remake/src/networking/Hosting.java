@@ -52,15 +52,15 @@ public abstract class Hosting extends Thread {
 		boolean isWritable = false;
 
 		try {
-			// update server with host
-			beforeSelect();
-			
 			selector = Selector.open();
 			server = ServerSocketChannel.open();
 			server.configureBlocking(false);
 			server.socket().bind(new InetSocketAddress(7661));
-			server.register(selector, SelectionKey.OP_ACCEPT);
-
+			server.register(selector, SelectionKey.OP_ACCEPT);	
+			
+			// update server with host
+			beforeSelect();
+			
 			while(true)
 			{
 				if(closing) {
@@ -73,7 +73,6 @@ public abstract class Hosting extends Thread {
 				// act as server for incoming connections
 
 				selector.select();
-				System.out.println("stage -1 " + selector.selectedKeys());
 				for(Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
 					System.out.println("stage 0");
 					
