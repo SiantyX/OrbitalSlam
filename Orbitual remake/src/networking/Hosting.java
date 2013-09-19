@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.channels.CancelledKeyException;
+import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -50,25 +52,23 @@ public abstract class Hosting extends Thread {
 		boolean isWritable = false;
 
 		try {
+			// update server with host
+			beforeSelect();
+			
 			selector = Selector.open();
 			server = ServerSocketChannel.open();
 			server.configureBlocking(false);
-			server.socket().bind(new InetSocketAddress(port));
+			server.socket().bind(new InetSocketAddress(7662));
 			server.register(selector, SelectionKey.OP_ACCEPT);
 
 			while(true)
 			{
 				if(closing) {
-					hndlr.close();
 					server.socket().close();
 					server.close();
 					selector.close();
 					break;
 				}
-
-
-				// update server with host
-				beforeSelect();
 
 				// act as server for incoming connections
 
@@ -110,8 +110,11 @@ public abstract class Hosting extends Thread {
 				}
 			}
 		}
-		catch (Exception e) {
-
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (CancelledKeyException | ClosedSelectorException e) {
+			System.out.println("Closed hosting");
 		}
 		finally {
 			try {
@@ -119,14 +122,24 @@ public abstract class Hosting extends Thread {
 				server.socket().close();
 				server.close();
 			}
-			catch (Exception e) {
-
+			catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
 	public void close() {
 		closing = true;
+		hndlr.close();
+		try {
+			server.socket().close();
+			server.close();
+			selector.close();
+		} catch (IOException e) {
+			System.out.println("Can't close");
+			e.printStackTrace();
+		}
+
 	}
 	
 	public boolean isInLobby() {

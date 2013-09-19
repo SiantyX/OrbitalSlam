@@ -22,13 +22,21 @@ public class LobbyHosting extends Hosting {
 	}
 
 	protected void beforeSelect() {
-		if(timer.isTriggered() >= 0) {
-			try {
-				hndlr.updateHost(hostname, players.size(), maxPlayers);
-			} catch (IOException e) {
-				System.out.println("Couldn't update server with host data.");
+		Runnable r = new Runnable() {
+			public void run() {
+				while(!closing) {
+					if(timer.isTriggered() >= 0) {
+						try {
+							hndlr.updateHost(hostname, players.size(), maxPlayers);
+						} catch (IOException e) {
+							System.out.println("Couldn't update server with host data.");
+						}
+					}
+				}
 			}
-		}
+		};
+		Thread t = new Thread(r);
+		t.start();
 	}
 
 	protected void accept() {
@@ -45,7 +53,7 @@ public class LobbyHosting extends Hosting {
 				System.out.println("Game is full");
 			}
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 
 		}
 	}
@@ -54,7 +62,7 @@ public class LobbyHosting extends Hosting {
 		try {
 			String message = readIncomingMessage(key);
 			String parts[] = message.split("\\n");
-			
+
 			String wholemsg = "";
 			if(parts.length > 2) {
 				for(int i = 1; i < parts.length; i++) {
@@ -68,12 +76,12 @@ public class LobbyHosting extends Hosting {
 					addAttach(key, message);
 				}
 			}
-			
+
 			if(parts[0].equals("name")) {
 				// change list of names and send name update to everyone
 				removePlayer(key);
 				players.add(wholemsg + "@" + ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
-				
+
 				for(SelectionKey k : selector.keys()) {
 					addAttach(k, message);
 				}
@@ -115,19 +123,19 @@ public class LobbyHosting extends Hosting {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// extra methods -------------------------------------------
 	////////////////////////////////////////////////////////////
-	
+
 	protected String popAttach(SelectionKey key) {
 		if(key.attachment() == null) return "";
 		ArrayList<String> atchs = (ArrayList<String>) key.attachment();
-		
+
 		String tmp = atchs.get(0);
 		atchs.remove(0);
 		return tmp;
 	}
-	
+
 	protected void addAttach(SelectionKey key, String msg) {
 		if(key.attachment() == null) {
 			ArrayList<String> atchs = new ArrayList<String>();
@@ -138,7 +146,7 @@ public class LobbyHosting extends Hosting {
 			((ArrayList<String>)key.attachment()).add(msg);
 		}
 	}
-	
+
 	protected boolean removePlayer(SelectionKey key) {
 		String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
 		for(String s : players) {
@@ -151,7 +159,7 @@ public class LobbyHosting extends Hosting {
 		key.cancel();
 		return false;
 	}
-	
+
 	public CopyOnWriteArrayList<String> getPlayers() {
 		return players;
 	}
