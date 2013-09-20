@@ -30,7 +30,6 @@ public class ClientLobbyState extends LobbyState {
 			};
 			Thread thread = new Thread(updateLobby);
 			thread.start();
-
 		}
 	}
 
