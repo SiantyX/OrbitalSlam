@@ -46,7 +46,7 @@ public class ClientLobbyState extends LobbyState {
 		users.clear();
 		for(String player : players) {
 			users.add(new MenuButton(player, new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (users.size()*50), 100, 30), Color.black,
-					player.split("\\@")[0].length() < 1 ? "Unknown" : player.split("\\@")[0], ttf, Color.yellow));
+					player.length() < 1 ? "Unknown" : player, ttf, Color.yellow));
 		}
 	}
 
