@@ -1,7 +1,9 @@
 package gamestates;
 
 import game.Game;
+import game.Label;
 import game.MenuButton;
+import game.MessageBox;
 import game.Player;
 
 import java.awt.Font;
@@ -43,7 +45,9 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 	protected int alpha;
 	protected LobbyHosting hosted;
 	protected CopyOnWriteArrayList<String> players;
-
+	protected Label saylabel;
+	protected MessageBox mbox;
+	
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		hostname = NetHandler.getHostName();
 
@@ -57,12 +61,19 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 
 		Font f = new Font("Arial", Font.PLAIN, 18);
 		ttf = new TrueTypeFont(f, true);
+		
+		
+		saylabel = new Label("Say: ", f, Game.centerWidth - (Game.WIDTH/5 - 40)/2 - 20, Game.centerHeight + 320, Color.white);
 
 		f = new Font("Comic Sans", Font.ITALIC, 50);
 		bigText = new TrueTypeFont(f, true);
 
 		cancelButton = new MenuButton("cancel", new Rectangle(Game.centerWidth - 300, Game.centerHeight + 400, 200, 50), Color.white, "Cancel", ttf);
-		textButton = new MenuButton("text", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 300, 200, 50), Color.black, "|...", ttf);
+		textButton = new MenuButton("text", new Rectangle(Game.centerWidth - (Game.WIDTH/5 - 40)/2 + 20, Game.centerHeight + 300, Game.WIDTH/5 - 40, 50), Color.lightGray, "...", ttf, Color.white);
+		textButton.fillRect(false);
+		textButton.writeCenter(false);
+		
+		mbox = new MessageBox(Game.WIDTH/5, Game.HEIGHT/5, Game.centerWidth - Game.WIDTH/10, Game.centerHeight + Game.HEIGHT / 14, Color.lightGray, Color.white, ttf);
 
 
 		buttons.add(cancelButton);
@@ -78,6 +89,9 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 		for (MenuButton button : users) {
 			button.render(gc, sb, g);
 		}
+		
+		saylabel.render(gc, sb, g);
+		mbox.render(gc, sb, g);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
@@ -101,22 +115,20 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 			if(key == Input.KEY_ENTER) {
 				textChange = false;
 				sendText(textButton.getText());
-				textButton.setText("|...");
+				textButton.setText("...");
 			}
 			else if(key == Input.KEY_ESCAPE) {
 				textChange = false;
 				justChanged = true;
-				textButton.setText("|...");
+				textButton.setText("...");
 			}
 			else if(((int) c >= 32 && (int) c <= 126) || (int) c == 229 || (int) c == 228 || (int) c == 246) {
 				textButton.setText(textButton.getText() + c);
 			}
 		}
 	}
-
-	public void sendText(String str) {
-
-	}
+	
+	public abstract void sendText(String str);
 
 	public abstract int getID();
 }

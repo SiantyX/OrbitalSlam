@@ -1,38 +1,42 @@
 package networking;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.SocketAddress;
 import java.nio.channels.SelectionKey;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class InGameHosting extends Hosting{
+public class InGameHosting {
+	private DatagramSocket server;
+	private final int port = 7661;
+	private final int bSize = 512;
+	public static ArrayList<InetAddress> ipaddrs;
 
-	public InGameHosting(String hostname, int maxPlayers) throws IOException {
-		super(hostname, maxPlayers);
-		// TODO Auto-generated constructor stub
+	public InGameHosting() {
+		try {
+			server = new DatagramSocket(port);
+		}
+		catch(IOException e) {
+			System.out.println("Couldn't listen to " + port);
+		}
 	}
 
-	@Override
-	protected void accept() {
-		// TODO Auto-generated method stub
-		
+	public void recieve() {
+		try {
+			byte[] buffer = new byte[bSize];
+			DatagramPacket packet = new DatagramPacket(buffer, bSize);
+			while(true) {
+				buffer = new byte[bSize];
+				packet = new DatagramPacket(buffer, bSize);
+				server.receive(packet);
+			}
+		}
+		catch(IOException e) {
+			// recieve error
+		}
 	}
-
-	@Override
-	protected void read(SelectionKey key) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void write(SelectionKey key) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void beforeSelect() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

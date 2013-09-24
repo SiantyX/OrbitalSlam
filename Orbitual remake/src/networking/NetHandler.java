@@ -26,10 +26,12 @@ public class NetHandler {
 	private final int port = 7661;
 	private final String ipaddr = "siantyxserver.servegame.com";
 	private SocketChannel sc;
-	private Lobby currentLobby;
+	public Lobby currentLobby;
+	public boolean started;
 
 	public NetHandler() throws UnknownHostException, IOException {
 		sc = SocketChannel.open();
+		started = false;
 	}
 
 	public boolean JoinLobby(Lobby l) throws IOException {
@@ -47,7 +49,7 @@ public class NetHandler {
 				System.out.println("Couldn't connect to server " + currentLobby.getIpAddress() + " at port " + port);
 				return false;
 			}
-			
+
 			// connected
 			ClientLobbyState.hndlr = this;
 			CharBuffer buffer = CharBuffer.wrap("name\n" + Game.username);
@@ -55,7 +57,7 @@ public class NetHandler {
 			while(buffer.hasRemaining()) {
 				sc.write(Charset.defaultCharset().encode(buffer));
 			}
-			
+
 			return true;
 		}
 		catch (ConnectException e) {
@@ -63,8 +65,23 @@ public class NetHandler {
 			return false;
 		}
 	}
-	
-	public void updateClientLobby(CopyOnWriteArrayList<String> players) {
+
+	public void sendChatUpdate(String str) {
+		try {
+			ClientLobbyState.hndlr = this;
+			CharBuffer buffer = CharBuffer.wrap("chat\n" + Game.username + ": " + str);
+			System.out.println("Sending chat update");
+			while(buffer.hasRemaining()) {
+				sc.write(Charset.defaultCharset().encode(buffer));
+			}
+		}
+		catch (IOException e) {
+			System.out.println("Couldn't send chat update.");
+			e.printStackTrace();
+		}
+	}
+
+	public void updateClientLobby(CopyOnWriteArrayList<String> players, CopyOnWriteArrayList<String> mboxList) {
 		try {
 			while (currentLobby != null) {
 				ByteBuffer inbuffer = ByteBuffer.allocate(1024);
@@ -76,15 +93,15 @@ public class NetHandler {
 				}
 				inbuffer.clear();
 				if(msg.length() < 1) continue;
-				
+
 				System.out.println("Server says: " + msg);
-				
+
 				String[] parts = msg.split("\\n");
 				if(msg.equals("kick")) {
 					break;
 				}
 				else if(msg.equals("start")) {
-					// start game trololol
+					started = true;
 				}
 				else if(parts[0].equals("names")) {
 					players.clear();
@@ -94,13 +111,20 @@ public class NetHandler {
 					}
 				}
 				else if(parts[0].equals("chat")) {
-					// fixa chat
+					String wholemsg = "";
+					for(int i = 1; i < parts.length; i++) {
+						wholemsg += parts[i];
+					}
+					mboxList.add(wholemsg);
 				}
 			}
 		}
 		catch (IOException e) {
 			System.out.println("!update client error!");
 			e.printStackTrace();
+		}
+		finally {
+			close();
 		}
 	}
 

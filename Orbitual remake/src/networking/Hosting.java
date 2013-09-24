@@ -16,6 +16,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -74,7 +75,6 @@ public abstract class Hosting extends Thread {
 
 				selector.select();
 				for(Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
-					System.out.println("stage 0");
 					
 					SelectionKey key = i.next();
 					i.remove();
@@ -152,6 +152,12 @@ public abstract class Hosting extends Thread {
 		inLobby = n;
 	}
 	
+	public void setAllKeys(String str) {
+		for(SelectionKey key : selector.keys()) {
+			addAttach(key, str);
+		}
+	}
+	
 	protected String readIncomingMessage(SelectionKey key) throws IOException {
 		ByteBuffer readBuffer = ByteBuffer.allocate(1024);
 		SocketChannel channel = (SocketChannel) key.channel();
@@ -179,6 +185,26 @@ public abstract class Hosting extends Thread {
 		}
 		buffer.clear();
 		System.out.println("Wrote: " + msg + " to " + channel.getRemoteAddress().toString());
+	}
+	
+	protected String popAttach(SelectionKey key) {
+		if(key.attachment() == null) return "";
+		CopyOnWriteArrayList<String> atchs = (CopyOnWriteArrayList<String>) key.attachment();
+
+		String tmp = atchs.get(0);
+		atchs.remove(0);
+		return tmp;
+	}
+
+	protected void addAttach(SelectionKey key, String msg) {
+		if(key.attachment() == null) {
+			CopyOnWriteArrayList<String> atchs = new CopyOnWriteArrayList<String>();
+			atchs.add(msg);
+			key.attach(atchs);
+		}
+		else {
+			((CopyOnWriteArrayList<String>)key.attachment()).add(msg);
+		}
 	}
 	
 	protected abstract void accept();

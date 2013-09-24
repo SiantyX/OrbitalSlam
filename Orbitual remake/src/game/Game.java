@@ -4,6 +4,7 @@ import gamestates.AfterGameState;
 import gamestates.AudioSettingsState;
 import gamestates.BrowserState;
 import gamestates.ClientLobbyState;
+import gamestates.ClientMultiplayerState;
 import gamestates.ControlsSettingsState;
 import gamestates.DisplayModeState;
 import gamestates.HostLobbyState;
@@ -11,6 +12,7 @@ import gamestates.InGameState;
 import gamestates.MenuState;
 import gamestates.MultiplayerState;
 import gamestates.PauseMenuState;
+import gamestates.ServerMultiplayerState;
 import gamestates.SettingsState;
 
 import org.newdawn.slick.AppGameContainer;
@@ -58,8 +60,9 @@ public class Game extends StateBasedGame {
 		addState(new AfterGameState());
 		addState(new BrowserState());
 		addState(new HostLobbyState());
-		addState(new MultiplayerState());
+		addState(new ClientMultiplayerState());
 		addState(new ClientLobbyState());
+		addState(new ServerMultiplayerState());
 	}
 	
 	

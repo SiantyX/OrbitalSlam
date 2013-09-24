@@ -41,7 +41,7 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 		
 		if(Game.LASTID == BrowserState.ID) {
 			try {
-				hosted = new LobbyHosting(hostname, 4);
+				hosted = new LobbyHosting(hostname, 4, mbox);
 				hosted.start();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -56,8 +56,15 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
 		
+		users.clear();
+		players = hosted.getPlayers();
+		
 		if(startButton.isMousePressed()) {
-			sb.enterState(MultiplayerState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			hosted.setAllKeys("start");
+			hosted.close();
+			ServerMultiplayerState.names = players;
+			sb.getState(ServerMultiplayerState.ID).init(gc, sb);
+			sb.enterState(ServerMultiplayerState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
@@ -67,12 +74,16 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 					100));
 		}
 		
-		users.clear();
-		players = hosted.getPlayers();
-		for(String player : players) {
-			users.add(new MenuButton(player, new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (users.size()*50), 100, 30), Color.black,
-					player.split("\\@")[0].length() < 1 ? "Unknown" : player.split("\\@")[0], ttf, Color.yellow));
+		mbox = hosted.getBox();
+		for(int i = 0; i < players.size(); i++) {
+			users.add(new MenuButton(players.get(i), new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (i*50), 100, 30), Color.black,
+					players.get(i).split("\\@")[0].length() < 1 ? "Unknown" : players.get(i).split("\\@")[0], ttf, Color.yellow));
 		}
+	}
+	
+	public void sendText(String str) {
+		hosted.addToBox("Me: " + str);
+		hosted.setAllKeys("chat\n" + Game.username + ": " + str);
 	}
 	
 	public int getID() {

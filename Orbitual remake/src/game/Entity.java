@@ -11,11 +11,10 @@ import components.Component;
 import components.RenderComponent;
 import components.ImageRenderComponent;
 
-public class Entity {
+public class Entity extends Node {
 
 	private String id;
 
-	private Vector2f position;
 	private float scale;
 	private float rotation;
 	private float radius;
@@ -24,12 +23,12 @@ public class Entity {
 	private ArrayList<Component> components = null;
 
 	public Entity(String id) {
+		super(0, 0);
 		this.id = id;
 
 		components = new ArrayList<Component>();
 		renderComponent = new ArrayList<RenderComponent>();
 
-		position = new Vector2f(0, 0);
 		scale = 1;
 		rotation = 0;
 		
@@ -56,7 +55,7 @@ public class Entity {
 	}
 
 	public Vector2f getPosition() {
-		return position;
+		return pos;
 	}
 	
 	public Vector2f getCenterPosition() {
@@ -76,16 +75,11 @@ public class Entity {
 	}
 
 	public void setPosition(Vector2f position) {
-		this.position = position;
+		moveTo(position.x, position.y);
 	}
 	
 	public void setCenterPosition(Vector2f position) {
-		Vector2f v = new Vector2f(position.x - getRadius(), position.y - getRadius());
-		this.position = v;
-	}
-	
-	public void translate(float dx, float dy) {
-		this.position = new Vector2f(position.x + dx, position.y + dy);
+		moveTo(position.x - getRadius(), position.y - getRadius());
 	}
 
 	public void setRotation(float rotate) {

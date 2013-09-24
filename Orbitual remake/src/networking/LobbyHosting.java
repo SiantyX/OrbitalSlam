@@ -1,6 +1,7 @@
 package networking;
 
 import game.Game;
+import game.MessageBox;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
@@ -14,11 +15,13 @@ import components.SXTimer;
 
 public class LobbyHosting extends Hosting {
 	private CopyOnWriteArrayList<String> players;
+	private MessageBox mbox;
 
-	public LobbyHosting(String hostname, int maxPlayers) throws IOException {
+	public LobbyHosting(String hostname, int maxPlayers, MessageBox mbox) throws IOException {
 		super(hostname, maxPlayers);
 		players = new CopyOnWriteArrayList<String>();
 		players.add(Game.username + "@127.0.0.1");
+		this.mbox = mbox;
 	}
 
 	protected void beforeSelect() {
@@ -54,7 +57,8 @@ public class LobbyHosting extends Hosting {
 			}
 		}
 		catch (IOException e) {
-
+			System.out.println("IOException in accept()");
+			e.printStackTrace();
 		}
 	}
 
@@ -72,6 +76,8 @@ public class LobbyHosting extends Hosting {
 
 			if(parts[0].equals("chat")) {
 				// display chat message n send it
+				mbox.addMessage(wholemsg);
+				
 				for (SelectionKey k : selector.keys()) {
 					addAttach(key, message);
 				}
@@ -79,7 +85,12 @@ public class LobbyHosting extends Hosting {
 
 			if(parts[0].equals("name")) {
 				// change list of names and send name update to everyone
-				removePlayer(key);
+				String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
+				for(String s : players) {
+					if(s.split("\\@")[1].equals(ipaddr)) {
+						players.remove(s);
+					}
+				}
 				players.add(wholemsg + "@" + ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
 
 				for(SelectionKey k : selector.keys()) {
@@ -127,25 +138,6 @@ public class LobbyHosting extends Hosting {
 	// extra methods -------------------------------------------
 	////////////////////////////////////////////////////////////
 
-	protected String popAttach(SelectionKey key) {
-		if(key.attachment() == null) return "";
-		ArrayList<String> atchs = (ArrayList<String>) key.attachment();
-
-		String tmp = atchs.get(0);
-		atchs.remove(0);
-		return tmp;
-	}
-
-	protected void addAttach(SelectionKey key, String msg) {
-		if(key.attachment() == null) {
-			ArrayList<String> atchs = new ArrayList<String>();
-			atchs.add(msg);
-			key.attach(atchs);
-		}
-		else {
-			((ArrayList<String>)key.attachment()).add(msg);
-		}
-	}
 
 	protected boolean removePlayer(SelectionKey key) {
 		String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
@@ -158,6 +150,14 @@ public class LobbyHosting extends Hosting {
 		}
 		key.cancel();
 		return false;
+	}
+	
+	public MessageBox getBox() {
+		return mbox;
+	}
+	
+	public void addToBox(String str) {
+		mbox.addMessage(str);
 	}
 
 	public CopyOnWriteArrayList<String> getPlayers() {

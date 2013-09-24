@@ -4,6 +4,7 @@ import gamestates.AudioSettingsState;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -19,14 +20,15 @@ import org.newdawn.slick.util.FontUtils;
 import components.Component;
 import components.ImageRenderComponent;
 
-public class MenuButton extends Entity{
+public class MenuButton extends Entity {
 
 	private boolean mousePressed;
 	private int buttonPressed;
 	private Image image;
+	private boolean fill;
+	private boolean writecenter;
 	
 	private float w, h;
-	private Vector2f pos;
 	
 	private Shape shape;
 	private Color color;
@@ -38,7 +40,6 @@ public class MenuButton extends Entity{
 	
 	public MenuButton(String id, Shape shape, Color color, String text, TrueTypeFont ttf) throws SlickException {
 		super(id);
-		setPosition(pos);
 		mousePressed = false;
 		this.shape = shape;
 		this.color = color;
@@ -46,9 +47,11 @@ public class MenuButton extends Entity{
 		this.ttf = ttf;
 		w = shape.getWidth();
 		h = shape.getHeight();
-		this.pos = new Vector2f(shape.getX(), shape.getY());
+		pos = new Vector2f(shape.getX(), shape.getY());
 		this.txtColor = new Color(1 - color.r, 1 - color.g, 1 - color.b);
 		sound = new Sound("res/audio/sound/klick.ogg");
+		fill = true;
+		writecenter = true;
 	}
 	
 	public MenuButton(String id, Shape shape, Color color, String text, TrueTypeFont ttf, Color txtColor) throws SlickException {
@@ -66,6 +69,8 @@ public class MenuButton extends Entity{
 		mousePressed = false;
 		this.shape = null;
 		sound = new Sound("res/audio/sound/klick.ogg");
+		writecenter = true;
+		fill = true;
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
@@ -75,10 +80,19 @@ public class MenuButton extends Entity{
 		else {
 			if(shape == null || ttf == null || txtColor == null) return;
 			g.setColor(color);
-			g.fill(shape);
+			if(fill)
+				g.fill(shape);
+			else
+				g.draw(shape);
 			g.setColor(txtColor);
 			try {
-				FontUtils.drawCenter(ttf, text, (int)shape.getX(), (int)shape.getCenterY() - ttf.getHeight()/2, (int)shape.getWidth(), txtColor);
+				if(writecenter) {
+					FontUtils.drawCenter(ttf, text, (int)shape.getX(), (int)shape.getCenterY() - ttf.getHeight()/2, (int)shape.getWidth(), txtColor);
+				}
+				else {
+					g.setFont(ttf);
+					g.drawString(text, (int)shape.getX() + 10, (int)shape.getCenterY() - ttf.getHeight()/2);
+				}
 			}
 			catch(NullPointerException e) {
 				
@@ -90,6 +104,9 @@ public class MenuButton extends Entity{
 		for (Component component : getComponents()) {
 			component.update(gc, sb, delta);
 		}
+		
+		shape.setX(pos.x);
+		shape.setY(pos.y);
 		
 		int mousePosX = Mouse.getX();
 		int mousePosY = Math.abs(Mouse.getY() - Game.app.getHeight());
@@ -185,5 +202,13 @@ public class MenuButton extends Entity{
 	
 	public float getHeight() {
 		return shape.getHeight();
+	}
+	
+	public void fillRect(boolean b) {
+		fill = b;
+	}
+
+	public void writeCenter(boolean b) {
+		writecenter = b;
 	}
 }

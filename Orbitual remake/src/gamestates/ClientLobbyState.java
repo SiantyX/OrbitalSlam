@@ -25,7 +25,7 @@ public class ClientLobbyState extends LobbyState {
 		if(Game.LASTID == BrowserState.ID) {
 			Runnable updateLobby = new Runnable() {
 				public void run() {
-					hndlr.updateClientLobby(players);
+					hndlr.updateClientLobby(players, mbox.getMessages());
 				}
 			};
 			Thread thread = new Thread(updateLobby);
@@ -44,10 +44,23 @@ public class ClientLobbyState extends LobbyState {
 		}
 		
 		users.clear();
-		for(String player : players) {
-			users.add(new MenuButton(player, new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (users.size()*50), 100, 30), Color.black,
-					player.length() < 1 ? "Unknown" : player, ttf, Color.yellow));
+		for(int i = 0; i < players.size(); i++) {
+			users.add(new MenuButton(players.get(i), new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (i*50), 100, 30), Color.black,
+					players.get(i).length() < 1 ? "Unknown" : players.get(i), ttf, Color.yellow));
 		}
+		
+		if(hndlr.started) {
+			ClientMultiplayerState.lobby = hndlr.currentLobby;
+			hndlr.close();
+			ClientMultiplayerState.names = players;
+			sb.getState(ClientMultiplayerState.ID).init(gc, sb);
+			sb.enterState(ClientMultiplayerState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
+		}
+	}
+	
+	public void sendText(String str) {
+		mbox.addMessage(str);
 	}
 
 	public int getID() {
