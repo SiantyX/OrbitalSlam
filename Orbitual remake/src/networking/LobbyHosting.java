@@ -68,7 +68,7 @@ public class LobbyHosting extends Hosting {
 			String parts[] = message.split("\\n");
 
 			String wholemsg = "";
-			if(parts.length > 2) {
+			if(parts.length > 1) {
 				for(int i = 1; i < parts.length; i++) {
 					wholemsg += parts[i];
 				}

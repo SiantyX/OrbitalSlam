@@ -18,6 +18,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import components.SXTimer;
@@ -58,10 +59,10 @@ public abstract class Hosting extends Thread {
 			server.configureBlocking(false);
 			server.socket().bind(new InetSocketAddress(7661));
 			server.register(selector, SelectionKey.OP_ACCEPT);	
-			
+
 			// update server with host
 			beforeSelect();
-			
+
 			while(true)
 			{
 				if(closing) {
@@ -75,7 +76,7 @@ public abstract class Hosting extends Thread {
 
 				selector.select();
 				for(Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
-					
+
 					SelectionKey key = i.next();
 					i.remove();
 
@@ -143,21 +144,30 @@ public abstract class Hosting extends Thread {
 		}
 
 	}
-	
+
 	public boolean isInLobby() {
 		return inLobby;
 	}
-	
+
 	public void setInLobby(boolean n) {
 		inLobby = n;
 	}
-	
+
 	public void setAllKeys(String str) {
-		for(SelectionKey key : selector.keys()) {
-			addAttach(key, str);
+		try {
+			Set<SelectionKey> tmp = selector.keys();
+			for(SelectionKey key : tmp) {
+				if(!key.isValid()) continue;
+				addAttach(key, str);
+			}
+		}
+		catch (ClosedSelectorException e) {
+			System.out.println("Selector closed");
+			e.printStackTrace();
+			close();
 		}
 	}
-	
+
 	protected String readIncomingMessage(SelectionKey key) throws IOException {
 		ByteBuffer readBuffer = ByteBuffer.allocate(1024);
 		SocketChannel channel = (SocketChannel) key.channel();
@@ -186,10 +196,11 @@ public abstract class Hosting extends Thread {
 		buffer.clear();
 		System.out.println("Wrote: " + msg + " to " + channel.getRemoteAddress().toString());
 	}
-	
+
 	protected String popAttach(SelectionKey key) {
 		if(key.attachment() == null) return "";
 		CopyOnWriteArrayList<String> atchs = (CopyOnWriteArrayList<String>) key.attachment();
+		if(atchs.size() < 1) return "";
 
 		String tmp = atchs.get(0);
 		atchs.remove(0);
@@ -206,7 +217,7 @@ public abstract class Hosting extends Thread {
 			((CopyOnWriteArrayList<String>)key.attachment()).add(msg);
 		}
 	}
-	
+
 	protected abstract void accept();
 	protected abstract void read(SelectionKey key);
 	protected abstract void write(SelectionKey key);
