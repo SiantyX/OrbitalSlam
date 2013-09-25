@@ -41,7 +41,7 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 	protected TrueTypeFont ttf, bigText;
 	//private ArrayList<Player> players;
 	protected ArrayList<MenuButton> users;
-	protected NetHandler hndlr;
+	//protected NetHandler hndlr;
 	protected int alpha;
 	protected LobbyHosting hosted;
 	protected CopyOnWriteArrayList<String> players;
