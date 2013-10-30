@@ -43,7 +43,7 @@ public class RandomFunkyMap extends GameMap {
 	}
 	private boolean collisioncheck(Vector2f vector){
 		for (Vector2f v : startpositions){
-			if ((int)Math.abs((v.getX()) - vector.getX()) < 200 || (int)Math.abs((v.getY()) - vector.getY()) < 200 ){
+			if ((int)Math.abs((v.distance(vector))) < 200 ){
 				return false;
 				
 			}
@@ -55,23 +55,12 @@ public class RandomFunkyMap extends GameMap {
 	// handlar om att de inte skall spawna i varandra
 	public Vector2f getStartPos(int i) {
 		
-		int x = (int)Math.round(rand.nextFloat()*(Game.WIDTH ));
-		int y = (int)Math.round(rand.nextFloat()*(Game.HEIGHT ));
+		int x = (int)Math.round(rand.nextFloat()*(Game.WIDTH/3) + Game.WIDTH/3);
+		int y = (int)Math.round(rand.nextFloat()*(Game.HEIGHT/3) + Game.HEIGHT/3);
 		Vector2f vector = new Vector2f(x,y);
 		return vector;
-		/*boolean b = false;
-		int x = 0;
-		int y = 0;
-		Vector2f vector = null;
-		while (b != true){
-			x = (int)Math.round(rand.nextFloat()*(Game.WIDTH ));
-			y = (int)Math.round(rand.nextFloat()*(Game.HEIGHT ));
-			vector = new Vector2f(x,y);
-			b = collisioncheck(vector);
-		}
 		
-		startpositions.add(vector);
-		return vector; */
+
 	}
 	
 }
