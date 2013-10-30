@@ -115,7 +115,19 @@ public class Entity extends Node {
 		this.radius = radius;
 	}
 	
-	public ArrayList<Component> getComponents() {
-		return components;
+	public void clear() {
+		components.clear();
+		renderComponent.clear();
+	}
+	
+	public void changeImage(Component component) {
+		clear();
+		AddComponent(component);
+	}
+	
+	public void changeImageOnNotEqual(String id, Component component) {
+		if(getComponent(id) == null) {
+			changeImage(component);
+		}
 	}
 }

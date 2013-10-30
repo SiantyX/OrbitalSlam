@@ -101,9 +101,7 @@ public class MenuButton extends Entity {
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
-		for (Component component : getComponents()) {
-			component.update(gc, sb, delta);
-		}
+		super.update(gc, sb, delta);
 		
 		int mousePosX = Mouse.getX();
 		int mousePosY = Math.abs(Mouse.getY() - Game.app.getHeight());

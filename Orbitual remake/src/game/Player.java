@@ -19,13 +19,16 @@ import components.ImageRenderComponent;
 public class Player {
 	private boolean dead;
 	private Entity entity;
-	private final String[] playerImg = new String[]{"res/sprites/smiley1.png", "res/sprites/smiley2.png", "res/sprites/smiley3.png", "res/sprites/smiley4.png", "res/sprites/smiley5.png", "res/sprites/smiley6.png", "res/sprites/smiley7.png", "res/sprites/smiley8.png"};
+	private final String[] playerImg = new String[]{"res/sprites/smiley1", "res/sprites/smiley2", "res/sprites/smiley3", "res/sprites/smiley4", "res/sprites/smiley5", "res/sprites/smiley6", "res/sprites/smiley7.png", "res/sprites/smiley8"};
 	public static final float stdScale = 0.0005208f;
 	public static final Color[] PLAYER_COLORS = new Color[]{Color.red, Color.blue, new Color(25, 235, 184), new Color(84, 0, 140), Color.yellow, Color.orange, Color.green, Color.pink, Color.gray, new Color(89, 42, 4)};
 	public Color myColor;
 	private int num;
 	private int score;
 	private Sound sound;
+	
+	private ImageRenderComponent defaultImage;
+	private ImageRenderComponent stunnedImage;
 
 	private double dx;
 	private double dy;
@@ -66,21 +69,14 @@ public class Player {
 	
 	//--------------------------
 
-	public Player(Player player) throws SlickException {
-		entity = new Entity(player.getEntity().getId());
-		entity.AddComponent(new ImageRenderComponent("Player " + num, new Image(playerImg[num])));
-		entity.setCenterPosition(player.getEntity().getPosition());
-		entity.setScale(stdScale*Game.WIDTH);
-		dx = player.getDx();
-		dy = player.getDy();
-		mass = 1;
-		speed = player.getSpeed();
-	}
-
 	public Player(int num, AnchorMap map) throws SlickException {
 		Vector2f startPos = new Vector2f(map.getStartPosX() + (num) * (((Game.WIDTH-(2*map.getStartPosX()))/(map.getNumAncPerRow()-1))) - Game.WIDTH/14, map.getStartPosY() - Game.HEIGHT/10);
-		entity = new Entity("Player " + num);
-		entity.AddComponent(new ImageRenderComponent("Player " + num, new Image(playerImg[num])));
+		entity = new Entity(playerImg[num]);
+		
+		defaultImage = new ImageRenderComponent(playerImg[num], new Image(playerImg[num] + ".png"));
+		stunnedImage = new ImageRenderComponent(playerImg[num] + "xd", new Image(playerImg[num] + "xd.png"));
+		
+		entity.AddComponent(defaultImage);
 		entity.setCenterPosition(startPos);
 		entity.setScale(stdScale*Game.WIDTH);
 
@@ -127,12 +123,16 @@ public class Player {
 		if(dead) return;
 
 		if(stunTime != 0) {
+			entity.changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);
+			
 			stunTime -= delta;
 			if(stunTime < 0) {
 				stunTime = 0;
 			}
 		}
 		else {
+			entity.changeImageOnNotEqual(playerImg[num], defaultImage);
+			
 			// hook button
 			Input input = gc.getInput();
 			if (input.isKeyPressed(KEYBIND)) {
