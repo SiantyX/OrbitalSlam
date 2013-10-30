@@ -58,7 +58,7 @@ public abstract class Hosting extends Thread {
 			selector = Selector.open();
 			server = ServerSocketChannel.open();
 			server.configureBlocking(false);
-			server.socket().bind(new InetSocketAddress(7661));
+			server.socket().bind(new InetSocketAddress(port));
 			server.register(selector, SelectionKey.OP_ACCEPT);	
 
 			// update server with host
