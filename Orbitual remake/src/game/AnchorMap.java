@@ -14,10 +14,6 @@ import components.ImageRenderComponent;
 public class AnchorMap extends GameMap {
 	private ArrayList<Entity> entities;
 	
-	private int numPlayers;
-	
-	private int numAnc;
-	
 	private int startPosX;
 	private double startPercentX;
 	private int numAncPerRow;
@@ -25,9 +21,6 @@ public class AnchorMap extends GameMap {
 	private int startPosY;
 	private double startPercentY;
 	private int numAncPerColumn;
-	
-	private final String anchorPath = "res/sprites/anchorstar.png";
-	private final float stdScale = 0.00002f;
 	
 	// default map
 	public AnchorMap() throws SlickException {
