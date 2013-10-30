@@ -123,7 +123,7 @@ public class Player {
 		if(dead) return;
 
 		if(stunTime != 0) {
-			entity.changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);;
+			entity.changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);
 			
 			stunTime -= delta;
 			if(stunTime < 0) {
@@ -131,7 +131,7 @@ public class Player {
 			}
 		}
 		else {
-			entity.changeImageOnNotEqual(playerImg[num], defaultImage);;
+			entity.changeImageOnNotEqual(playerImg[num], defaultImage);
 			
 			// hook button
 			Input input = gc.getInput();
