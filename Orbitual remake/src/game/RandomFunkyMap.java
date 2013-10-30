@@ -41,26 +41,42 @@ public class RandomFunkyMap extends GameMap {
 			entities.add(e);
 		}
 	}
-	private boolean collisionCheck(Vector2f vector){
-		for (Vector2f v : startpositions){
-			if ((int)Math.abs((v.distance(vector))) < 200 ){
+
+	private boolean collisioncheck(Vector2f vector) {
+		Entity A = new Entity("a");
+		Entity B = new Entity("b");
+		A.setRadius(100);
+		A.setPosition(vector);
+		B.setRadius(100);
+		for (Vector2f v : startpositions) {
+			B.setPosition(v);
+			if (B.collisionCircle(A)) {
 				return false;
-				
+
 			}
-			
+
 		}
 		return true;
 	}
 
 	// handlar om att de inte skall spawna i varandra
 	public Vector2f getStartPos(int i) {
-		
-		int x = (int)Math.round(rand.nextFloat()*(Game.WIDTH/3) + Game.WIDTH/3);
-		int y = (int)Math.round(rand.nextFloat()*(Game.HEIGHT/3) + Game.HEIGHT/3);
-		Vector2f vector = new Vector2f(x,y);
+		boolean b = false;
+		int x = 0;
+		int y = 0;
+		Vector2f vector = null;
+		while (b != true) {
+			x = (int) Math.round(rand.nextFloat() * (Game.WIDTH / 3)
+					+ Game.WIDTH / 3);
+			y = (int) Math.round(rand.nextFloat() * (Game.HEIGHT / 3)
+					+ Game.HEIGHT / 3);
+			vector = new Vector2f(x, y);
+			b = collisioncheck(vector);
+		}
+		startpositions.add(vector);
+
 		return vector;
-		
 
 	}
-	
+
 }
