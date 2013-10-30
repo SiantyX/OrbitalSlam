@@ -105,9 +105,6 @@ public class MenuButton extends Entity {
 			component.update(gc, sb, delta);
 		}
 		
-		shape.setX(pos.x);
-		shape.setY(pos.y);
-		
 		int mousePosX = Mouse.getX();
 		int mousePosY = Math.abs(Mouse.getY() - Game.app.getHeight());
 		Input input = gc.getInput();
@@ -133,6 +130,8 @@ public class MenuButton extends Entity {
 			}
 		}
 		else {
+			shape.setX(pos.x);
+			shape.setY(pos.y);
 			if(shape.contains(mousePosX, mousePosY)) {
 				if(input.isMousePressed(0)) {
 					mousePressed = true;
