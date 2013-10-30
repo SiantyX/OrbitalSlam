@@ -72,7 +72,7 @@ public class RandomFunkyMap extends GameMap {
 		}
 		startpositions.add(vector);
 		mapnr ++;
-		mapnr = mapnr % 10;
+		mapnr = mapnr % 4;
 		if (mapnr == 0)
 			startpositions.clear();
 
