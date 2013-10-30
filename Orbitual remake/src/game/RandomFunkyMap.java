@@ -41,7 +41,7 @@ public class RandomFunkyMap extends GameMap {
 			entities.add(e);
 		}
 	}
-	private boolean collisioncheck(Vector2f vector){
+	private boolean collisionCheck(Vector2f vector){
 		for (Vector2f v : startpositions){
 			if ((int)Math.abs((v.distance(vector))) < 200 ){
 				return false;
