@@ -2,6 +2,7 @@ package game;
 
 import gamestates.AfterGameState;
 import gamestates.AudioSettingsState;
+import gamestates.BeforeGameState;
 import gamestates.BrowserState;
 import gamestates.ClientLobbyState;
 import gamestates.ClientMultiplayerState;
@@ -63,6 +64,7 @@ public class Game extends StateBasedGame {
 		addState(new ClientMultiplayerState());
 		addState(new ClientLobbyState());
 		addState(new ServerMultiplayerState());
+		addState(new BeforeGameState());
 	}
 	
 	

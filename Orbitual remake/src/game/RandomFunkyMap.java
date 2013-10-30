@@ -80,4 +80,9 @@ public class RandomFunkyMap extends GameMap {
 
 	}
 
+	@Override
+	public String toString() {
+		return "Random Map";
+	}
+
 }

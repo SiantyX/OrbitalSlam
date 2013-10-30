@@ -107,4 +107,9 @@ public class AnchorMap extends GameMap {
 		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
 	}
 
+	@Override
+	public String toString() {
+		return "Anchor Map";
+	}
+
 }

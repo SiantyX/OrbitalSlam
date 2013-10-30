@@ -94,13 +94,16 @@ public class MenuState extends BasicGameState{
 		Input input = gc.getInput();
 		
 		if (playButton.isMousePressed()) {
-			Game.LASTID = getID();
+			/*Game.LASTID = getID();
 			InGameState.finished = true;
 			sb.getState(InGameState.ID).init(gc, sb);
 			Game.INGAME_MUSIC.loop();
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
+					100));*/
+			Game.LASTID = getID();
+			sb.enterState(BeforeGameState.ID);
+			InGameState.finished = true;
 		}
 		
 		if(multiButton.isMousePressed()) {

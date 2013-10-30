@@ -45,5 +45,6 @@ public abstract class GameMap {
 	public int getScorePlacementX(int i) {
 		return (Game.WIDTH / numPlayers) * (i) + Game.HEIGHT / (numPlayers * 2);
 	}
+	public abstract String toString();
 
 }
