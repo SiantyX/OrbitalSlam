@@ -114,13 +114,4 @@ public class AnchorMap extends GameMap {
 		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
 	}
 
-	@Override
-	public int getScorePlacementX(int i) {
-		return (Game.WIDTH/numPlayers)*(i) + Game.HEIGHT/(numPlayers*2);
-	}
-
-	@Override
-	public int getScorePlacementY() {
-		return (Game.HEIGHT/15);
-	}
 }

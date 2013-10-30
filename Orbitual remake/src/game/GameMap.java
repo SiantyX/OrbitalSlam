@@ -40,8 +40,12 @@ public abstract class GameMap {
 		return numPlayers;
 	}
 
-	public abstract int getScorePlacementY();
+	public int getScorePlacementY() {
+		return (Game.HEIGHT / 15);
+	}
 
-	public abstract int getScorePlacementX(int i);
+	public int getScorePlacementX(int i) {
+		return (Game.WIDTH / numPlayers) * (i) + Game.HEIGHT / (numPlayers * 2);
+	}
 
 }

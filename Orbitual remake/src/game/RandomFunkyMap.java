@@ -73,12 +73,5 @@ public class RandomFunkyMap extends GameMap {
 		startpositions.add(vector);
 		return vector; */
 	}
-
-	public int getScorePlacementX(int i) {
-		return (Game.WIDTH / numPlayers) * (i) + Game.HEIGHT / (numPlayers * 2);
-	}
-
-	public int getScorePlacementY() {
-		return (Game.HEIGHT / 8);
-	}
+	
 }
