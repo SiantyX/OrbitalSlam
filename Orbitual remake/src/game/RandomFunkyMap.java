@@ -14,9 +14,11 @@ public class RandomFunkyMap extends GameMap {
 	private Random rand;
 	private ArrayList<Vector2f> startpositions;
 	ArrayList<Vector2f> list = new ArrayList<Vector2f>();
+	int mapnr = 0;
+
 
 	public RandomFunkyMap() throws SlickException {
-
+		
 		super();
 		startpositions = new ArrayList<Vector2f>();
 
@@ -43,14 +45,8 @@ public class RandomFunkyMap extends GameMap {
 	}
 
 	private boolean collisioncheck(Vector2f vector) {
-		Entity A = new Entity("a");
-		Entity B = new Entity("b");
-		A.setRadius(100);
-		A.setPosition(vector);
-		B.setRadius(100);
 		for (Vector2f v : startpositions) {
-			B.setPosition(v);
-			if (B.collisionCircle(A)) {
+			if (v.distance(vector) < 100) {
 				return false;
 
 			}
@@ -61,6 +57,7 @@ public class RandomFunkyMap extends GameMap {
 
 	// handlar om att de inte skall spawna i varandra
 	public Vector2f getStartPos(int i) {
+		
 		boolean b = false;
 		int x = 0;
 		int y = 0;
@@ -74,6 +71,10 @@ public class RandomFunkyMap extends GameMap {
 			b = collisioncheck(vector);
 		}
 		startpositions.add(vector);
+		mapnr ++;
+		mapnr = mapnr % 10;
+		if (mapnr == 0)
+			startpositions.clear();
 
 		return vector;
 
