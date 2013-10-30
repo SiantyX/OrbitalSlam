@@ -244,7 +244,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 		if(!playersAlive.isEmpty() && playersAlive.size() > 1) {
 			for(int i = 0; i < playersAlive.size() - 1; i++) {
 				for(int j = i+1; j < playersAlive.size(); j++) {
-					if(collisionCircle(playersAlive.get(i).getEntity(), playersAlive.get(j).getEntity())) {
+					if(playersAlive.get(i).getEntity().collisionCircle(playersAlive.get(j).getEntity())) {
 						playersAlive.get(i).collision(playersAlive.get(j));
 					}
 				}
@@ -252,15 +252,6 @@ public class InGameState extends BasicGameState implements KeyListener {
 		}
 	}
 
-	private boolean collisionCircle(Entity e1, Entity e2) {
-		float radii = e1.getRadius() + e2.getRadius();
-		float dx = e2.getPosition().x + e2.getRadius() - e1.getPosition().x - e1.getRadius();
-		float dy = e2.getPosition().y + e2.getRadius() - e1.getPosition().y - e1.getRadius();
-		if( dx * dx + dy * dy < radii * radii){
-			return true;
-		}
-		return false;
-	}
 
 	private void deathCheck() {
 		// check if dead
