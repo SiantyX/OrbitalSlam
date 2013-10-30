@@ -19,7 +19,6 @@ public abstract class GameMap {
 	public GameMap() {
 		entities = new ArrayList<Entity>();
 		numPlayers = 4;
-
 	}
 
 	public abstract Vector2f getStartPos(int i);
@@ -36,7 +35,6 @@ public abstract class GameMap {
 	}
 
 	public int getNumPlayers() {
-		// TODO Auto-generated method stub
 		return numPlayers;
 	}
 
