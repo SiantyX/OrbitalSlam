@@ -41,7 +41,7 @@ public abstract class GameMap {
 	}
 
 	public int getScorePlacementY() {
-		return (Game.HEIGHT / 15);
+		return (Game.HEIGHT / 18);
 	}
 
 	public int getScorePlacementX(int i) {
