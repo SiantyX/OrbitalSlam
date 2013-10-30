@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
@@ -41,6 +42,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 	
 	private static double countDown;
 	private static boolean onCountDown;
+	
+	private Image bg;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
@@ -49,6 +52,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 			return;
 		}
 
+		bg = new Image("res/orbitalbg1.jpg");
+		
 		playersAlive = new ArrayList<Player>();
 		map = new RandomFunkyMap();
 		players = new ArrayList<Player>();
@@ -130,6 +135,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		bg.draw(0, 0, (float) Game.WIDTH/2560);
+		
 		map.render(gc, sb, g);
 
 		if(players.isEmpty()) return;
