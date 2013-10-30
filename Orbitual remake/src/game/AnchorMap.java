@@ -11,7 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import components.ImageRenderComponent;
 
-public class AnchorMap {
+public class AnchorMap extends GameMap {
 	private ArrayList<Entity> entities;
 	
 	private int numPlayers;
@@ -31,6 +31,7 @@ public class AnchorMap {
 	
 	// default map
 	public AnchorMap() throws SlickException {
+		
 		numAnc = 12;
 		
 		startPercentX = 0.2;
@@ -106,5 +107,20 @@ public class AnchorMap {
 	
 	public int getNumPlayers() {
 		return numPlayers;
+	}
+
+	@Override
+	public Vector2f getStartPos(int i) {
+		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
+	}
+
+	@Override
+	public int getScorePlacementX(int i) {
+		return (Game.WIDTH/numPlayers)*(i) + Game.HEIGHT/(numPlayers*2);
+	}
+
+	@Override
+	public int getScorePlacementY() {
+		return (Game.HEIGHT/8);
 	}
 }

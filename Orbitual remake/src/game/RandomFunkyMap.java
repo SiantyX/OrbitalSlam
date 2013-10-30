@@ -1,5 +1,5 @@
 package game;
- 
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,41 +11,74 @@ import components.ImageRenderComponent;
 
 public class RandomFunkyMap extends GameMap {
 	// extra deluxe funk edition
-	Random rand;
+	private Random rand;
+	private ArrayList<Vector2f> startpositions;
 	ArrayList<Vector2f> list = new ArrayList<Vector2f>();
 
 	public RandomFunkyMap() throws SlickException {
-		numPlayers = 4;
-		
-		rand = new Random();	
+
+		super();
+		startpositions = new ArrayList<Vector2f>();
+
+		rand = new Random();
 		numAnc = rand.nextInt(24) + 12;
-		entities = new ArrayList<Entity>();
-			
-		
-		
-		
+
 		createMap();
 	}
+
 	private void createMap() throws SlickException {
-		for(int i = 0; i < numAnc; i++) {
+		for (int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
 			Image img = new Image(anchorPath);
-			ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
+			ImageRenderComponent c = new ImageRenderComponent("Anchor "
+					+ Integer.toString(i), img);
 			e.AddComponent(c);
 			// homemade
-			e.setScale(stdScale*Game.WIDTH);
-			Vector2f pos = new Vector2f(rand.nextFloat()*Game.WIDTH, (float)rand.nextFloat()*(Game.HEIGHT));
+			e.setScale(stdScale * Game.WIDTH);
+			Vector2f pos = new Vector2f(rand.nextFloat() * Game.WIDTH,
+					rand.nextFloat() * Game.HEIGHT);
 			e.setPosition(pos);
 			entities.add(e);
 		}
 	}
-	
+	private boolean collisioncheck(Vector2f vector){
+		for (Vector2f v : startpositions){
+			if ((int)Math.abs((v.getX()) - vector.getX()) < 200 || (int)Math.abs((v.getY()) - vector.getY()) < 200 ){
+				return false;
+				
+			}
+			
+		}
+		return true;
+	}
 
-
-	public Vector2f getStartPos(int i){
-		int x = rand.nextInt(Game.WIDTH - (Game.WIDTH/3)) + (Game.WIDTH/3);
-		int y = rand.nextInt(Game.HEIGHT - (Game.HEIGHT/ 3)) + (Game.HEIGHT/ 3);
-		return new Vector2f(x, y);
+	// handlar om att de inte skall spawna i varandra
+	public Vector2f getStartPos(int i) {
 		
+		int x = (int)Math.round(rand.nextFloat()*(Game.WIDTH ));
+		int y = (int)Math.round(rand.nextFloat()*(Game.HEIGHT ));
+		Vector2f vector = new Vector2f(x,y);
+		return vector;
+		/*boolean b = false;
+		int x = 0;
+		int y = 0;
+		Vector2f vector = null;
+		while (b != true){
+			x = (int)Math.round(rand.nextFloat()*(Game.WIDTH ));
+			y = (int)Math.round(rand.nextFloat()*(Game.HEIGHT ));
+			vector = new Vector2f(x,y);
+			b = collisioncheck(vector);
+		}
+		
+		startpositions.add(vector);
+		return vector; */
+	}
+
+	public int getScorePlacementX(int i) {
+		return (Game.WIDTH / numPlayers) * (i) + Game.HEIGHT / (numPlayers * 2);
+	}
+
+	public int getScorePlacementY() {
+		return (Game.HEIGHT / 8);
 	}
 }

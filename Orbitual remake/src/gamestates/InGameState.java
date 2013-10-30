@@ -1,9 +1,11 @@
 package gamestates;
 
+import game.GameMap;
 import game.AnchorMap;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.RandomFunkyMap;
 
 import java.awt.Font;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import org.newdawn.slick.util.FontUtils;
 public class InGameState extends BasicGameState implements KeyListener {
 
 	public static final int ID = 1;
-	private AnchorMap map;
+	private GameMap map;
 	public static ArrayList<Player> players;
 	static int numLocalPlayers = 2;
 	private static boolean numPlayersChanged = false;
@@ -48,7 +50,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 		}
 
 		playersAlive = new ArrayList<Player>();
-		map = new AnchorMap();
+		map = new RandomFunkyMap();
 		players = new ArrayList<Player>();
 
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
@@ -138,7 +140,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 		FontUtils.drawCenter(scoreFont, "Score limit: " + Game.SCORE_LIMIT, 10, 10, 200);
 		
 		for(int i = 0; i < numLocalPlayers; i++) {
-			FontUtils.drawCenter(scoreFont, "Player " + (i+1) + ": " + players.get(i).getScore(), map.getStartPosX() + i * ((Game.WIDTH - map.getStartPosX()*2) / (map.getNumPlayers()-1)) - Game.WIDTH/14, 40, 100, Player.PLAYER_COLORS[i]);
+			FontUtils.drawCenter(scoreFont, "Player " + (i+1) + ": " + players.get(i).getScore(),map.getScorePlacementX(i), map.getScorePlacementY(), 100, Player.PLAYER_COLORS[i]);
 		}
 		
 		if(onCountDown) {

@@ -69,8 +69,8 @@ public class Player {
 	
 	//--------------------------
 
-	public Player(int num, AnchorMap map) throws SlickException {
-		Vector2f startPos = new Vector2f(map.getStartPosX() + (num) * (((Game.WIDTH-(2*map.getStartPosX()))/(map.getNumAncPerRow()-1))) - Game.WIDTH/14, map.getStartPosY() - Game.HEIGHT/10);
+	public Player(int num, GameMap map) throws SlickException {
+		Vector2f startPos = map.getStartPos(num);
 		entity = new Entity(playerImg[num]);
 		
 		defaultImage = new ImageRenderComponent(playerImg[num], new Image(playerImg[num] + ".png"));
