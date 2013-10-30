@@ -121,6 +121,6 @@ public class AnchorMap extends GameMap {
 
 	@Override
 	public int getScorePlacementY() {
-		return (Game.HEIGHT/8);
+		return (Game.HEIGHT/15);
 	}
 }
