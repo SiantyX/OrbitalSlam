@@ -10,9 +10,6 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class ImageRenderComponent extends Component {
-	private float scale;
-	private float rotation;
-
 	public ImageRenderComponent(String id, Image image) {
 		super(id);
 		this.currentImage = image;
@@ -35,33 +32,4 @@ public class ImageRenderComponent extends Component {
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
 		currentImage.rotate(owner.getRotation() - currentImage.getRotation());
 	}
-	
-	public float getRadius(){
-		return (currentImage.getWidth()/2)*scale;
-	}
-	
-	public Image getImage() {
-		return currentImage;
-	}
-
-	@Override
-	public void setScale(float scale) {
-		this.scale = scale;
-	}
-
-	@Override
-	public float getScale() {
-		return scale;
-	}
-
-	@Override
-	public void setRotation(float rotation) {
-		currentImage.rotate(getRotation() - rotation);
-		this.rotation = rotation;
-	}
-
-	@Override
-	public float getRotation() {
-		return rotation;
-	}	
 }
