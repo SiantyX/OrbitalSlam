@@ -55,7 +55,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 		bg = new Image("res/orbitalbg1.jpg");
 		
 		playersAlive = new ArrayList<Player>();
-		map = new RandomFunkyMap();
+		// måste få kartan på något sätt om inte statiskt map = BeforeGameState.selectedMap;
+		map = new AnchorMap();
 		players = new ArrayList<Player>();
 
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();

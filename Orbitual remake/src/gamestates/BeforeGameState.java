@@ -2,9 +2,14 @@ package gamestates;
 
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
+import game.AnchorMap;
 import game.Game;
+import game.GameMap;
 import game.MenuButton;
+import game.RandomFunkyMap;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -25,32 +30,40 @@ import org.newdawn.slick.util.FontUtils;
 public class BeforeGameState extends BasicGameState{
 	public static final int ID = 13;
 	private ArrayList<MenuButton> buttons;
-	private MenuButton okButton, backButton;
+	private MenuButton okButton, backButton, mapButton;
 	private TrueTypeFont ttf;
-
+	private GameMap selectedMap;
+	private LinkedList<GameMap> Maplist;
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		
+		Maplist = new LinkedList<GameMap>();
+		Maplist.add(new AnchorMap());
+		Maplist.add(new RandomFunkyMap());
+		
+		selectedMap = (GameMap) Maplist.poll();
+		Maplist.addLast(selectedMap);
+		
+		
+		
 
 		Font f = new Font("Arial", Font.PLAIN, 18);
 		ttf = new TrueTypeFont(f, true);
-		okButton = new MenuButton("knas", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 150, 200, 50), Color.white, "Ok", ttf);
-		backButton = new MenuButton("back", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 200, 200, 50), Color.white, "Back", ttf);
+		okButton = new MenuButton("Ok", new Rectangle(Game.centerWidth - 250, Game.centerHeight + 200, 200, 50), Color.white, "Ok", ttf);
+		backButton = new MenuButton("Back", new Rectangle(Game.centerWidth + 50, Game.centerHeight + 200, 200, 50), Color.white, "Back", ttf);
+		mapButton = new MenuButton(selectedMap.toString(), new Rectangle(Game.centerWidth - 100, Game.centerHeight - 150, 200, 50), Color.white, selectedMap.toString(), ttf);
+		
 		
 		buttons.add(okButton);
 		buttons.add(backButton);
+		buttons.add(mapButton);
 		//-------------------
 		
 		f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
-		
-		Game.MENU_MUSIC = new Music("res/audio/music/menu.ogg");
-		Game.MENU_MUSIC.loop();
-		Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-		
-		Game.INGAME_MUSIC = new Music("res/audio/music/ingame.ogg");
+	
 	}
 
 	@Override
@@ -62,6 +75,10 @@ public class BeforeGameState extends BasicGameState{
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
 		}
+		
+	}
+	public GameMap getMap(){
+		return selectedMap;
 		
 	}
 
@@ -88,6 +105,11 @@ public class BeforeGameState extends BasicGameState{
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
 			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
+		}
+		if (mapButton.isMousePressed()){
+			selectedMap = (GameMap) Maplist.poll();
+			Maplist.addLast(selectedMap);
+			mapButton.setText(selectedMap.toString());
 		}
 
 	}

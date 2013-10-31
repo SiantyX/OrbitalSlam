@@ -53,6 +53,7 @@ public class Game extends StateBasedGame {
 		centerWidth = app.getWidth()/2;
 		addState(new MenuState());
 		addState(new DisplayModeState());
+		addState(new BeforeGameState());
 		addState(new InGameState());
 		addState(new PauseMenuState());
 		addState(new SettingsState());
@@ -64,7 +65,7 @@ public class Game extends StateBasedGame {
 		addState(new ClientMultiplayerState());
 		addState(new ClientLobbyState());
 		addState(new ServerMultiplayerState());
-		addState(new BeforeGameState());
+		
 	}
 	
 	
