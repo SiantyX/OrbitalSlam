@@ -32,7 +32,7 @@ public class MenuButton extends Entity {
 	
 	private Shape shape;
 	private Color color;
-	private String text;
+	protected String text;
 	private Color txtColor;
 	private TrueTypeFont ttf;
 	
