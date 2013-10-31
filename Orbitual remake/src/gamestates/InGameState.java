@@ -203,6 +203,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 		}
 
 		if(players.isEmpty()) return;
+		
 		if(!playersAlive.isEmpty()) {
 			ArrayList<Player> tmpPlayers = new ArrayList<Player>();
 			for(Player player : playersAlive) {
@@ -265,14 +266,11 @@ public class InGameState extends BasicGameState implements KeyListener {
 	private void deathCheck() {
 		// check if dead
 		for(Player player : playersAlive) {
-			if(player.getEntity().getCenterPosition().x < 0 || player.getEntity().getCenterPosition().x > Game.WIDTH
-					|| player.getEntity().getCenterPosition().y < 0 || player.getEntity().getCenterPosition().y > Game.HEIGHT) {
-				player.die();
+			if(player.deathCheck()) {
 				for(Player otherPlayer : playersAlive) {
 					if(otherPlayer.equals(player)) continue;
 					otherPlayer.addScore(1);
 				}
-
 				// SCREEN FLASH HERE
 			}
 		}

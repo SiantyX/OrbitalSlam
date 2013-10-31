@@ -310,6 +310,16 @@ public class Player {
 		hooked = h;
 	}
 	
+	public boolean deathCheck() {
+		if(getEntity().getCenterPosition().x < 0 || getEntity().getCenterPosition().x > Game.WIDTH
+				|| getEntity().getCenterPosition().y < 0 || getEntity().getCenterPosition().y > Game.HEIGHT) {
+			die();
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void die() {
 		dead = true;
 	}
