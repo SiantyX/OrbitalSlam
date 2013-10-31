@@ -21,7 +21,7 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class SettingsState extends BasicGameState implements KeyListener{
-	public static final int ID = 4;
+	private final int ID;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton backButton, videoButton, controlsButton, audioButton, scoreLimitButton;
 	private TrueTypeFont ttf;
@@ -30,6 +30,10 @@ public class SettingsState extends BasicGameState implements KeyListener{
 	private boolean changeScoreLimit;
 	private static boolean justChanged = false;
 	private Color oldColor;
+	
+	public SettingsState(int id) {
+		ID = id;
+	}
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
@@ -100,7 +104,7 @@ public class SettingsState extends BasicGameState implements KeyListener{
 			changeScoreLimit = false;
 			scoreLimitButton.setBackColor(oldColor);
 			scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
-			sb.enterState(ControlsSettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.CONTROLSSETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
@@ -108,7 +112,7 @@ public class SettingsState extends BasicGameState implements KeyListener{
 			changeScoreLimit = false;
 			scoreLimitButton.setBackColor(oldColor);
 			scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
-			sb.enterState(AudioSettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.AUDIOSETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
@@ -116,7 +120,7 @@ public class SettingsState extends BasicGameState implements KeyListener{
 			changeScoreLimit = false;
 			scoreLimitButton.setBackColor(oldColor);
 			scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
-			sb.enterState(DisplayModeState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.DISPLAYMODESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		

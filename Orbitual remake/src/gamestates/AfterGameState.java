@@ -23,13 +23,17 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class AfterGameState extends BasicGameState implements Comparator<Player> {
-	public static final int ID = 7;
+	private final int ID;
 	private TrueTypeFont bigText;
 	private TrueTypeFont scoreFont;
 	private ArrayList<Player> scoreList;
 	
 	private ArrayList<MenuButton> buttons;
 	private MenuButton playButton, backButton;
+	
+	public AfterGameState(int id) {
+		ID = id;
+	}
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
@@ -61,7 +65,7 @@ public class AfterGameState extends BasicGameState implements Comparator<Player>
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
 		
-		sb.getState(InGameState.ID).render(gc, sb, g);
+		sb.getState(Game.State.INGAMESTATE.ordinal()).render(gc, sb, g);
 		
 		g.setColor(new Color(0, 0, 0, 180));
 		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
@@ -87,16 +91,16 @@ public class AfterGameState extends BasicGameState implements Comparator<Player>
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
 		if (playButton.isMousePressed()) {
 			Game.LASTID = getID();
 			InGameState.finished = true;
-			sb.getState(InGameState.ID).init(gc, sb);
+			sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
 			Game.INGAME_MUSIC.play();
-			sb.enterState(InGameState.ID);
+			sb.enterState(Game.State.INGAMESTATE.ordinal());
 		}
 	}
 

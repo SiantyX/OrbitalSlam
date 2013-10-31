@@ -26,7 +26,7 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class BrowserState extends BasicGameState implements KeyListener {
-	public final static int ID = 8;
+	private final int ID;
 	
 	private ArrayList<MenuButton> buttons;
 	private ArrayList<MenuButton> lobbys;
@@ -40,6 +40,10 @@ public class BrowserState extends BasicGameState implements KeyListener {
 	private boolean changeName;
 	private boolean justChanged;
 	private Color oldColor;
+	
+	public BrowserState(int id) {
+		ID = id;
+	}
 	
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException {
 		buttons = new ArrayList<MenuButton>();
@@ -101,7 +105,7 @@ public class BrowserState extends BasicGameState implements KeyListener {
 		}
 		
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
@@ -115,8 +119,8 @@ public class BrowserState extends BasicGameState implements KeyListener {
 		
 		if(createButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.getState(HostLobbyState.ID).init(gc, sb);
-			sb.enterState(HostLobbyState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.getState(Game.State.HOSTLOBBYSTATE.ordinal()).init(gc, sb);
+			sb.enterState(Game.State.HOSTLOBBYSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
@@ -127,7 +131,7 @@ public class BrowserState extends BasicGameState implements KeyListener {
 				try {
 				NetHandler hndlr = new NetHandler();
 				if(hndlr.JoinLobby(browser.get(Integer.parseInt(button.getId()))))
-					sb.enterState(ClientLobbyState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black, 100));
+					sb.enterState(Game.State.CLIENTLOBBYSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black, 100));
 				}
 				catch (IOException e) {
 					e.printStackTrace();

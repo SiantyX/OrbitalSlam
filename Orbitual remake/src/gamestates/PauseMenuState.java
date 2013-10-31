@@ -21,10 +21,14 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class PauseMenuState extends BasicGameState {
-	public static final int ID = 0;
+	private final int ID;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton continueButton, settingsButton, exitButton;
 	private TrueTypeFont ttf;
+	
+	public PauseMenuState(int id) {
+		ID = id;
+	}
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
@@ -48,7 +52,7 @@ public class PauseMenuState extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
-		sb.getState(InGameState.ID).render(gc, sb, g);
+		sb.getState(Game.State.INGAMESTATE.ordinal()).render(gc, sb, g);
 		
 		g.setColor(new Color(0, 0, 0, 125));
 		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
@@ -74,20 +78,20 @@ public class PauseMenuState extends BasicGameState {
 			Game.MENU_MUSIC.stop();
 			Game.INGAME_MUSIC.resume();
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 			InGameState.startCountDown();
 		}
 		
 		if (settingsButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
 		if (exitButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 	}

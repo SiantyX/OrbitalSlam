@@ -43,6 +43,12 @@ public class Game extends StateBasedGame {
 	public static Music MENU_MUSIC;
 	public static Music INGAME_MUSIC;
 	
+	public static enum State {
+		MENUSTATE, DISPLAYMODESTATE, PAUSEMENUSTATE, SETTINGSSTATE,	AUDIOSETTINGSSTATE, CONTROLSSETTINGSSTATE,
+		BEFOREGAMESTATE, INGAMESTATE, AFTERGAMESTATE,
+		BROWSERSTATE, HOSTLOBBYSTATE, CLIENTMULTIPLAYERSTATE, CLIENTLOBBYSTATE, SERVERMULTIPLAYERSTATE
+	}
+	
 	public Game() {
 		super("Orbital Slam");
 	}
@@ -51,21 +57,20 @@ public class Game extends StateBasedGame {
 	public void initStatesList(GameContainer arg0) throws SlickException {
 		centerHeight = app.getHeight()/2;
 		centerWidth = app.getWidth()/2;
-		addState(new MenuState());
-		addState(new DisplayModeState());
-		addState(new BeforeGameState());
-		addState(new InGameState());
-		addState(new PauseMenuState());
-		addState(new SettingsState());
-		addState(new AudioSettingsState());
-		addState(new ControlsSettingsState());
-		addState(new AfterGameState());
-		addState(new BrowserState());
-		addState(new HostLobbyState());
-		addState(new ClientMultiplayerState());
-		addState(new ClientLobbyState());
-		addState(new ServerMultiplayerState());
-		
+		addState(new MenuState(State.MENUSTATE.ordinal()));
+		addState(new DisplayModeState(State.DISPLAYMODESTATE.ordinal()));
+		addState(new BeforeGameState(State.BEFOREGAMESTATE.ordinal()));
+		addState(new InGameState(State.INGAMESTATE.ordinal()));
+		addState(new PauseMenuState(State.PAUSEMENUSTATE.ordinal()));
+		addState(new SettingsState(State.SETTINGSSTATE.ordinal()));
+		addState(new AudioSettingsState(State.AUDIOSETTINGSSTATE.ordinal()));
+		addState(new ControlsSettingsState(State.CONTROLSSETTINGSSTATE.ordinal()));
+		addState(new AfterGameState(State.AFTERGAMESTATE.ordinal()));
+		addState(new BrowserState(State.BROWSERSTATE.ordinal()));
+		addState(new HostLobbyState(State.HOSTLOBBYSTATE.ordinal()));
+		addState(new ClientMultiplayerState(State.CLIENTMULTIPLAYERSTATE.ordinal()));
+		addState(new ClientLobbyState(State.CLIENTLOBBYSTATE.ordinal()));
+		addState(new ServerMultiplayerState(State.SERVERMULTIPLAYERSTATE.ordinal()));
 	}
 	
 	

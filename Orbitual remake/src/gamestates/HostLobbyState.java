@@ -30,8 +30,9 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class HostLobbyState extends LobbyState implements KeyListener {
-	public static final int ID = 9;
-
+	public HostLobbyState(int id) {
+		super(id);
+	}
 	
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		super.init(gc, sb);
@@ -39,7 +40,7 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 		startButton = new MenuButton("start", new Rectangle(Game.centerWidth + 100, Game.centerHeight + 400, 200, 50), Color.white, "Start", ttf);
 		buttons.add(startButton);
 		
-		if(Game.LASTID == BrowserState.ID) {
+		if(Game.LASTID == Game.State.BROWSERSTATE.ordinal()) {
 			try {
 				hosted = new LobbyHosting(hostname, 4, mbox);
 				hosted.start();
@@ -63,14 +64,14 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 			hosted.setAllKeys("start");
 			hosted.close();
 			ServerMultiplayerState.names = players;
-			sb.getState(ServerMultiplayerState.ID).init(gc, sb);
-			sb.enterState(ServerMultiplayerState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal()).init(gc, sb);
+			sb.enterState(Game.State.SERVERMULTIPLAYERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
 		if(cancelButton.isMousePressed()) {
 			hosted.close();
-			sb.enterState(BrowserState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.BROWSERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
@@ -84,10 +85,6 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 	public void sendText(String str) {
 		hosted.addToBox("Me: " + str);
 		hosted.setAllKeys("chat\n" + Game.username + ": " + str);
-	}
-	
-	public int getID() {
-		return ID;
 	}
 }
 /*	private String hostname;

@@ -21,7 +21,9 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class ServerMultiplayerState extends MultiplayerState {
-	public static final int ID = 12;
+	public ServerMultiplayerState(int id) {
+		super(id);
+	}
 
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		super.init(gc, sb);
@@ -34,9 +36,4 @@ public class ServerMultiplayerState extends MultiplayerState {
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
 	}
-
-	public int getID() {
-		return ID;
-	}
-
 }

@@ -28,26 +28,28 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class BeforeGameState extends BasicGameState{
-	public static final int ID = 13;
+	private final int ID;
+	
 	private ArrayList<MenuButton> buttons;
 	private MenuButton okButton, backButton, mapButton;
 	private TrueTypeFont ttf;
 	private GameMap selectedMap;
-	private LinkedList<GameMap> Maplist;
+	private LinkedList<GameMap> maplist;
+	
+	public BeforeGameState(int id) {
+		ID = id;
+	}
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		
-		Maplist = new LinkedList<GameMap>();
-		Maplist.add(new AnchorMap());
-		Maplist.add(new RandomFunkyMap());
+		maplist = new LinkedList<GameMap>();
+		maplist.add(new AnchorMap());
+		maplist.add(new RandomFunkyMap());
 		
-		selectedMap = (GameMap) Maplist.poll();
-		Maplist.addLast(selectedMap);
-		
-		
-		
+		selectedMap = (GameMap) maplist.poll();
+		maplist.addLast(selectedMap);
 
 		Font f = new Font("Arial", Font.PLAIN, 18);
 		ttf = new TrueTypeFont(f, true);
@@ -96,19 +98,19 @@ public class BeforeGameState extends BasicGameState{
 		if (okButton.isMousePressed()) {
 			Game.LASTID = getID();
 			InGameState.finished = true;
-			sb.getState(InGameState.ID).init(gc, sb);
+			sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
 			Game.INGAME_MUSIC.loop();
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
-			sb.enterState(MenuState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		if (mapButton.isMousePressed()){
-			selectedMap = (GameMap) Maplist.poll();
-			Maplist.addLast(selectedMap);
+			selectedMap = (GameMap) maplist.poll();
+			maplist.addLast(selectedMap);
 			mapButton.setText(selectedMap.toString());
 		}
 

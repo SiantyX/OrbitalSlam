@@ -24,12 +24,13 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public abstract class MultiplayerState extends BasicGameState {
-	public static final int ID = 98;
+	private final int ID;
 
 	public static CopyOnWriteArrayList<String> names;
 
 	// INGAME SPECIFIC
 
+	private int keyBinds[];
 	private AnchorMap map;
 	public static ArrayList<Player> players;
 	static int numLocalPlayers = 2;
@@ -45,6 +46,10 @@ public abstract class MultiplayerState extends BasicGameState {
 	private static double countDown;
 	private static boolean onCountDown;
 
+	public MultiplayerState(int id) {
+		ID = id;
+	}
+
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		if(names != null) {
 			playersAlive = new ArrayList<Player>();
@@ -59,7 +64,7 @@ public abstract class MultiplayerState extends BasicGameState {
 			for(int i = 0; i < names.size(); i++) {
 				Player p = new Player(i, map);
 				if(names.get(i).equals(Game.username))
-					p.KEYBIND = ControlsSettingsState.KEYBINDS[8];
+					p.KEYBIND = keyBinds[i];
 				else
 					p.KEYBIND = 9999;
 				players.add(p);
@@ -95,7 +100,7 @@ public abstract class MultiplayerState extends BasicGameState {
 		for(int i = 0; i < names.size(); i++) {
 			Player p = new Player(i, map);
 			if(names.get(i).equals(Game.username))
-				p.KEYBIND = ControlsSettingsState.KEYBINDS[8];
+				p.KEYBIND = keyBinds[i];
 			else
 				p.KEYBIND = 9999;
 			p.setScore(tmpAL.get(i));
@@ -129,13 +134,11 @@ public abstract class MultiplayerState extends BasicGameState {
 			g.setColor(new Color(0, 0, 0, 125));
 			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 			g.setColor(Color.white);
-			if(playersAlive.size() < 1) {
-				if(sb.getCurrentStateID() != AfterGameState.ID) {
+			if(sb.getCurrentStateID() != Game.State.AFTERGAMESTATE.ordinal()) {
+				if(playersAlive.size() < 1) {
 					FontUtils.drawCenter(ttf, "It's a Draw!", Game.centerWidth - 200, Game.centerHeight - 25, 400);
 				}
-			}
-			else {
-				if(sb.getCurrentStateID() != AfterGameState.ID) {
+				else {
 					FontUtils.drawCenter(ttf, playersAlive.get(0).toString() + " Wins!", Game.centerWidth - 200, Game.centerHeight - 25, 400, Player.PLAYER_COLORS[players.indexOf(playersAlive.get(0))]);
 				}
 			}
@@ -149,7 +152,7 @@ public abstract class MultiplayerState extends BasicGameState {
 			finished = false;
 			Game.MENU_MUSIC.loop();
 			Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-			sb.enterState(PauseMenuState.ID);
+			sb.enterState(Game.State.PAUSEMENUSTATE.ordinal());
 		}
 
 		if(numPlayersChanged) {
@@ -206,8 +209,8 @@ public abstract class MultiplayerState extends BasicGameState {
 				// playersAlive.get(0)
 				Game.LASTID = getID();
 				finished = true;
-				sb.getState(AfterGameState.ID).init(gc, sb);
-				sb.enterState(AfterGameState.ID, new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
+				sb.getState(Game.State.AFTERGAMESTATE.ordinal()).init(gc, sb);
+				sb.enterState(Game.State.AFTERGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 2000), new FadeInTransition(Color.black,
 						2000));
 			}
 			else {
@@ -257,6 +260,16 @@ public abstract class MultiplayerState extends BasicGameState {
 		countDown = 3000;
 		onCountDown = true;
 	}
+	
+	public void setControls(int keyBinds[]) {
+		this.keyBinds = keyBinds;
+		
+		for(int i = 0; i < numLocalPlayers; i++) {
+			players.get(i).KEYBIND = keyBinds[i];
+		}
+	}
 
-	public abstract int getID();
+	public int getID() {
+		return ID;
+	}
 }

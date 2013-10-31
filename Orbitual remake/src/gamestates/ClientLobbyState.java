@@ -16,13 +16,16 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class ClientLobbyState extends LobbyState {
-	public static final int ID = 11;
+	public ClientLobbyState(int id) {
+		super(id);
+	}
+
 	public static NetHandler hndlr;
 
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		super.init(gc, sb);
 
-		if(Game.LASTID == BrowserState.ID) {
+		if(Game.LASTID == Game.State.BROWSERSTATE.ordinal()) {
 			Runnable updateLobby = new Runnable() {
 				public void run() {
 					hndlr.updateClientLobby(players, mbox.getMessages());
@@ -39,7 +42,7 @@ public class ClientLobbyState extends LobbyState {
 		if(cancelButton.isMousePressed()) {
 			hndlr.close();
 			hndlr = null;
-			sb.enterState(BrowserState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.BROWSERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
@@ -53,17 +56,13 @@ public class ClientLobbyState extends LobbyState {
 			ClientMultiplayerState.lobby = hndlr.currentLobby;
 			hndlr.close();
 			ClientMultiplayerState.names = players;
-			sb.getState(ClientMultiplayerState.ID).init(gc, sb);
-			sb.enterState(ClientMultiplayerState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.getState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal()).init(gc, sb);
+			sb.enterState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 	}
 	
 	public void sendText(String str) {
 		mbox.addMessage(str);
-	}
-
-	public int getID() {
-		return ID;
 	}
 }

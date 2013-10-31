@@ -28,7 +28,7 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class DisplayModeState extends BasicGameState implements Comparator<DisplayMode> {
-	public static final int ID = 3;
+	private final int ID;
 	private LinkedList<DisplayMode> resolutions;
 	private int index, currentResIndex;
 	private ArrayList<MenuButton> buttons;
@@ -40,6 +40,10 @@ public class DisplayModeState extends BasicGameState implements Comparator<Displ
 	private TrueTypeFont bigText, ttf;
 	
 	private boolean fullscreen;
+	
+	public DisplayModeState(int id) {
+		ID = id;
+	}
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
@@ -141,7 +145,7 @@ public class DisplayModeState extends BasicGameState implements Comparator<Displ
 		}
 		
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || cancelButton.isMousePressed()) {
-			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 			resButton.setText(resolutions.get(currentResIndex).toString());
 			sb.closeRequested();

@@ -23,11 +23,16 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class MenuState extends BasicGameState{
-	public static final int ID = 2;
+	private final int ID;
+	
 	private ArrayList<MenuButton> buttons;
 	private MenuButton playButton, multiButton, settingsButton, quitButton;
 	private TrueTypeFont ttf;
 
+	public MenuState(int id) {
+		ID = id;
+	}
+	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
@@ -102,19 +107,19 @@ public class MenuState extends BasicGameState{
 			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));*/
 			Game.LASTID = getID();
-			sb.enterState(BeforeGameState.ID);
+			sb.enterState(Game.State.BEFOREGAMESTATE.ordinal());
 			InGameState.finished = true;
 		}
 		
 		if(multiButton.isMousePressed()) {
 			Game.LASTID = getID();
 			InGameState.finished = true;
-			sb.enterState(BrowserState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black));
+			sb.enterState(Game.State.BROWSERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black));
 		}
 		
 		if (settingsButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		

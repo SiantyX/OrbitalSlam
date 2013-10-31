@@ -32,7 +32,8 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public abstract class LobbyState extends BasicGameState implements KeyListener {
-	public static final int ID = 99;
+	private final int ID;
+	
 	protected String hostname;
 	protected ArrayList<MenuButton> buttons;
 	protected MenuButton startButton, cancelButton, textButton;
@@ -47,6 +48,10 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 	protected CopyOnWriteArrayList<String> players;
 	protected Label saylabel;
 	protected MessageBox mbox;
+	
+	public LobbyState(int id) {
+		ID = id;
+	}
 	
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		hostname = NetHandler.getHostName();
@@ -130,7 +135,9 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 	
 	public abstract void sendText(String str);
 
-	public abstract int getID();
+	public int getID() {
+		return ID;
+	}
 }
 
 

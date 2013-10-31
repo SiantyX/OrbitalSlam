@@ -21,7 +21,8 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class AudioSettingsState extends BasicGameState {
-	public static final int ID = 6;
+	private final int ID;
+	
 	private ArrayList<MenuButton> buttons;
 	private MenuButton okButton, cancelButton;
 	private MenuButton[] sliders;//musicButton, masterButton, soundButton;
@@ -37,6 +38,10 @@ public class AudioSettingsState extends BasicGameState {
 	public static float MASTER_LEVEL = 0.5f;
 	public static float MUSIC_LEVEL = 1;
 	public static float SOUND_LEVEL = 1;
+	
+	public AudioSettingsState(int id) {
+		ID = id;
+	}
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
@@ -114,12 +119,12 @@ public class AudioSettingsState extends BasicGameState {
 			
 			Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*MASTER_LEVEL);
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*MASTER_LEVEL);
-			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || cancelButton.isMousePressed()) {
-			sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		

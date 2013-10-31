@@ -21,23 +21,32 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public class ControlsSettingsState extends BasicGameState implements KeyListener {
-	public static final int ID = 5;
+	private final int ID;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton okButton, cancelButton;
 	private ArrayList<MenuButton> playerCButtons;
 	private TrueTypeFont ttf;
 	private TrueTypeFont bigText;
 
-	public static int[] KEYBINDS = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
-	private int[] keyBindChanges = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
+	private final int defualtKeyBinds[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
+	private int keyBinds[];
+	private int keyBindChanges[];
 
 	private int lastPressed;
 	private int pressed;
 	private int lastId;
 
+	public ControlsSettingsState(int id) {
+		ID = id;
+		
+		keyBinds = defualtKeyBinds.clone();
+		keyBindChanges = defualtKeyBinds.clone();
+	}
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
+		((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setKeyBinds(keyBinds);
 
 		buttons = new ArrayList<MenuButton>();
 
@@ -49,12 +58,12 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 
 		playerCButtons = new ArrayList<MenuButton>();
 		for(int i = 0 ; i < Game.MAX_PLAYERS; i++) {
-			MenuButton tmp = new MenuButton(new Integer(i).toString(), new Rectangle((200 + (i * ((Game.WIDTH - 400) / (Game.MAX_PLAYERS-1)))) - 50, Game.centerHeight - 100, 100, 30), Color.white, Input.getKeyName(KEYBINDS[i]), ttf);
+			MenuButton tmp = new MenuButton(new Integer(i).toString(), new Rectangle((200 + (i * ((Game.WIDTH - 400) / (Game.MAX_PLAYERS-1)))) - 50, Game.centerHeight - 100, 100, 30), Color.white, Input.getKeyName(keyBinds[i]), ttf);
 			playerCButtons.add(tmp);
 			buttons.add(tmp);
 		}
 		
-		MenuButton tmp = new MenuButton("8", new Rectangle(Game.centerWidth - 75, Game.centerHeight + 35, 150, 45), Color.white, Input.getKeyName(KEYBINDS[8]), ttf);
+		MenuButton tmp = new MenuButton("8", new Rectangle(Game.centerWidth - 75, Game.centerHeight + 35, 150, 45), Color.white, Input.getKeyName(keyBinds[8]), ttf);
 		playerCButtons.add(tmp);
 		buttons.add(tmp);
 		
@@ -105,15 +114,15 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 		if(pressed != lastPressed) {
 			if (okButton.isMousePressed()) {
 				for(int i = 0; i < Game.MAX_PLAYERS; i++) {
-					KEYBINDS[i] = keyBindChanges[i];
+					keyBinds[i] = keyBindChanges[i];
 				}
-				sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+				sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 						100));
-				sb.getState(InGameState.ID).init(gc, sb);
+				((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setControls(keyBinds);
 			}
 
 			if (input.isKeyPressed(Input.KEY_ESCAPE) || cancelButton.isMousePressed()) {
-				sb.enterState(SettingsState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+				sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 						100));
 			}
 
