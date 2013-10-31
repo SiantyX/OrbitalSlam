@@ -116,9 +116,9 @@ public class Entity extends Node {
 	}
 	public boolean collisionCircle(Entity e1) {
 		float radii = e1.getRadius() + this.getRadius();
-		float dx = this.getPosition().x + this.getRadius() - e1.getPosition().x - e1.getRadius();
-		float dy = this.getPosition().y + this.getRadius() - e1.getPosition().y - e1.getRadius();
-		if( dx * dx + dy * dy < radii * radii){
+		float dx = this.getCenterPosition().x - e1.getCenterPosition().x;
+		float dy = e1.getCenterPosition().y - this.getCenterPosition().y;
+		if( dx * dx + dy * dy <= radii * radii){
 			return true;
 		}
 		return false;

@@ -72,7 +72,7 @@ public class BeforeGameState extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
 		
-		FontUtils.drawCenter(ttf, "Orbital Slam", Game.centerWidth - 300, Game.centerHeight/3, 600);
+		FontUtils.drawCenter(ttf, "Game Settings", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);

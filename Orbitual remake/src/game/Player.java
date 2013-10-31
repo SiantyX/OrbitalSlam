@@ -70,15 +70,15 @@ public class Player {
 	//--------------------------
 
 	public Player(int num, GameMap map) throws SlickException {
-		Vector2f startPos = map.getStartPos(num);
 		entity = new Entity(playerImg[num]);
-		
+	
 		defaultImage = new ImageRenderComponent(playerImg[num], new Image(playerImg[num] + ".png"));
 		stunnedImage = new ImageRenderComponent(playerImg[num] + "xd", new Image(playerImg[num] + "xd.png"));
 		
 		entity.AddComponent(defaultImage);
-		entity.setCenterPosition(startPos);
 		entity.setScale(stdScale*Game.WIDTH);
+		Vector2f startPos = map.getStartPos(num, this);
+		entity.setCenterPosition(startPos);
 
 		dead = false;
 

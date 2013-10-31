@@ -21,7 +21,7 @@ public abstract class GameMap {
 		numPlayers = 4;
 	}
 
-	public abstract Vector2f getStartPos(int i);
+	public abstract Vector2f getStartPos(int i, Player p);
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
 		for (Entity e : entities) {

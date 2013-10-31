@@ -103,7 +103,7 @@ public class AnchorMap extends GameMap {
 	}
 
 	@Override
-	public Vector2f getStartPos(int i) {
+	public Vector2f getStartPos(int i, Player p) {
 		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
 	}
 

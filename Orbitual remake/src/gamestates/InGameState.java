@@ -60,7 +60,6 @@ public class InGameState extends BasicGameState implements KeyListener {
 		bg = new Image("res/orbitalbg1.jpg");
 
 		playersAlive = new ArrayList<Player>();
-		// måste få kartan på något sätt om inte statiskt map = BeforeGameState.selectedMap;
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
 
 		players = new ArrayList<Player>();
