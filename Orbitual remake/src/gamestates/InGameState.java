@@ -66,7 +66,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
 
-		Player.anchorList = map.getEntities();
+		Player.anchorList = map.getAnchors();
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
 			Player p = new Player(i, map);
@@ -106,7 +106,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 			e.setScale(Player.stdScale*Game.WIDTH);
 		}
 
-		ArrayList<Entity> anchors = map.getEntities();
+		ArrayList<Entity> anchors = map.getAnchors();
 		for(Entity e : anchors) {
 			Vector2f v = new Vector2f(e.getPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
 			e.setPosition(v);

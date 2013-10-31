@@ -58,7 +58,7 @@ public abstract class MultiplayerState extends BasicGameState {
 
 			//if(names.size() > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
 
-			Player.anchorList = map.getEntities();
+			Player.anchorList = map.getAnchors();
 			// players
 
 			for(int i = 0; i < names.size(); i++) {

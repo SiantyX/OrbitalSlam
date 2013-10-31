@@ -12,7 +12,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 public abstract class GameMap {
-	protected ArrayList<Entity> entities;
+	protected ArrayList<Entity> anchors;
 	protected int numAnc;
 
 	protected int numPlayers;
@@ -21,20 +21,20 @@ public abstract class GameMap {
 	protected final float stdScale = 0.00002f;
 
 	public GameMap() {
-		entities = new ArrayList<Entity>();
+		anchors = new ArrayList<Entity>();
 		numPlayers = 4;
 	}
 
 	public abstract Vector2f getStartPos(int i, Player p);
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
-		for (Entity e : entities) {
+		for (Entity e : anchors) {
 			e.render(gc, sb, g);
 		}
 	}
 
-	public ArrayList<Entity> getEntities() {
-		return entities;
+	public ArrayList<Entity> getAnchors() {
+		return anchors;
 
 	}
 

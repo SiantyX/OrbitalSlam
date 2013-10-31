@@ -16,7 +16,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import components.ImageRenderComponent;
 
 public class AnchorMap extends GameMap {
-	private ArrayList<Entity> entities;
 	
 	private int startPosX;
 	private double startPercentX;
@@ -29,7 +28,9 @@ public class AnchorMap extends GameMap {
 	// default map
 	public AnchorMap() throws SlickException {
 		
+		super();
 		numAnc = 12;
+		
 		
 		startPercentX = 0.2;
 		startPosX = (int)Math.round(Game.WIDTH * startPercentX);
@@ -41,7 +42,6 @@ public class AnchorMap extends GameMap {
 		
 		numPlayers = 4;
 		
-		entities = new ArrayList<Entity>();
 		
 		createMap();
 	}
@@ -60,7 +60,6 @@ public class AnchorMap extends GameMap {
 		
 		this.numPlayers = numPlayers;
 		
-		entities = new ArrayList<Entity>();
 		
 		createMap();
 	}
@@ -75,19 +74,19 @@ public class AnchorMap extends GameMap {
 			e.setScale(stdScale*Game.WIDTH); // trololol
 			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
 			e.setPosition(pos);
-			entities.add(e);
+			anchors.add(e);
 		}
 	}
 	
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
-		for(Entity e : entities) {
+		for(Entity e : anchors) {
 			e.render(gc, sb, g);
 		}
 	}
 	
-	public ArrayList<Entity> getEntities() {
-		return entities;
+	public ArrayList<Entity> getAnchors() {
+		return anchors;
 	}
 	
 	public int getNumAncPerRow() {

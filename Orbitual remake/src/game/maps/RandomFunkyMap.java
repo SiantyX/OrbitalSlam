@@ -48,7 +48,7 @@ public class RandomFunkyMap extends GameMap {
 			Vector2f pos = new Vector2f(rand.nextFloat() * Game.WIDTH,
 					rand.nextFloat() * Game.HEIGHT);
 			e.setPosition(pos);
-			entities.add(e);
+			anchors.add(e);
 		}
 	}
 
