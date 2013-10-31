@@ -11,20 +11,17 @@ import components.ImageRenderComponent;
 import game.Entity;
 import game.Game;
 import game.Player;
-import game.maps.GameMap;
-import gamestates.AudioSettingsState;
-import gamestates.BeforeGameState;
 import gamestates.InGameState;
 
 public class Mine extends Interactable {
 	private boolean detonated;
 	private Image img;
 	private Image noImg;
-	private int mass;
-	private float SPEED_LOST = 0.6f;
 	protected final static String minePath = "res/sprites/mine.png";
 	protected final static String emptyPath ="res/sprites/empty.png";
-	private float power;
+	protected final static float power = .3f;
+	protected final static float radius = 100;
+	
 	ImageRenderComponent realMine;
 	ImageRenderComponent invMine;
 
@@ -32,7 +29,7 @@ public class Mine extends Interactable {
 		
 		super("Mine");
 		detonated = false;
-		this.setRadius(100);
+		this.setRadius(radius);
 		
 		this.img = new Image(minePath);
 		this.noImg = new Image(emptyPath);
@@ -42,8 +39,6 @@ public class Mine extends Interactable {
 		this.AddComponent(invMine);
 		
 		setScale((float) 0.2);
-		this.mass = 100;
-		this.power =(float) .3;
 		
 	}
 
