@@ -218,7 +218,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 				}
 			}
 		}
-
+		map.update(gc, sb, delta);
 		deathCheck();
 
 		ArrayList<Player> winners = new ArrayList<Player>();
