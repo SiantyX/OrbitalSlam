@@ -38,6 +38,7 @@ public class Mine extends Interactible {
 	
 	public void reset(){
 		detonated = false;
+		
 	}
 
 	public void collisionCheck(StateBasedGame sb) {
