@@ -107,7 +107,7 @@ public class MenuState extends BasicGameState{
 			sb.enterState(InGameState.ID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));*/
 			Game.LASTID = getID();
-			sb.enterState(Game.State.BEFOREGAMESTATE.ordinal());
+			sb.enterState(Game.State.BEFOREGAMESTATE.ordinal(),new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black));
 			InGameState.finished = true;
 		}
 		
