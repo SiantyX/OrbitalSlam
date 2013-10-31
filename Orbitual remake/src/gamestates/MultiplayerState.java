@@ -52,6 +52,7 @@ public abstract class MultiplayerState extends BasicGameState {
 		ID = id;
 		scoreLimit = 20;
 	}
+	
 
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		if(names != null) {
@@ -282,3 +283,4 @@ public abstract class MultiplayerState extends BasicGameState {
 		return ID;
 	}
 }
+
