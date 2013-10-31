@@ -1,4 +1,4 @@
-package game.maps;
+package game.maps.interactables;
 
 import java.util.ArrayList;
 
@@ -11,54 +11,51 @@ import components.ImageRenderComponent;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.maps.GameMap;
 import gamestates.AudioSettingsState;
 import gamestates.BeforeGameState;
 import gamestates.InGameState;
 
-
-
-
-public class Mine extends Interactible {
+public class Mine extends Interactable {
 	private boolean detonated;
 	private Image img;
 	private int mass;
 	private float SPEED_LOST = 0.6f;
-	
-	
+	protected final static String minePath = "res/sprites/mine.png";
+
 	public Mine() throws SlickException{
 		super("Mine");
 		detonated = false;
 		this.setRadius(200);
-		this.img = new Image(GameMap.minePath);
+		this.img = new Image(minePath);
 		ImageRenderComponent c = new ImageRenderComponent("Mine ", img);
 		this.AddComponent(c);
 		setScale((float) 0.2);
 		this.mass = 100;
 	}
-	
+
 	public void reset(){
 		detonated = false;
-		
+
 	}
 
 	public void collisionCheck(StateBasedGame sb) {
 		ArrayList<Player> playerlist = new ArrayList<Player>();
 		playerlist = ((InGameState)sb.getState(Game.State.INGAMESTATE.ordinal())).getPlayers();
-	
+
 		for (Player e : playerlist){
 			if (this.collisionCircle(e.getEntity()))
 				collision(e);
 		}
-			
-		}
+	}
 
 	@Override
 	public void collision(Player player) {
 		if (detonated)
 			return;
-		
+
 		Entity entity = this;
-		
+
 		Vector2f delta = new Vector2f(entity.getCenterPosition().x - player.getEntity().getCenterPosition().x, entity.getCenterPosition().y - player.getEntity().getCenterPosition().y);
 		float r = entity.getRadius() + player.getEntity().getRadius();
 		float dist2 = delta.dot(delta);
@@ -101,25 +98,25 @@ public class Mine extends Interactible {
 
 		player.setHooked(false);
 
-		
+
 		player.setStunTime(100);
 
 		player.setVelocity(new Vector2f(15 - player.getVelocity().x, 15 - player.getVelocity().y));
-		*/
+		 */
 		detonated = true;
 		player.turnAround();
 
 		player.setHooked(false);
 
-		
+
 		player.setStunTime(100);
 
 		player.setVelocity(new Vector2f(15 - player.getVelocity().x, 15 - player.getVelocity().y));
-		
+
 	}
-	
-	
-	
+
+
+
 
 
 }

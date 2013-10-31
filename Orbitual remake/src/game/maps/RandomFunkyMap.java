@@ -3,6 +3,7 @@ package game.maps;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.maps.interactables.Mine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class RandomFunkyMap extends GameMap {
 					rand.nextFloat() * Game.HEIGHT);
 			a.setCenterPosition(vector);
 			mapPlayers.put(100+i, a);
-			interactibles.add(a);
+			interactables.add(a);
 		}
 	}
 

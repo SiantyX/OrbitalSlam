@@ -19,15 +19,15 @@ public class WriteBox extends MenuButton implements KeyListener {
 
 	public WriteBox(String id, Shape shape, Color color, String text, TrueTypeFont ttf) throws SlickException {
 		super(id, shape, color, text, ttf);
-		Init();
+		init();
 	}
 	
 	public WriteBox(String id, Shape shape, Color color, String text, TrueTypeFont ttf, Color color2) throws SlickException {
 		super(id, shape, color, text, ttf, color2);
-		Init();
+		init();
 	}
 	
-	private void Init() {
+	private void init() {
 		focused = false;
 		acceptable = "";
 		timer = new SXTimer(500);
