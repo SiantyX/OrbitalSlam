@@ -176,7 +176,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		if(finished) return;
+		if(finished)
+			return;
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
@@ -246,6 +247,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 						2000));
 			}
 			else {
+				map.reset();
 				newRound();
 			}
 		}

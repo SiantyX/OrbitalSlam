@@ -42,6 +42,12 @@ public abstract class GameMap {
 		return anchors;
 
 	}
+	
+	public void reset(){
+		for (Interactible i : interactibles)
+			i.reset();
+		
+	}
 
 	public int getNumPlayers() {
 		return numPlayers;

@@ -20,7 +20,7 @@ public class RandomFunkyMap extends GameMap {
 	// extra deluxe funk edition
 	private Random rand;
 	private Map<Integer, Vector2f> startPositions;
-	private Map<Integer, Player> mapPlayers;
+	private Map<Integer, Entity> mapPlayers;
 	protected int mapnr = 0;
 
 
@@ -28,14 +28,16 @@ public class RandomFunkyMap extends GameMap {
 		
 		super();
 		startPositions = new HashMap<Integer, Vector2f>();
-		mapPlayers = new HashMap<Integer, Player>();
+		mapPlayers = new HashMap<Integer, Entity>();
 		
 		rand = new Random();
-		numAnc = rand.nextInt(24) + 12;
+		numAnc = rand.nextInt(24) + 20;
 
 		createMap();
 		Mine a = new Mine();
-		a.setCenterPosition(new Vector2f(1000, 500));
+		Vector2f vector = new Vector2f(1000,500);
+		a.setCenterPosition(vector);
+		mapPlayers.put(100,a);
 		interactibles.add(a);
 		
 	}
@@ -56,9 +58,9 @@ public class RandomFunkyMap extends GameMap {
 		}
 	}
 
-	private boolean collisionCheck(Player p) {
-		for(Entry<Integer, Player> e : mapPlayers.entrySet()) {
-			if(p.getEntity().collisionCircle(e.getValue().getEntity())) {
+	private boolean collisionCheck(Entity e2) {
+		for(Entry<Integer, Entity> e : mapPlayers.entrySet()) {
+			if(e2.collisionCircle(e.getValue())) {
 				return true;
 			}
 		}
@@ -66,7 +68,7 @@ public class RandomFunkyMap extends GameMap {
 	}
 
 	// handlar om att de inte skall spawna i varandra
-	public Vector2f getStartPos(int i, Player p) {
+	public Vector2f getStartPos(int i, Entity e) {
 		int x, y;
 		Vector2f vector = null;
 		do {
@@ -74,11 +76,11 @@ public class RandomFunkyMap extends GameMap {
 					+ Game.WIDTH / 4);
 			y = (int) Math.round(rand.nextFloat() * (Game.HEIGHT / 2));
 			vector = new Vector2f(x, y);
-			p.getEntity().setCenterPosition(vector);
-		} while(collisionCheck(p));
+			e.setCenterPosition(vector);
+		} while(collisionCheck(e));
 		
 		startPositions.put(i, vector);
-		mapPlayers.put(i, p);
+		mapPlayers.put(i, e);
 
 		return vector;
 
@@ -87,6 +89,12 @@ public class RandomFunkyMap extends GameMap {
 	@Override
 	public String toString() {
 		return "Random Map";
+	}
+
+	@Override
+	public Vector2f getStartPos(int i, Player p) {
+		// TODO Auto-generated method stub
+		return getStartPos(i,p.getEntity());
 	}
 
 }

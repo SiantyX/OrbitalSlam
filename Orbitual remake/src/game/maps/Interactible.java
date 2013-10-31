@@ -22,5 +22,7 @@ public abstract class Interactible extends Entity {
 	public abstract void collisionCheck(StateBasedGame sb);
 	
 	public abstract void collision(Player player);
+	
+	public abstract void reset();
 
 }
