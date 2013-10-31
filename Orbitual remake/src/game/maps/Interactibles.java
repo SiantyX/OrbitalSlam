@@ -1,4 +1,6 @@
-package game;
+package game.maps;
+
+import game.Entity;
 
 public abstract class Interactibles extends Entity {
 
@@ -7,8 +9,6 @@ public abstract class Interactibles extends Entity {
 		
 	}
 	
-	public abstract void collisioncheck(){
-		
-	}
+	public abstract void collisioncheck();
 
 }
