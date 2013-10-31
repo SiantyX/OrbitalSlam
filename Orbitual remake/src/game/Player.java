@@ -1,5 +1,7 @@
 package game;
 
+import game.maps.AnchorMap;
+import game.maps.GameMap;
 import gamestates.AudioSettingsState;
 
 import java.util.ArrayList;

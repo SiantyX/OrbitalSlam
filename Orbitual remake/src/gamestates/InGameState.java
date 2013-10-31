@@ -1,11 +1,11 @@
 package gamestates;
 
-import game.GameMap;
-import game.AnchorMap;
 import game.Entity;
 import game.Game;
 import game.Player;
-import game.RandomFunkyMap;
+import game.maps.AnchorMap;
+import game.maps.GameMap;
+import game.maps.RandomFunkyMap;
 
 import java.awt.Font;
 import java.util.ArrayList;

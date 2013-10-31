@@ -1,4 +1,8 @@
-package game;
+package game.maps;
+
+import game.Entity;
+import game.Game;
+import game.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,12 +76,6 @@ public class RandomFunkyMap extends GameMap {
 		
 		startPositions.put(i, vector);
 		mapPlayers.put(i, p);
-		/*mapnr ++;
-		mapnr = mapnr % Game.MAX_PLAYERS + 1;
-		if (mapnr == 0) {
-			startPositions.clear();
-			mapPlayers.clear();
-		}*/
 
 		return vector;
 

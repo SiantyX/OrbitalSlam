@@ -2,25 +2,21 @@ package gamestates;
 
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 
-import game.AnchorMap;
 import game.Game;
-import game.GameMap;
 import game.MenuButton;
-import game.RandomFunkyMap;
+import game.maps.AnchorMap;
+import game.maps.GameMap;
+import game.maps.RandomFunkyMap;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -31,7 +27,7 @@ public class BeforeGameState extends BasicGameState{
 	private final int ID;
 	
 	private ArrayList<MenuButton> buttons;
-	private MenuButton okButton, backButton, mapButton;
+	private MenuButton okButton, backButton, mapButton, modeButton;
 	private TrueTypeFont ttf;
 	private GameMap selectedMap;
 	private LinkedList<GameMap> maplist;
@@ -56,6 +52,7 @@ public class BeforeGameState extends BasicGameState{
 		okButton = new MenuButton("Ok", new Rectangle(Game.centerWidth - 250, Game.centerHeight + 200, 200, 50), Color.white, "Ok", ttf);
 		backButton = new MenuButton("Back", new Rectangle(Game.centerWidth + 50, Game.centerHeight + 200, 200, 50), Color.white, "Back", ttf);
 		mapButton = new MenuButton(selectedMap.toString(), new Rectangle(Game.centerWidth - 100, Game.centerHeight - 150, 200, 50), Color.white, selectedMap.toString(), ttf);
+		
 		
 		
 		buttons.add(okButton);

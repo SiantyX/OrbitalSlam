@@ -1,9 +1,9 @@
 package gamestates;
 
-import game.AnchorMap;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.maps.AnchorMap;
 
 import java.awt.Font;
 import java.util.ArrayList;

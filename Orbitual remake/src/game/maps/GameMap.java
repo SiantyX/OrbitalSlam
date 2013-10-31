@@ -1,4 +1,8 @@
-package game;
+package game.maps;
+
+import game.Entity;
+import game.Game;
+import game.Player;
 
 import java.util.ArrayList;
 
