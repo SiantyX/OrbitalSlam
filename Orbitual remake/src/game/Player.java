@@ -301,6 +301,12 @@ public class Player {
 		dx = v.x;
 		dy = v.y;
 	}
+	
+	public void turnAround(){
+		dx = dx - Math.PI;
+		dy = dy - Math.PI;
+		
+	}
 
 	public void setStunTime(double time) {
 		stunTime = time;

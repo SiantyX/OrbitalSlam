@@ -22,6 +22,7 @@ public class RandomFunkyMap extends GameMap {
 	private Map<Integer, Vector2f> startPositions;
 	private Map<Integer, Entity> mapPlayers;
 	protected int mapnr = 0;
+	private int numMines;
 
 
 	public RandomFunkyMap() throws SlickException {
@@ -31,15 +32,10 @@ public class RandomFunkyMap extends GameMap {
 		mapPlayers = new HashMap<Integer, Entity>();
 		
 		rand = new Random();
-		numAnc = rand.nextInt(24) + 20;
+		numAnc = rand.nextInt(32) + 25;
+		numMines = rand.nextInt(8);
 
 		createMap();
-		Mine a = new Mine();
-		Vector2f vector = new Vector2f(1000,500);
-		a.setCenterPosition(vector);
-		mapPlayers.put(100,a);
-		interactibles.add(a);
-		
 	}
 
 	private void createMap() throws SlickException {
@@ -55,6 +51,16 @@ public class RandomFunkyMap extends GameMap {
 					rand.nextFloat() * Game.HEIGHT);
 			e.setPosition(pos);
 			anchors.add(e);
+		}
+		Mine a;
+		Vector2f vector;
+		for (int i = 0; i < numMines;i++){
+			a = new Mine();
+			vector = new Vector2f(rand.nextFloat() * Game.WIDTH,
+					rand.nextFloat() * Game.HEIGHT);
+			a.setCenterPosition(vector);
+			mapPlayers.put(100+i, a);
+			interactibles.add(a);
 		}
 	}
 

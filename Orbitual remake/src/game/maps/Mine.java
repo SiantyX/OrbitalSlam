@@ -55,7 +55,7 @@ public class Mine extends Interactible {
 	public void collision(Player player) {
 		if (detonated)
 			return;
-
+		
 		Entity entity = this;
 		
 		Vector2f delta = new Vector2f(entity.getCenterPosition().x - player.getEntity().getCenterPosition().x, entity.getCenterPosition().y - player.getEntity().getCenterPosition().y);
@@ -74,14 +74,11 @@ public class Mine extends Interactible {
 
 		mtd = new Vector2f(delta.x * (((entity.getRadius() + player.getEntity().getRadius()) - d)/d), delta.y * (((entity.getRadius() + player.getEntity().getRadius()) - d)/d));
 
-		float im1 = (float) (1 / mass);
+		float im1 = (float) 2*(1 / mass);
 		float im2 = (float) (1 / player.getMass());
 
-		Vector2f mtdScaled1 = new Vector2f(mtd.x * (im1 / (im1 + im2)), mtd.y * (im1 / (im1 + im2)));
 		Vector2f mtdScaled2 = new Vector2f(mtd.x * (im2 / (im1 + im2)), mtd.y * (im2 / (im1 + im2)));
-		entity.setCenterPosition(new Vector2f(entity.getCenterPosition().x + mtdScaled1.x, entity.getCenterPosition().y + mtdScaled1.y));
 		player.getEntity().setCenterPosition(new Vector2f(player.getEntity().getCenterPosition().x + mtdScaled2.x, player.getEntity().getCenterPosition().y + mtdScaled2.y));
-
 		Vector2f v = new Vector2f(20 - player.getVelocity().x, 20 - player.getVelocity().y);
 
 		float vn = v.dot(mtd.normalise());
@@ -93,23 +90,30 @@ public class Mine extends Interactible {
 		Vector2f impulse = new Vector2f(mtd.x * i, mtd.y * i);
 
 		// momentum
-		Vector2f dim1 = new Vector2f(impulse.x * im1, impulse.y * im1);
 		Vector2f dim2 = new Vector2f(impulse.x * im2, impulse.y * im2);
-		float dx = 1;
-		float dy = 1;
-		Vector2f newV = new Vector2f((float)dx  + dim1.x, (float)dy  + dim1.y);
 		Vector2f otherNewV = new Vector2f(player.getVelocity().x - dim2.x, player.getVelocity().y - dim2.y);
 		// ------------------------------------------------------------------------------------------------------
 		// ------------------------------------------------------------------------------------------------------
-		
+		/*
 		detonated = true;
+		player.turnAround();
 
 		player.setHooked(false);
 
 		
 		player.setStunTime(100);
 
-		player.setVelocity(otherNewV);
+		player.setVelocity(new Vector2f(15 - player.getVelocity().x, 15 - player.getVelocity().y));
+		*/
+		detonated = true;
+		player.turnAround();
+
+		player.setHooked(false);
+
+		
+		player.setStunTime(100);
+
+		player.setVelocity(new Vector2f(15 - player.getVelocity().x, 15 - player.getVelocity().y));
 		
 	}
 	
