@@ -79,12 +79,6 @@ public class AnchorMap extends GameMap {
 	}
 	
 	
-	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
-		for(Entity e : anchors) {
-			e.render(gc, sb, g);
-		}
-	}
-	
 	public ArrayList<Entity> getAnchors() {
 		return anchors;
 	}

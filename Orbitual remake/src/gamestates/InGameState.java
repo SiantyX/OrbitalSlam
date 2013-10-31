@@ -282,6 +282,10 @@ public class InGameState extends BasicGameState implements KeyListener {
 		countDown = 3000;
 		onCountDown = true;
 	}
+	
+	public ArrayList<Player> getPlayers(){
+		return playersAlive;
+	}
 
 	public void keyPressed(int key, char c) {
 		if(key >= Input.KEY_F1 && key <= Input.KEY_F8) {

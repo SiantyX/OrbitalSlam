@@ -34,6 +34,7 @@ public class RandomFunkyMap extends GameMap {
 		numAnc = rand.nextInt(24) + 12;
 
 		createMap();
+		interactibles.add(new Mine());
 	}
 
 	private void createMap() throws SlickException {

@@ -13,15 +13,18 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public abstract class GameMap {
 	protected ArrayList<Entity> anchors;
+	protected ArrayList<Interactible> interactibles;
 	protected int numAnc;
 
 	protected int numPlayers;
 
 	protected final String anchorPath = "res/sprites/anchorstar.png";
 	protected final float stdScale = 0.00002f;
+	protected final static String minePath = "res/sprites/mine.png";
 
 	public GameMap() {
 		anchors = new ArrayList<Entity>();
+		interactibles = new ArrayList<Interactible>();
 		numPlayers = 4;
 	}
 
@@ -31,6 +34,8 @@ public abstract class GameMap {
 		for (Entity e : anchors) {
 			e.render(gc, sb, g);
 		}
+		for (Interactible i : interactibles)
+			i.render(gc, sb, g);
 	}
 
 	public ArrayList<Entity> getAnchors() {
@@ -48,6 +53,11 @@ public abstract class GameMap {
 
 	public int getScorePlacementX(int i) {
 		return (Game.WIDTH / numPlayers) * (i) + Game.HEIGHT / (numPlayers * 2);
+	}
+	public void update(GameContainer gc, StateBasedGame sb, int delta){
+		for (Interactible i : interactibles){
+			i.collisionCheck(sb);
+		}
 	}
 	public abstract String toString();
 
