@@ -58,8 +58,8 @@ public class Entity extends Node {
 		moveTo(position.x, position.y);
 	}
 	
-	public void setCenterPosition(Vector2f position) {
-		moveTo(position.x - getRadius(), position.y - getRadius());
+	public void setCenterPosition(Vector2f vector2f) {
+		moveTo(vector2f.x - getRadius(), vector2f.y - getRadius());
 	}
 	
 	public float getRotation() {

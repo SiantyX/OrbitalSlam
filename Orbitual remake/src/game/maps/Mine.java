@@ -21,10 +21,11 @@ public class Mine extends Interactible {
 	private int mass;
 	public Mine() throws SlickException{
 		super("Mine");
-		this.setRadius(50);
+		this.setRadius(200);
 		this.img = new Image(GameMap.minePath);
 		ImageRenderComponent c = new ImageRenderComponent("Mine ", img);
 		this.AddComponent(c);
+		setScale((float) 0.2);
 	}
 
 	public void collisionCheck(StateBasedGame sb) {
@@ -32,7 +33,8 @@ public class Mine extends Interactible {
 		playerlist = ((InGameState)sb.getState(Game.State.INGAMESTATE.ordinal())).getPlayers();
 	
 		for (Player e : playerlist){
-			this.collisionCircle(e.getEntity());
+			if (this.collisionCircle(e.getEntity()))
+				collision(e);
 		}
 			
 		}
@@ -42,6 +44,7 @@ public class Mine extends Interactible {
 		player.die();
 	
 	}
+	
 
 
 }
