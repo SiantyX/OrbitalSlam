@@ -70,10 +70,9 @@ public class RandomFunkyMap extends GameMap {
 		int x, y;
 		Vector2f vector = null;
 		do {
-			x = (int) Math.round(rand.nextFloat() * (Game.WIDTH / 3)
-					+ Game.WIDTH / 3);
-			y = (int) Math.round(rand.nextFloat() * (Game.HEIGHT / 3)
-					+ Game.HEIGHT / 3);
+			x = (int) Math.round(rand.nextFloat() * (Game.WIDTH / 2)
+					+ Game.WIDTH / 4);
+			y = (int) Math.round(rand.nextFloat() * (Game.HEIGHT / 2));
 			vector = new Vector2f(x, y);
 			p.getEntity().setCenterPosition(vector);
 		} while(collisionCheck(p));
