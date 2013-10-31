@@ -5,11 +5,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
-import org.newdawn.slick.MouseListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import components.SXTimer;
@@ -37,6 +35,10 @@ public class WriteBox extends MenuButton implements KeyListener {
 
 	public void setAcceptable(String a) {
 		acceptable = a;
+	}
+	
+	public void removeFocus() {
+		focused = false;
 	}
 	
 	@Override
