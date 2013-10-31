@@ -53,5 +53,13 @@ public abstract class Component {
 
 	public float getRotation() {
 		return rotation;
-	}	
+	}
+	
+	public float getWidth() {
+		return currentImage.getWidth()*scale;
+	}
+	
+	public float getHeight() {
+		return currentImage.getHeight()*scale;
+	}
 }

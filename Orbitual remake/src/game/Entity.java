@@ -146,6 +146,22 @@ public class Entity extends Node {
 		setScale(radius/getRadius(), id);
 	}
 	
+	public float getWidth() {
+		return components.get(0).getWidth();
+	}
+	
+	public float getWidth(String id) {
+		return getComponent(id).getWidth();
+	}
+	
+	public float getHeight() {
+		return components.get(0).getHeight();
+	}
+	
+	public float getHeight(String id) {
+		return getComponent(id).getHeight();
+	}
+	
 	public boolean collisionCircle(Entity e1) {
 		float radii = e1.getRadius() + this.getRadius();
 		float dx = this.getCenterPosition().x - e1.getCenterPosition().x;
@@ -156,8 +172,12 @@ public class Entity extends Node {
 		return false;
 	}
 	
+	public boolean collisionSquare(Vector2f e1) {
+		return e1.x > pos.x && e1.x < pos.x + getWidth() && e1.y > pos.y && e1.y < pos.y + getHeight();
+	}
+	
 	public boolean collisionSquare(Entity e1) {
-		return true;
+		return false;
 	}
 	
 	public void clear() {
