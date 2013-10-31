@@ -9,41 +9,27 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class ImageRenderComponent extends RenderComponent {
-
-	private Image image;
-
+public class ImageRenderComponent extends Component {
 	public ImageRenderComponent(String id, Image image) {
 		super(id);
-		this.image = image;
+		this.currentImage = image;
+		scale = 1;
+		rotation = 0;
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr) {
 		Vector2f pos = owner.getPosition();
-		float scale = owner.getScale();
 
-		image.draw(pos.x, pos.y, scale);
-		if(Game.showHitbox){
+		currentImage.draw(pos.x, pos.y, scale);
+		if(Game.showHitbox) {
 			gr.setColor(Color.red);
-			gr.drawOval(pos.x, pos.y, owner.getRadius()*2, owner.getRadius()*2);
+			gr.drawOval(pos.x, pos.y, currentImage.getWidth(), currentImage.getHeight());
 		}
-
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
-
-		image.rotate(owner.getRotation() - image.getRotation());
+		currentImage.rotate(owner.getRotation() - currentImage.getRotation());
 	}
-	
-	public float getRadius(){
-		return image.getWidth()/2;
-	}
-	
-	public Image getImage() {
-		return image;
-	}
-	
-	
 }

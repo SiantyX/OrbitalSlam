@@ -8,18 +8,13 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import components.Component;
-import components.RenderComponent;
+import components.AnimationRenderComponent;
 import components.ImageRenderComponent;
 
 public class Entity extends Node {
 
 	private String id;
-
-	private float scale;
-	private float rotation;
-	private float radius;
-	//
-	private ArrayList<RenderComponent> renderComponent = null;
+	
 	private ArrayList<Component> components = null;
 
 	public Entity(String id) {
@@ -27,20 +22,9 @@ public class Entity extends Node {
 		this.id = id;
 
 		components = new ArrayList<Component>();
-		renderComponent = new ArrayList<RenderComponent>();
-
-		scale = 1;
-		rotation = 0;
-		
-		radius = 0;
-		
 	}
 
 	public void AddComponent(Component component) {
-		if (RenderComponent.class.isInstance(component)){
-			renderComponent.add((RenderComponent) component);
-		}
-
 		component.setOwnerEntity(this);
 		components.add(component);
 	}
@@ -53,6 +37,10 @@ public class Entity extends Node {
 
 		return null;
 	}
+	
+	public boolean removeComponent(String id) {
+		return components.remove(getComponent(id));
+	}
 
 	public Vector2f getPosition() {
 		return pos;
@@ -60,14 +48,6 @@ public class Entity extends Node {
 	
 	public Vector2f getCenterPosition() {
 		return new Vector2f(getPosition().x + getRadius(), getPosition().y + getRadius());
-	}
-
-	public float getScale() {
-		return scale;
-	}
-
-	public float getRotation() {
-		return rotation;
 	}
 
 	public String getId() {
@@ -81,13 +61,53 @@ public class Entity extends Node {
 	public void setCenterPosition(Vector2f position) {
 		moveTo(position.x - getRadius(), position.y - getRadius());
 	}
+	
+	public float getRotation() {
+		if(components.isEmpty()) return 1;
+		
+		return components.get(0).getRotation();
+	}
+	
+	public float getRotation(String id) {
+		if(components.isEmpty()) return 1;
+		
+		return getComponent(id).getRotation();
+	}
 
 	public void setRotation(float rotate) {
-		rotation = rotate;
+		if(components.isEmpty()) return;
+		
+		components.get(0).setRotation(rotate);
+	}
+	
+	public void setRotation(float rotate, String id) {
+		if(components.isEmpty()) return;
+		
+		getComponent(id).setRotation(rotate);
+	}
+	
+	public float getScale() {
+		if(components.isEmpty()) return 1;
+		
+		return components.get(0).getScale();
+	}
+	
+	public float getScale(String id) {
+		if(components.isEmpty()) return 1;
+		
+		return getComponent(id).getScale();
 	}
 
 	public void setScale(float scale) {
-		this.scale = scale;
+		if(components.isEmpty()) return;
+		
+		components.get(0).setScale(scale);
+	}
+	
+	public void setScale(float scale, String id) {
+		if(components.isEmpty()) return;
+		
+		getComponent(id).setScale(scale);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
@@ -97,23 +117,35 @@ public class Entity extends Node {
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
-		for(RenderComponent re : renderComponent){
-			re.render(gc, sb, g);
+		for(Component component : components) {
+			component.render(gc, sb, g);
 		}
 	}
 	
 	public float getRadius(){
-		if(radius == 0) {
-			ImageRenderComponent irc = (ImageRenderComponent) getComponent(id);
-			radius = irc.getRadius();
-		}
+		if(components.isEmpty()) return 0;
 		
-		return radius*scale;
+		return components.get(0).getRadius();
+	}
+	
+	public float getRadius(String id){
+		if(components.isEmpty()) return 0;
+		
+		return getComponent(id).getRadius();
 	}
 	
 	public void setRadius(float radius){
-		this.radius = radius;
+		if(components.isEmpty()) return;
+		
+		setScale(radius/getRadius());
 	}
+	
+	public void setRadius(float radius, String id){
+		if(components.isEmpty()) return;
+		
+		setScale(radius/getRadius(), id);
+	}
+	
 	public boolean collisionCircle(Entity e1) {
 		float radii = e1.getRadius() + this.getRadius();
 		float dx = this.getCenterPosition().x - e1.getCenterPosition().x;
@@ -124,9 +156,12 @@ public class Entity extends Node {
 		return false;
 	}
 	
+	public boolean collisionSquare(Entity e1) {
+		return true;
+	}
+	
 	public void clear() {
 		components.clear();
-		renderComponent.clear();
 	}
 	
 	public void changeImage(Component component) {
