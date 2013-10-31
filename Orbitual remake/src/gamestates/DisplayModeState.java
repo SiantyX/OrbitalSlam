@@ -75,9 +75,9 @@ public class DisplayModeState extends BasicGameState implements Comparator<Displ
 		}
 		
 		// debug
-		for (int i=0; i < resolutions.size(); i ++) {
+		/*for (int i=0; i < resolutions.size(); i ++) {
 			System.out.println(resolutions.get(i).toString());
-		}
+		}*/
 		
 		// buttons
 		buttons = new ArrayList<MenuButton>();
