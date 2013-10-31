@@ -23,13 +23,9 @@ import org.newdawn.slick.util.FontUtils;
 public class SettingsState extends BasicGameState implements KeyListener{
 	private final int ID;
 	private ArrayList<MenuButton> buttons;
-	private MenuButton backButton, videoButton, controlsButton, audioButton, scoreLimitButton;
+	private MenuButton backButton, videoButton, controlsButton, audioButton;
 	private TrueTypeFont ttf;
 	private TrueTypeFont bigText;
-	
-	private boolean changeScoreLimit;
-	private static boolean justChanged = false;
-	private Color oldColor;
 	
 	public SettingsState(int id) {
 		ID = id;
@@ -39,7 +35,7 @@ public class SettingsState extends BasicGameState implements KeyListener{
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
-		changeScoreLimit = false;
+
 		
 		Font f = new Font("Arial", Font.PLAIN, 18);
 		ttf = new TrueTypeFont(f, true);
@@ -51,14 +47,11 @@ public class SettingsState extends BasicGameState implements KeyListener{
 		audioButton = new MenuButton("audio", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 50, 200, 50), Color.white, "Audio", ttf);
 		videoButton = new MenuButton("video", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 50, 200, 50), Color.white, "Video", ttf);
 		backButton = new MenuButton("back", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 150, 200, 50), Color.white, "Back", ttf);
-		scoreLimitButton = new MenuButton("score", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 250, 200, 50), new Color(0, 0, 0, 0), "Score limit: " + Game.SCORE_LIMIT, ttf);
-		oldColor = scoreLimitButton.getBackColor();
 		
 		buttons.add(controlsButton);
 		buttons.add(backButton);
 		buttons.add(audioButton);
 		buttons.add(videoButton);
-		buttons.add(scoreLimitButton);
 	}
 
 	@Override
@@ -78,88 +71,30 @@ public class SettingsState extends BasicGameState implements KeyListener{
 			throws SlickException {
 		Input input = gc.getInput();
 		
-		if(justChanged) {
-			input.clearKeyPressedRecord();
-			justChanged = false;
-		}
-		
-		if(changeScoreLimit) {
-			if(!scoreLimitButton.getBackColor().equals(new Color(40, 40, 40))) {
-				oldColor = scoreLimitButton.getBackColor();
-				scoreLimitButton.setBackColor(new Color(40, 40, 40));
-			}
-		}
-		
-		else {
-			if(scoreLimitButton.getBackColor().equals(new Color(40, 40, 40))) {
-				scoreLimitButton.setBackColor(oldColor);
-			}
-		}
-		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}
 
 		if (controlsButton.isMousePressed()) {
-			changeScoreLimit = false;
-			scoreLimitButton.setBackColor(oldColor);
-			scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
+			
 			sb.enterState(Game.State.CONTROLSSETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
 		if (audioButton.isMousePressed()) {
-			changeScoreLimit = false;
-			scoreLimitButton.setBackColor(oldColor);
-			scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
 			sb.enterState(Game.State.AUDIOSETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
 		if (videoButton.isMousePressed()) {
-			changeScoreLimit = false;
-			scoreLimitButton.setBackColor(oldColor);
-			scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
 			sb.enterState(Game.State.DISPLAYMODESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		
 		if (backButton.isMousePressed() || input.isKeyPressed(Input.KEY_ESCAPE)) {
-			changeScoreLimit = false;
-			scoreLimitButton.setBackColor(oldColor);
-			scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
 			sb.enterState(Game.LASTID, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 			Game.LASTID = getID();
-		}
-		
-		if (scoreLimitButton.isMousePressed()) {
-			changeScoreLimit = true;
-			scoreLimitButton.setText("");
-		}
-	}
-	
-	public void keyPressed(int key, char c) {
-		if(changeScoreLimit) {
-			if(key == Input.KEY_ENTER) {
-				changeScoreLimit = false;
-				int oldscore = Game.SCORE_LIMIT;
-				try {
-					Game.SCORE_LIMIT = Integer.parseInt(scoreLimitButton.getText()) < 1 ? 1 : Integer.parseInt(scoreLimitButton.getText());
-				}
-				catch(NumberFormatException e) {
-					Game.SCORE_LIMIT = oldscore;
-				}
-				scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
-			}
-			else if(key == Input.KEY_ESCAPE) {
-				changeScoreLimit = false;
-				justChanged = true;
-				scoreLimitButton.setText("Score limit: " + Game.SCORE_LIMIT);
-			}
-			else if(key >= Input.KEY_1 && key <= Input.KEY_0) {
-				scoreLimitButton.setText(scoreLimitButton.getText() + Input.getKeyName(key));
-			}
 		}
 	}
 

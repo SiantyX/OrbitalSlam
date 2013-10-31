@@ -45,9 +45,12 @@ public abstract class MultiplayerState extends BasicGameState {
 
 	private static double countDown;
 	private static boolean onCountDown;
+	
+	private int scoreLimit;
 
 	public MultiplayerState(int id) {
 		ID = id;
+		scoreLimit = 20;
 	}
 
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
@@ -119,7 +122,7 @@ public abstract class MultiplayerState extends BasicGameState {
 			player.render(gc, sb, g);
 		}
 
-		FontUtils.drawCenter(scoreFont, "Score limit: " + Game.SCORE_LIMIT, 10, 10, 200);
+		FontUtils.drawCenter(scoreFont, "Score limit: " + scoreLimit, 10, 10, 200);
 
 		for(int i = 0; i < names.size(); i++) {
 			FontUtils.drawCenter(scoreFont, names.get(i) + (i+1) + ": " + players.get(i).getScore(), map.getStartPosX() + i * ((Game.WIDTH - map.getStartPosX()*2) / (map.getNumPlayers()-1)) - Game.WIDTH/14, 40, 100, Player.PLAYER_COLORS[i]);
@@ -193,7 +196,7 @@ public abstract class MultiplayerState extends BasicGameState {
 
 		if((playersAlive.size() == 1 && numLocalPlayers > 1) || (playersAlive.size() < 1)) {
 			for(Player player : players) {
-				if(player.getScore() >= Game.SCORE_LIMIT) {
+				if(player.getScore() >= scoreLimit) {
 					winners.add(player);
 				}
 			}
@@ -262,11 +265,17 @@ public abstract class MultiplayerState extends BasicGameState {
 	}
 	
 	public void setControls(int keyBinds[]) {
-		this.keyBinds = keyBinds;
-		
 		for(int i = 0; i < numLocalPlayers; i++) {
 			players.get(i).KEYBIND = keyBinds[i];
 		}
+	}
+	
+	public void setKeyBinds(int keyBinds[]) {
+		this.keyBinds = keyBinds;
+	}
+	
+	public void setScoreLimit(int score) {
+		scoreLimit = score;
 	}
 
 	public int getID() {

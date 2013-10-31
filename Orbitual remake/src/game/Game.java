@@ -36,7 +36,6 @@ public class Game extends StateBasedGame {
 	public static int LASTID;
 	
 	public static final int MAX_PLAYERS = 4;//8;
-	public static int SCORE_LIMIT = 20;
 	
 	public static String username = "Player";
 	

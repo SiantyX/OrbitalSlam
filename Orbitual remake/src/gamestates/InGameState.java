@@ -43,6 +43,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 
 	private static double countDown;
 	private static boolean onCountDown;
+	
+	private int scoreLimit;
 
 	private Image bg;
 
@@ -146,7 +148,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 			player.render(gc, sb, g);
 		}
 
-		FontUtils.drawCenter(scoreFont, "Score limit: " + Game.SCORE_LIMIT, 10, 10, 200);
+		FontUtils.drawCenter(scoreFont, "Score limit: " + scoreLimit, 10, 10, 200);
 
 		for(int i = 0; i < numLocalPlayers; i++) {
 			FontUtils.drawCenter(scoreFont, "Player " + (i+1) + ": " + players.get(i).getScore(),map.getScorePlacementX(i), map.getScorePlacementY(), 100, Player.PLAYER_COLORS[i]);
@@ -222,7 +224,7 @@ public class InGameState extends BasicGameState implements KeyListener {
 
 		if((playersAlive.size() == 1 && numLocalPlayers > 1) || (playersAlive.size() < 1)) {
 			for(Player player : players) {
-				if(player.getScore() >= Game.SCORE_LIMIT) {
+				if(player.getScore() >= scoreLimit) {
 					winners.add(player);
 				}
 			}
@@ -296,6 +298,10 @@ public class InGameState extends BasicGameState implements KeyListener {
 	
 	public void setKeyBinds(int keyBinds[]) {
 		this.keyBinds = keyBinds;
+	}
+	
+	public void setScoreLimit(int score) {
+		scoreLimit = score;
 	}
 	
 	@Override
