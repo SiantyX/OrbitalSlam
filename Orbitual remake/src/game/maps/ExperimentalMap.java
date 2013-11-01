@@ -55,7 +55,7 @@ public class ExperimentalMap extends GameMap {
 			ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
 			e.AddComponent(c);
 			// homemade
-			e.setScale(stdScale*Game.WIDTH); // trololol
+			e.setScale(stdScale*Game.WIDTH); 
 			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
 			e.setPosition(pos);
 			anchors.add(e);

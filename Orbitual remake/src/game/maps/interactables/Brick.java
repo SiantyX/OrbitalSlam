@@ -26,6 +26,7 @@ public class Brick extends Interactable {
 		ImageRenderComponent brick = new ImageRenderComponent("Brick", img);
 		this.AddComponent(brick);
 		setHeight(Height);
+		setRelativeHeight(2);
 
 	}
 
@@ -43,13 +44,14 @@ public class Brick extends Interactable {
 		}
 
 	}
+	
 
 	@Override
 	public void collision(Player player) {
 
-		boolean hitTopOrBottom = (Math.abs(this.getCenterPosition().x - player.getEntity().getCenterPosition().x)) < (this.getWidth()/2 -5f + player.getEntity().getRadius());
+		boolean hitTopOrBottom = (Math.abs(this.getCenterPositionRectangle().x - player.getEntity().getCenterPosition().x)) < (this.getWidth()/2 -5f + player.getEntity().getRadius());
 		
-		float degreeOfImpactX = (this.getCenterPosition().x - player
+		float degreeOfImpactX = (this.getCenterPositionRectangle().x - player
 				.getEntity().getCenterPosition().x);
 		float degreeOfImpactY = (this.getCenterPosition().y - player
 				.getEntity().getCenterPosition().y);

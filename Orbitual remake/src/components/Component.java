@@ -1,5 +1,7 @@
 package components;
 
+import java.awt.Toolkit;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -15,6 +17,7 @@ public abstract class Component {
 	protected Image currentImage;
 	protected float scale;
 	protected float rotation;
+	protected Toolkit toolkit;
 	
 	public Component(String id) {
 		this.id = id;
@@ -46,6 +49,11 @@ public abstract class Component {
 
 	public float getScale() {
 		return scale;
+	}
+	
+	public void setRelativeHeight(int proportion){
+		currentImage = currentImage.getSubImage(0, 0, ((int) (getWidth())/proportion), (int)getHeight());
+		scale *= proportion;
 	}
 
 	public void setRotation(float rotation) {

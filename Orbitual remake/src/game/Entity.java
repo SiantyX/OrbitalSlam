@@ -48,6 +48,10 @@ public class Entity extends Node {
 		return new Vector2f(getPosition().x + getRadius(), getPosition().y
 				+ getRadius());
 	}
+	
+	public Vector2f getCenterPositionRectangle(){
+		return new Vector2f(getPosition().x + getWidth()/2,getPosition().y + getHeight()/2 );
+	}
 
 	public String getId() {
 		return id;
@@ -177,6 +181,16 @@ public class Entity extends Node {
 		setScale(width / getWidth());
 
 	}
+	public void setRelativeHeight(int i){
+		components.get(0).setRelativeHeight(i);
+//		this.setCenterPositionRectangle(new Vector2f((this.getPosition().x + this.getWidth()/2), (this.getPosition().y + this.getHeight()/2)));
+	}
+	
+
+	private void setCenterPositionRectangle(Vector2f vector) {
+		moveTo(vector.x - this.getWidth()/2, vector.y - this.getHeight()/2);
+		
+	}
 
 	public float getWidth() {
 		return components.get(0).getWidth();
@@ -217,8 +231,8 @@ public class Entity extends Node {
 	}
 	
 	public boolean collisionRectangle(Entity e1){
-		float distanceX = Math.abs(e1.getCenterPosition().x - getCenterPosition().x);
-		float distanceY = Math.abs(e1.getCenterPosition().y - getCenterPosition().y);
+		float distanceX = Math.abs(e1.getCenterPositionRectangle().x - getCenterPositionRectangle().x);
+		float distanceY = Math.abs(e1.getCenterPositionRectangle().y - getCenterPositionRectangle().y);
 		float sizeOfHitboxX = e1.getRadius() + getWidth()/2;
 		float sizeOfHitboxY = e1.getRadius() + getHeight()/2;
 		return (distanceX < sizeOfHitboxX && distanceY < sizeOfHitboxY);
