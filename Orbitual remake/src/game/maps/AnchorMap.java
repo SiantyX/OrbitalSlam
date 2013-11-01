@@ -64,8 +64,10 @@ public class AnchorMap extends GameMap {
 	
 	public void createMap(ViewPort vp) throws SlickException {
 		this.numPlayers = numPlayers;
-		this.startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
-		this.startPosX = (int)Math.round(Game.WIDTH * startPercentX);
+		Vector2f tmp = new Vector2f((int)Math.round(Game.HEIGHT * startPercentY), (int)Math.round(Game.WIDTH * startPercentX));
+		tmp = vp.toRelative(tmp);
+		this.startPosY = Math.round(tmp.x);
+		this.startPosX = Math.round(tmp.y);
 		
 		for(int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
