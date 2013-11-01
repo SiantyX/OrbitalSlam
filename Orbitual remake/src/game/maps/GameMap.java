@@ -5,11 +5,13 @@ import game.Game;
 import game.Player;
 import game.ViewPort;
 import game.maps.interactables.*;
+import gamestates.BeforeGameState;
 
 import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -22,6 +24,9 @@ public abstract class GameMap {
 
 	protected final String anchorPath = "res/sprites/interactables/anchorstar.png";
 	protected final float stdScale = 0.00002f;
+	protected float scale;
+	protected float actualWidth;
+	protected float actualHeight;
 
 	public GameMap() {
 		anchors = new ArrayList<Entity>();
@@ -44,6 +49,8 @@ public abstract class GameMap {
 		return anchors;
 
 	}
+	
+	public abstract void createMap(float scale) throws SlickException;
 	
 	public void reset(){
 		for (Interactable i : interactables)

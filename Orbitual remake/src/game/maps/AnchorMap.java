@@ -43,7 +43,6 @@ public class AnchorMap extends GameMap {
 		numPlayers = 4;
 		
 		
-		createMap();
 	}
 	
 	// debug map
@@ -51,20 +50,22 @@ public class AnchorMap extends GameMap {
 		this.numAnc = numAnc;
 		
 		this.startPercentX = startPercentX;
-		this.startPosX = (int)Math.round(Game.WIDTH * startPercentX);
+		
 		this.numAncPerRow = numAncPerRow;
 		
 		this.startPercentY = startPercentY;
-		this.startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
+		
 		this.numAncPerColumn = numAnc/numAncPerRow;
 		
-		this.numPlayers = numPlayers;
 		
 		
-		createMap();
 	}
 	
-	private void createMap() throws SlickException {
+	public void createMap(float scale) throws SlickException {
+		this.numPlayers = numPlayers;
+		this.startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
+		this.startPosX = (int)Math.round(Game.WIDTH * startPercentX);
+		
 		for(int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
 			Image img = new Image(anchorPath);

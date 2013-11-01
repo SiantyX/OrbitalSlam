@@ -26,6 +26,7 @@ public class RandomFunkyMap extends GameMap {
 	private int numMines;
 
 
+
 	public RandomFunkyMap() throws SlickException {
 		
 		super();
@@ -36,10 +37,13 @@ public class RandomFunkyMap extends GameMap {
 		numAnc = rand.nextInt(32) + 25;
 		numMines = rand.nextInt(8);
 
-		createMap();
 	}
 
-	private void createMap() throws SlickException {
+	public void createMap(float scale) throws SlickException {
+		actualHeight = 1/scale*Game.HEIGHT;
+		actualWidth = 1/scale*Game.WIDTH;
+		
+		
 		for (int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
 			Image img = new Image(anchorPath);
@@ -47,9 +51,9 @@ public class RandomFunkyMap extends GameMap {
 					+ Integer.toString(i), img);
 			e.AddComponent(c);
 			// homemade
-			e.setScale(stdScale * Game.WIDTH);
-			Vector2f pos = new Vector2f(rand.nextFloat() * Game.WIDTH,
-					rand.nextFloat() * Game.HEIGHT);
+			e.setScale(stdScale * actualWidth);
+			Vector2f pos = new Vector2f(rand.nextFloat() * actualWidth,
+					rand.nextFloat() * actualHeight);
 			e.setPosition(pos);
 			anchors.add(e);
 		}
@@ -57,8 +61,8 @@ public class RandomFunkyMap extends GameMap {
 		Vector2f vector;
 		for (int i = 0; i < numMines;i++){
 			a = new Mine();
-			vector = new Vector2f(rand.nextFloat() * Game.WIDTH,
-					rand.nextFloat() * Game.HEIGHT);
+			vector = new Vector2f(rand.nextFloat() * actualWidth,
+					rand.nextFloat() * actualHeight);
 			a.setCenterPosition(vector);
 			mapPlayers.put(100+i, a);
 			interactables.add(a);
@@ -79,9 +83,9 @@ public class RandomFunkyMap extends GameMap {
 		int x, y;
 		Vector2f vector = null;
 		do {
-			x = (int) Math.round(rand.nextFloat() * (Game.WIDTH / 2)
-					+ Game.WIDTH / 4);
-			y = (int) Math.round(rand.nextFloat() * (Game.HEIGHT / 2));
+			x = (int) Math.round(rand.nextFloat() * (actualWidth / 2)
+					+ actualWidth / 4);
+			y = (int) Math.round(rand.nextFloat() * (actualHeight / 2));
 			vector = new Vector2f(x, y);
 			e.setCenterPosition(vector);
 		} while(collisionCheck(e));

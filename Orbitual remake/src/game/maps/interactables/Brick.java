@@ -15,7 +15,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import components.ImageRenderComponent;
 
 public class Brick extends Interactable {
-	private float brickPowerAbsorption = 0;
 	protected static final String brickPath = "res/sprites/interactables/brick.png";
 	private Image img;
 
@@ -57,9 +56,9 @@ public class Brick extends Interactable {
 				.getEntity().getRadius());
 
 		float directionX;
-		float directionY;
+		float directionY = 0;
 		if (hitTopOrBottom) {
-			directionY = -player.getVelocity().y + brickPowerAbsorption;
+			directionY = -player.getVelocity().y;
 			player.setDy(directionY);
 		} else {
 			directionX = -player.getVelocity().x;

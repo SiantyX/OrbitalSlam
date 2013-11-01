@@ -36,15 +36,13 @@ public class ExperimentalMap extends GameMap {
 		numPlayers = 4;
 		
 		
-		createMap();
-		
 	}
 	
 	public String toString(){
 		return "Experimental Map";
 	}
 	
-	private void createMap() throws SlickException{
+	public void createMap(float scale) throws SlickException{
 		Brick brick = new Brick("Brick");
 		brick.setPosition(new Vector2f(0,500));
 		brick.MultiplyWidthBy(5);

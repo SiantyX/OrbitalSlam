@@ -50,6 +50,7 @@ public class InGameState extends BasicGameState {
 	private Image bg;
 	
 	private ViewPort vp;
+	private float scale;
 
 	public InGameState(int id) {
 		ID = id;
@@ -70,7 +71,7 @@ public class InGameState extends BasicGameState {
 
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
-
+		map.createMap(scale);
 		players = new ArrayList<Player>();
 
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
