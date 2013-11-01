@@ -146,6 +146,11 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		return false;
 	}
 	
+	public String getText() {
+		removeEnd("|");
+		return text;
+	}
+	
 	public void addText(char c) {
 		removeEnd("|");
 		text += c;

@@ -33,20 +33,15 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 	private final int ID;
 	
 	private ArrayList<MenuButton> buttons;
-	private MenuButton okButton, backButton, mapButton, scoreLimitButton;
+	private MenuButton okButton, backButton, mapButton;
 	private ArrayList<WriteBoxWithLabel> wBWLs;
-	private WriteBoxWithLabel numPlayersWBWL;
+	private WriteBoxWithLabel numPlayersWBWL, scoreLimitWBWL;
 	private TrueTypeFont ttf;
 	private GameMap selectedMap;
 	private LinkedList<GameMap> maplist;
-	private Color oldColor;
-	private boolean changeScoreLimit;
-	private boolean justChanged;
-	private int scoreLimit;
 	
 	public BeforeGameState(int id) {
 		ID = id;
-		scoreLimit = 20;
 	}
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
@@ -68,28 +63,20 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		backButton = new MenuButton("Back", new Rectangle(Game.centerWidth + 50, Game.centerHeight + 200, 200, 50), Color.white, "Back", ttf);
 		mapButton = new MenuButton(selectedMap.toString(), new Rectangle(Game.centerWidth - 100, Game.centerHeight - 150, 200, 50), Color.white, selectedMap.toString(), ttf);
 		
-		changeScoreLimit = false;
-		justChanged = false;
-		
-		scoreLimitButton = new MenuButton("score", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 250, 200, 50), new Color(0, 0, 0, 0), "Score limit: " + scoreLimit, ttf);
-		oldColor = scoreLimitButton.getBackColor();
-		
-		/*numPlayersLabel = new Label("Number of players:", ttf, Game.centerWidth - ttf.getWidth("Number of players:"), Game.centerHeight + 50, Color.white);
-		
-		numPlayersButton = new WriteBox("numplayers", new Rectangle(numPlayersLabel.getX() + numPlayersLabel.getWidth(), numPlayersLabel.getY() - 25 + ttf.getHeight()/2, 200, 50), new Color(0, 0, 0, 0), "2", ttf);
-		numPlayersButton.setInput(gc.getInput());
-		numPlayersButton.setAcceptable("1234567890");*/
+		scoreLimitWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight - Game.HEIGHT/4.32f), 200, "Score limit:", "20", Color.transparent, Color.white);
+		scoreLimitWBWL.wb.setInput(gc.getInput());
+		scoreLimitWBWL.wb.setAcceptable("1234567890");
 		
 		numPlayersWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight), 200, "Number of players:", "2", Color.transparent, Color.white);
 		numPlayersWBWL.wb.setInput(gc.getInput());
 		numPlayersWBWL.wb.setAcceptable("1234567890");
 		
+		wBWLs.add(scoreLimitWBWL);
 		wBWLs.add(numPlayersWBWL);
 		
 		buttons.add(okButton);
 		buttons.add(backButton);
 		buttons.add(mapButton);
-		buttons.add(scoreLimitButton);
 		//-------------------
 		
 		f = new Font("Comic Sans", Font.ITALIC, 50);
@@ -122,24 +109,6 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 			throws SlickException {
 		Input input = gc.getInput();
 		
-		if(justChanged) {
-			input.clearKeyPressedRecord();
-			justChanged = false;
-		}
-		
-		if(changeScoreLimit) {
-			if(!scoreLimitButton.getBackColor().equals(new Color(40, 40, 40))) {
-				oldColor = scoreLimitButton.getBackColor();
-				scoreLimitButton.setBackColor(new Color(40, 40, 40));
-			}
-		}
-		
-		else {
-			if(scoreLimitButton.getBackColor().equals(new Color(40, 40, 40))) {
-				scoreLimitButton.setBackColor(oldColor);
-			}
-		}
-		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}
@@ -150,60 +119,23 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		
 		if (okButton.isMousePressed()) {
 			Game.LASTID = getID();
-			changeScoreLimit = false;
-			scoreLimitButton.setBackColor(oldColor);
-			scoreLimitButton.setText("Score limit: " + scoreLimit);
+			((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setScoreLimit(Integer.parseInt(scoreLimitWBWL.wb.getText()));
+			((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setNumPlayers(Integer.parseInt(numPlayersWBWL.wb.getText()));
 			InGameState.finished = true;
 			sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
-			((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setScoreLimit(scoreLimit);
 			Game.INGAME_MUSIC.loop();
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
-			changeScoreLimit = false;
-			scoreLimitButton.setBackColor(oldColor);
-			scoreLimitButton.setText("Score limit: " + scoreLimit);
 			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 		if (mapButton.isMousePressed()){
-			changeScoreLimit = false;
-			scoreLimitButton.setBackColor(oldColor);
-			scoreLimitButton.setText("Score limit: " + scoreLimit);
 			selectedMap = (GameMap) maplist.poll();
 			maplist.addLast(selectedMap);
 			mapButton.setText(selectedMap.toString());
-		}
-
-		if (scoreLimitButton.isMousePressed()) {
-			changeScoreLimit = true;
-			scoreLimitButton.setText("");
-		}
-	}
-	
-	public void keyPressed(int key, char c) {
-		if(changeScoreLimit) {
-			if(key == Input.KEY_ENTER) {
-				changeScoreLimit = false;
-				int oldscore = scoreLimit;
-				try {
-					scoreLimit = Integer.parseInt(scoreLimitButton.getText()) < 1 ? 1 : Integer.parseInt(scoreLimitButton.getText());
-				}
-				catch(NumberFormatException e) {
-					scoreLimit = oldscore;
-				}
-				scoreLimitButton.setText("Score limit: " + scoreLimit);
-			}
-			else if(key == Input.KEY_ESCAPE) {
-				changeScoreLimit = false;
-				justChanged = true;
-				scoreLimitButton.setText("Score limit: " + scoreLimit);
-			}
-			else if(key >= Input.KEY_1 && key <= Input.KEY_0) {
-				scoreLimitButton.setText(scoreLimitButton.getText() + Input.getKeyName(key));
-			}
 		}
 	}
 

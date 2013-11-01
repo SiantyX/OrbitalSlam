@@ -313,6 +313,10 @@ public class InGameState extends BasicGameState implements KeyListener {
 		scoreLimit = score;
 	}
 	
+	public void setNumPlayers(int num) {
+		numLocalPlayers = num;
+	}
+	
 	@Override
 	public int getID() {
 		return ID;
