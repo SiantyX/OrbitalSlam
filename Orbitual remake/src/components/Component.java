@@ -18,9 +18,11 @@ public abstract class Component {
 	protected float scale;
 	protected float rotation;
 	protected Toolkit toolkit;
+	protected float scaleWidth, scaleHeight;
 	
 	public Component(String id) {
 		this.id = id;
+		scaleWidth = scaleHeight = 1;
 	}
 
 	public String getID() {
@@ -51,9 +53,20 @@ public abstract class Component {
 		return scale;
 	}
 	
-	public void setRelativeHeight(int proportion){
-		currentImage = currentImage.getSubImage(0, 0, ((int) (getWidth())/proportion), (int)getHeight());
-		scale *= proportion;
+	public void setScaleWidth(float scale) {
+		this.scaleWidth = scale;
+	}
+	
+	public void setScaleHeight(float scale) {
+		this.scaleHeight = scale;
+	}
+	
+	public float getScaleWidth() {
+		return scaleWidth;
+	}
+	
+	public float getScaleHeight() {
+		return scaleHeight;
 	}
 
 	public void setRotation(float rotation) {
@@ -66,16 +79,10 @@ public abstract class Component {
 	}
 	
 	public float getWidth() {
-		return currentImage.getWidth()*scale;
+		return currentImage.getWidth()*scale*scaleWidth;
 	}
 	
 	public float getHeight() {
-		return currentImage.getHeight()*scale;
-	}
-
-	public void setRelativeWidth(int proportion) {
-		currentImage = currentImage.getSubImage(0, 0, (int) (getWidth()), (int)getHeight()/proportion);
-		scale *= proportion;
-		
+		return currentImage.getHeight()*scale*scaleHeight;
 	}
 }

@@ -167,31 +167,6 @@ public class Entity extends Node {
 		setScale(radius / getRadius(), id);
 	}
 
-	public void setWidth(float width) {
-		if (components.isEmpty())
-			return;
-
-		setScale(width / getWidth());
-	}
-
-	public void setHeight(float width) {
-		if (components.isEmpty())
-			return;
-
-		setScale(width / getWidth());
-
-	}
-	public void setRelativeHeight(int i){
-		components.get(0).setRelativeHeight(i);
-	}
-	
-	public void setRelativeWidth(int i){
-		components.get(0).setRelativeWidth(i);
-		
-	}
-	
-
-
 
 	public float getWidth() {
 		return components.get(0).getWidth();

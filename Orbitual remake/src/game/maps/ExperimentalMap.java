@@ -46,7 +46,6 @@ public class ExperimentalMap extends GameMap {
 	public void createMap(ViewPort vp) throws SlickException{
 		Brick brick = new Brick("Brick");
 		brick.setPosition(new Vector2f(0,500));
-		brick.MultiplyWidthBy(5);
 		interactables.add(brick);
 		
 		for(int i = 0; i < numAnc; i++) {

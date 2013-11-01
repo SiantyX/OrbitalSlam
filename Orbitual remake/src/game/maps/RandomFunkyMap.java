@@ -52,17 +52,20 @@ public class RandomFunkyMap extends GameMap {
 			e.AddComponent(c);
 			// homemade
 			e.setScale(stdScale * Game.WIDTH);
-			Vector2f pos = new Vector2f(vp.getPosX() + (rand.nextFloat() * actualWidth),
-					vp.getPosY() + (rand.nextFloat() * actualHeight));
+			Vector2f pos = new Vector2f(rand.nextFloat() * Game.WIDTH,
+					rand.nextFloat() * Game.HEIGHT);
+			pos = vp.toAbsolute(pos);
 			e.setCenterPosition(pos);
 			anchors.add(e);
 		}
+		
 		Mine a;
 		Vector2f vector;
 		for (int i = 0; i < numMines;i++){
 			a = new Mine();
-			vector = new Vector2f(vp.getPosX() + rand.nextFloat() * actualWidth,
-					vp.getPosY() + rand.nextFloat() * actualHeight);
+			vector = new Vector2f(rand.nextFloat() * Game.WIDTH,
+					rand.nextFloat() * Game.HEIGHT);
+			vector = vp.toAbsolute(vector);
 			a.setCenterPosition(vector);
 			mapPlayers.put(100+i, a);
 			interactables.add(a);

@@ -135,10 +135,10 @@ public class ViewPort {
 	}
 
 	public float getResX() {
-		return res.x + pos.x;
+		return res.x;
 	}
 
 	public float getResY() {
-		return res.y + pos.y;
+		return res.y;
 	}
 }
