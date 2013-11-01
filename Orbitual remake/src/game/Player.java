@@ -333,9 +333,9 @@ public class Player {
 		hooked = h;
 	}
 	
-	public boolean deathCheck() {
-		if(getEntity().getCenterPosition().x < 0 || getEntity().getCenterPosition().x > Game.WIDTH
-				|| getEntity().getCenterPosition().y < 0 || getEntity().getCenterPosition().y > Game.HEIGHT) {
+	public boolean deathCheck(ViewPort vp) {
+		if(getEntity().getCenterPosition().x < vp.getPosX() || getEntity().getCenterPosition().x > vp.getResX()+vp.getPosX()
+				|| getEntity().getCenterPosition().y < vp.getPosY() || getEntity().getCenterPosition().y > vp.getResY()+vp.getPosY()) {
 			die();
 			return true;
 		}

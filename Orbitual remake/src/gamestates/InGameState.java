@@ -281,7 +281,7 @@ public class InGameState extends BasicGameState {
 	private void deathCheck() {
 		// check if dead
 		for(Player player : playersAlive) {
-			if(player.deathCheck()) {
+			if(player.deathCheck(vp)) {
 				for(Player otherPlayer : playersAlive) {
 					if(otherPlayer.equals(player)) continue;
 					otherPlayer.addScore(1);
