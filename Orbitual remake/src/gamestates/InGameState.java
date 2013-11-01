@@ -3,6 +3,7 @@ package gamestates;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.ViewPort;
 import game.maps.AnchorMap;
 import game.maps.GameMap;
 import game.maps.RandomFunkyMap;
@@ -47,6 +48,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 	private int scoreLimit;
 
 	private Image bg;
+	
+	private ViewPort vp;
 
 	public InGameState(int id) {
 		ID = id;
@@ -60,6 +63,8 @@ public class InGameState extends BasicGameState implements KeyListener {
 		}
 
 		bg = new Image("res/orbitalbg1.jpg");
+		
+		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
 
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
@@ -141,11 +146,11 @@ public class InGameState extends BasicGameState implements KeyListener {
 			throws SlickException {
 		bg.draw(0, 0, (float) Game.WIDTH/2560);
 
-		map.render(gc, sb, g);
+		map.render(gc, sb, g, vp);
 
 		if(players.isEmpty()) return;
 		for(Player player : players) {
-			player.render(gc, sb, g);
+			player.render(gc, sb, g, vp);
 		}
 
 		FontUtils.drawCenter(scoreFont, "Score limit: " + scoreLimit, 10, 10, 200);

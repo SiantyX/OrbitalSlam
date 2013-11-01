@@ -3,6 +3,7 @@ package game.maps;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.ViewPort;
 import game.maps.interactables.*;
 
 import java.util.ArrayList;
@@ -31,12 +32,12 @@ public abstract class GameMap {
 
 	public abstract Vector2f getStartPos(int i, Player p);
 
-	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
+	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
 		for (Entity e : anchors) {
-			e.render(gc, sb, g);
+			e.render(gc, sb, g, vp);
 		}
 		for (Interactable i : interactables)
-			i.render(gc, sb, g);
+			i.render(gc, sb, g, vp);
 	}
 
 	public ArrayList<Entity> getAnchors() {

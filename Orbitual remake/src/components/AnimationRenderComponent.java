@@ -1,5 +1,7 @@
 package components;
 
+import game.ViewPort;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -102,5 +104,10 @@ public class AnimationRenderComponent extends Component {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr) {
 		currentIRC.render(gc, sb, gr);
+	}
+
+	@Override
+	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, ViewPort vp) {
+		currentIRC.render(gc, sb, gr, vp);
 	}
 }

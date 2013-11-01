@@ -3,6 +3,8 @@ package game;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.util.FontUtils;
 
@@ -10,8 +12,8 @@ public class ViewPort {
 	private Vector2f pos;
 	private Vector2f res;
 	
-	public ViewPort() {
-		res = new Vector2f(Game.WIDTH, Game.HEIGHT);
+	public ViewPort(Vector2f res) {
+		this.res = res;
 		pos = new Vector2f(0, 0);
 	}
 	
@@ -62,19 +64,48 @@ public class ViewPort {
 		pos.set(v.x - res.x/2, v.y - res.y/2);
 	}
 	
-	public void drawString(Font font, String text, Vector2f v, int width) {
+	public void drawStringCenter(TrueTypeFont font, String text, Vector2f v, int width) {
 		v = toRelative(v);
 		FontUtils.drawCenter(font, text, Math.round(v.x), Math.round(v.y), width);
 	}
 	
+	public void drawStringCenter(TrueTypeFont font, String text, Vector2f v, int width, Color color) {
+		v = toRelative(v);
+		FontUtils.drawCenter(font, text, Math.round(v.x), Math.round(v.y), width, color);
+	}
+	
+	public void drawString(Graphics g, TrueTypeFont font, String text, Vector2f v) {
+		g.setFont(font);
+		v = toRelative(v);
+		g.drawString(text, v.x, v.y);
+	}
+	
+	public void drawString(Graphics g, TrueTypeFont font, String text, Vector2f v, Color color) {
+		g.setColor(color);
+		this.drawString(g, font, text, v);
+	}
+	
 	public void drawLine(Graphics g, Vector2f v1, Vector2f v2, Color color) {
 		g.setColor(color);
+		this.drawLine(g, v1, v2);
 	}
 	
 	public void drawLine(Graphics g, Vector2f v1, Vector2f v2) {
 		Vector2f tmp1 =	toRelative(v1);
 		Vector2f tmp2 = toRelative(v2);
 		g.drawLine(tmp1.x, tmp1.y, tmp2.x, tmp2.y);
+	}
+	
+	public void draw(Graphics g, Shape shape) {
+		Vector2f tmp = new Vector2f(shape.getX(), shape.getY());
+		shape.setLocation(tmp.x, tmp.y);
+		g.draw(shape);
+	}
+	
+	public void fill(Graphics g, Shape shape) {
+		Vector2f tmp = new Vector2f(shape.getX(), shape.getY());
+		shape.setLocation(tmp.x, tmp.y);
+		g.fill(shape);
 	}
 	
 	public float getPosX() {

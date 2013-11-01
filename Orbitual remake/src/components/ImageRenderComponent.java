@@ -1,6 +1,7 @@
 package components;
 
 import game.Game;
+import game.ViewPort;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -21,6 +22,19 @@ public class ImageRenderComponent extends Component {
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr) {
 		Vector2f pos = owner.getPosition();
 
+		currentImage.draw(pos.x, pos.y, scale);
+		if(Game.showHitbox) {
+			gr.setColor(Color.red);
+			gr.drawOval(pos.x, pos.y, currentImage.getWidth(), currentImage.getHeight());
+		}
+	}
+	
+	@Override
+	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, ViewPort vp) {
+		Vector2f pos = owner.getPosition();
+
+		pos = vp.toRelative(pos);
+		
 		currentImage.draw(pos.x, pos.y, scale);
 		if(Game.showHitbox) {
 			gr.setColor(Color.red);

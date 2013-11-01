@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.state.StateBasedGame;
 
 import game.Entity;
+import game.ViewPort;
 
 public abstract class Component {
 
@@ -29,6 +30,7 @@ public abstract class Component {
 
 	public abstract void update(GameContainer gc, StateBasedGame sb, int delta);
 	public abstract void render(GameContainer gc, StateBasedGame sb, Graphics gr);
+	public abstract void render(GameContainer gc, StateBasedGame sb, Graphics gr, ViewPort vp);
 	
 	public float getRadius(){
 		return (currentImage.getWidth()/2)*scale;

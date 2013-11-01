@@ -128,6 +128,12 @@ public class Entity extends Node {
 			component.render(gc, sb, g);
 		}
 	}
+	
+	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
+		for (Component component : components) {
+			component.render(gc, sb, g, vp);
+		}
+	}
 
 	public float getRadius() {
 		if (components.isEmpty())

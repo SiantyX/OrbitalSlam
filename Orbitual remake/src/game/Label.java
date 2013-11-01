@@ -23,8 +23,12 @@ public class Label extends Node {
 		ttf = new TrueTypeFont(font, true);
 	}
 	
+	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
+		vp.drawStringCenter(ttf, text, pos, ttf.getWidth(text), color);
+	}
+	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
-		FontUtils.drawCenter(ttf, text, xInt(), yInt() - ttf.getHeight()/2, ttf.getWidth(text), color);
+		FontUtils.drawCenter(ttf, text, Math.round(pos.x), Math.round(pos.y), ttf.getWidth(text), color);
 	}
 	
 	public void setText(String str) {

@@ -249,14 +249,14 @@ public class Player {
 		centriAcc = ACC_CONST/(hookLength*hookLength);
 	}
 
-	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
+	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
 		if(dead) return;
 
 		if(hooked) {
 			g.setColor(Color.white);
-			g.drawLine(entity.getCenterPosition().x, entity.getCenterPosition().y, hookedTo.getCenterPosition().x, hookedTo.getCenterPosition().y);
+			vp.drawLine(g, entity.getCenterPosition(), hookedTo.getCenterPosition());
 		}
-		entity.render(gc, sb, g);
+		entity.render(gc, sb, g, vp);
 		
 		// debug stun time
 		//g.drawString(new Double(stunTime).toString(), entity.getPosition().x, entity.getPosition().y);

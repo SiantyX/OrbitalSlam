@@ -3,6 +3,7 @@ package gamestates;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.ViewPort;
 import game.maps.AnchorMap;
 
 import java.awt.Font;
@@ -29,7 +30,6 @@ public abstract class MultiplayerState extends BasicGameState {
 	public static CopyOnWriteArrayList<String> names;
 
 	// INGAME SPECIFIC
-
 	private int keyBinds[];
 	private AnchorMap map;
 	public static ArrayList<Player> players;
@@ -47,6 +47,8 @@ public abstract class MultiplayerState extends BasicGameState {
 	private static boolean onCountDown;
 	
 	private int scoreLimit;
+	
+	private ViewPort vp;
 
 	public MultiplayerState(int id) {
 		ID = id;
@@ -116,11 +118,11 @@ public abstract class MultiplayerState extends BasicGameState {
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException {
-		map.render(gc, sb, g);
+		map.render(gc, sb, g, vp);
 
 		if(players.isEmpty()) return;
 		for(Player player : players) {
-			player.render(gc, sb, g);
+			player.render(gc, sb, g, vp);
 		}
 
 		FontUtils.drawCenter(scoreFont, "Score limit: " + scoreLimit, 10, 10, 200);

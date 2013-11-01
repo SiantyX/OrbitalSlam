@@ -21,6 +21,7 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	private boolean globalLeftPress;
 	private boolean globalRightPress;
 	private boolean doubleClick;
+	private Input input;
 
 	public WriteBox(String id, Shape shape, Color color, String text, TrueTypeFont ttf) throws SlickException {
 		super(id, shape, color, text, ttf);
@@ -39,6 +40,7 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		globalLeftPress = false;
 		globalRightPress = false;
 		doubleClick = false;
+		writeCenter(false);
 	}
 
 	public void setAcceptable(String a) {
@@ -97,6 +99,7 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		if(!focused) return;
 		
 		if(key == Input.KEY_ESCAPE) {
+			input.clearKeyPressedRecord();
 			focused = false;
 			text = "";
 		}
@@ -157,6 +160,7 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		input.addKeyListener(this);
 		input.addMouseListener(this);
 		input.enableKeyRepeat();
+		this.input = input;
 	}
 
 	@Override

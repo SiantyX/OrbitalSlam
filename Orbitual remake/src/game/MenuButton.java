@@ -73,6 +73,33 @@ public class MenuButton extends Entity {
 		fill = true;
 	}
 
+	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
+		if(shape == null) {
+			super.render(gc, sb, g, vp);
+		}
+		else {
+			if(shape == null || ttf == null || txtColor == null) return;
+			g.setColor(color);
+			if(fill)
+				vp.fill(g, shape);
+			else
+				vp.draw(g, shape);
+			g.setColor(txtColor);
+			try {
+				if(writecenter) {
+					Vector2f tmp = new Vector2f((int)shape.getX(), (int)shape.getCenterY() - ttf.getHeight()/2);
+					vp.drawStringCenter(ttf, text, tmp, (int)shape.getWidth(), txtColor);
+				}
+				else {
+					vp.drawString(g, ttf, text, new Vector2f((int)shape.getX() + 10, (int)shape.getCenterY() - ttf.getHeight()/2));
+				}
+			}
+			catch(NullPointerException e) {
+				
+			}
+		}
+	}
+	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
 		if(shape == null) {
 			super.render(gc, sb, g);
@@ -120,48 +147,6 @@ public class MenuButton extends Entity {
 				mousePressed = false;
 			}
 		}
-		
-		/*if(shape == null) {
-			if ( mousePosX > getPosition().getX() && mousePosX < getPosition().getX() + w
-					&& mousePosY > getPosition().getY() && mousePosY < getPosition().getY() + h ) { // cursor is inside button
-				if (input.isMousePressed(0)) {
-					mousePressed = true;
-					//input.clearKeyPressedRecord();
-					//input.clearMousePressedRecord();
-					buttonPressed = 0;
-				} 
-				else if(input.isMousePressed(1)) {
-					mousePressed = true;
-					//input.clearKeyPressedRecord();
-					//input.clearMousePressedRecord();
-					buttonPressed = 1;
-				}
-				else {
-					mousePressed = false;
-				}
-			}
-		}
-		else {
-			shape.setX(pos.x);
-			shape.setY(pos.y);
-			if(shape.contains(mousePosX, mousePosY)) {
-				if(input.isMousePressed(0)) {
-					mousePressed = true;
-					//input.clearKeyPressedRecord();
-					//input.clearMousePressedRecord();
-					buttonPressed = 0;
-				}
-				else if(input.isMousePressed(1)) {
-					mousePressed = true;
-					//input.clearKeyPressedRecord();
-					//input.clearMousePressedRecord();
-					buttonPressed = 1;
-				}
-				else {
-					mousePressed = false;
-				}
-			}
-		}*/
 	}
 	
 	public boolean mouseInThis(int mousePosX, int mousePosY) {
