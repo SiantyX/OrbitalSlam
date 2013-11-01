@@ -1,7 +1,6 @@
 package game;
 
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Shape;
@@ -30,7 +29,8 @@ public class ViewPort {
 		res.x /= factor;
 		res.y /= factor;
 		
-		
+		pos.x += res.x * 1/(factor*factor);
+		pos.y += res.y * 1/(factor*factor);
 	}
 	
 	//unfinished
