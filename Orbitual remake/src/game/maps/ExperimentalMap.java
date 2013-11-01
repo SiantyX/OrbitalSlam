@@ -3,6 +3,7 @@ package game.maps;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.ViewPort;
 import game.maps.interactables.Brick;
 
 import org.newdawn.slick.Image;
@@ -42,7 +43,7 @@ public class ExperimentalMap extends GameMap {
 		return "Experimental Map";
 	}
 	
-	public void createMap(float scale) throws SlickException{
+	public void createMap(ViewPort vp) throws SlickException{
 		Brick brick = new Brick("Brick");
 		brick.setPosition(new Vector2f(0,500));
 		brick.MultiplyWidthBy(5);
@@ -55,7 +56,7 @@ public class ExperimentalMap extends GameMap {
 			e.AddComponent(c);
 			// homemade
 			e.setScale(stdScale*Game.WIDTH); 
-			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
+			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((vp.getResX()-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((vp.getResY()-(2*startPosY))/(numAncPerColumn-1))));
 			e.setPosition(pos);
 			anchors.add(e);
 		}

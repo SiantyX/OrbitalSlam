@@ -50,7 +50,7 @@ public abstract class GameMap {
 
 	}
 	
-	public abstract void createMap(float scale) throws SlickException;
+	public abstract void createMap(ViewPort vp) throws SlickException;
 	
 	public void reset(){
 		for (Interactable i : interactables)

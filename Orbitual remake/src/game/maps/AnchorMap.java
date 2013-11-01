@@ -3,6 +3,7 @@ package game.maps;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.ViewPort;
 
 import java.util.ArrayList;
 
@@ -61,7 +62,7 @@ public class AnchorMap extends GameMap {
 		
 	}
 	
-	public void createMap(float scale) throws SlickException {
+	public void createMap(ViewPort vp) throws SlickException {
 		this.numPlayers = numPlayers;
 		this.startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 		this.startPosX = (int)Math.round(Game.WIDTH * startPercentX);
@@ -73,7 +74,7 @@ public class AnchorMap extends GameMap {
 			e.AddComponent(c);
 			// homemade
 			e.setScale(stdScale*Game.WIDTH); // trololol
-			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
+			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((vp.getResX()-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((vp.getResY()-(2*startPosY))/(numAncPerColumn-1))));
 			e.setPosition(pos);
 			anchors.add(e);
 		}

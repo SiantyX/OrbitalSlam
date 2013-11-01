@@ -50,7 +50,6 @@ public class InGameState extends BasicGameState {
 	private Image bg;
 	
 	private ViewPort vp;
-	private float scale;
 
 	public InGameState(int id) {
 		ID = id;
@@ -64,14 +63,13 @@ public class InGameState extends BasicGameState {
 		}
 
 		bg = new Image("res/orbitalbg1.jpg");
-		scale = 1 - 0.25f*(numLocalPlayers-2);
 		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
-		vp.setZoom(scale);
+		vp.setZoom(1 - 0.25f*(numLocalPlayers-2));
 		
 
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
-		map.createMap(scale);
+		map.createMap(vp);
 		players = new ArrayList<Player>();
 
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();

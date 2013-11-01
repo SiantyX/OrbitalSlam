@@ -3,6 +3,7 @@ package game.maps;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.ViewPort;
 import game.maps.interactables.Mine;
 
 import java.util.ArrayList;
@@ -39,10 +40,9 @@ public class RandomFunkyMap extends GameMap {
 
 	}
 
-	public void createMap(float scale) throws SlickException {
-		actualHeight = 1/scale*Game.HEIGHT;
-		actualWidth = 1/scale*Game.WIDTH;
-		
+	public void createMap(ViewPort vp) throws SlickException {
+		actualWidth = vp.getResX();
+		actualHeight = vp.getResY();
 		
 		for (int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
@@ -51,18 +51,18 @@ public class RandomFunkyMap extends GameMap {
 					+ Integer.toString(i), img);
 			e.AddComponent(c);
 			// homemade
-			e.setScale(stdScale * actualWidth);
-			Vector2f pos = new Vector2f(rand.nextFloat() * actualWidth,
-					rand.nextFloat() * actualHeight);
-			e.setPosition(pos);
+			e.setScale(stdScale * Game.WIDTH);
+			Vector2f pos = new Vector2f(vp.getPosX() + (rand.nextFloat() * actualWidth),
+					vp.getPosY() + (rand.nextFloat() * actualHeight));
+			e.setCenterPosition(pos);
 			anchors.add(e);
 		}
 		Mine a;
 		Vector2f vector;
 		for (int i = 0; i < numMines;i++){
 			a = new Mine();
-			vector = new Vector2f(rand.nextFloat() * actualWidth,
-					rand.nextFloat() * actualHeight);
+			vector = new Vector2f(vp.getPosX() + rand.nextFloat() * actualWidth,
+					vp.getPosY() + rand.nextFloat() * actualHeight);
 			a.setCenterPosition(vector);
 			mapPlayers.put(100+i, a);
 			interactables.add(a);
