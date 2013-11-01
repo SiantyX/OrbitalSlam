@@ -65,6 +65,7 @@ public abstract class GameMap {
 	public void update(GameContainer gc, StateBasedGame sb, int delta){
 		for (Interactable i : interactables){
 			i.collisionCheck(sb);
+			i.update(gc, sb, delta);
 		}
 	}
 	public abstract String toString();

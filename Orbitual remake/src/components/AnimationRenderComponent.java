@@ -24,13 +24,33 @@ public class AnimationRenderComponent extends Component {
 	private boolean started;
 	private boolean done;
 
-	public AnimationRenderComponent(String id, float fps, ImageRenderComponent ... images) {
+	
+	public AnimationRenderComponent(String id, float fps, Image ... images) {
 		super(id);
 		this.fps = fps;
 		
+		renderImages = new ArrayList<ImageRenderComponent>();
+		
+		for(Image img : images) {
+			ImageRenderComponent temp = new ImageRenderComponent(id + renderImages.size(), img);
+			temp.setOwnerEntity(owner);
+			renderImages.add(temp);
+		}
+		
+		
+		init();
+	}
+	
+	public AnimationRenderComponent(String id, float fps, ImageRenderComponent ... images) {
+		super(id);
+		this.fps = fps;
+		renderImages = new ArrayList<ImageRenderComponent>();
+		
 		for(ImageRenderComponent img : images) {
+			img.setOwnerEntity(owner);
 			renderImages.add(img);
 		}
+		
 		
 		init();
 	}
@@ -38,6 +58,7 @@ public class AnimationRenderComponent extends Component {
 	public AnimationRenderComponent(String id, float fps, String folderPath) throws SlickException {
 		super(id);
 		this.fps = fps;
+		renderImages = new ArrayList<ImageRenderComponent>();
 		
 		File folder = new File(folderPath);
 		if(!folder.exists()) return;
@@ -49,14 +70,17 @@ public class AnimationRenderComponent extends Component {
 		});
 		
 		for(File file : fileList) {
-			renderImages.add(new ImageRenderComponent(id + renderImages.size(), new Image(file.getAbsolutePath())));
+			System.out.println("path: "+file.getAbsolutePath());
+			ImageRenderComponent temp = new ImageRenderComponent(id + renderImages.size(), new Image(file.getAbsolutePath()));
+			temp.setOwnerEntity(owner);
+			renderImages.add(temp);
 		}
 		
 		init();
 	}
 	
 	private void init() {
-		timer = new SXTimer(Math.round(1/(fps*1000)));
+		timer = new SXTimer(Math.round(1000/fps));
 		currentIRC = renderImages.get(0);
 		currentImage = currentIRC.getImage();
 		loop = false;
@@ -84,6 +108,7 @@ public class AnimationRenderComponent extends Component {
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
 		if(!started || done) return;
 		
+		
 		if(timer.isTriggered() >= 0) {
 			int i = renderImages.indexOf(currentIRC);
 			i++;
@@ -101,13 +126,18 @@ public class AnimationRenderComponent extends Component {
 		}
 	}
 
+	
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr) {
+		currentIRC.setOwnerEntity(owner);
+		currentIRC.setScale(scale);
 		currentIRC.render(gc, sb, gr);
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, ViewPort vp) {
+		currentIRC.setOwnerEntity(owner);
+		currentIRC.setScale(scale);
 		currentIRC.render(gc, sb, gr, vp);
 	}
 }

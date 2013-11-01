@@ -8,6 +8,7 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
+import components.AnimationRenderComponent;
 import components.ImageRenderComponent;
 import game.Entity;
 import game.Game;
@@ -18,23 +19,38 @@ import gamestates.InGameState;
 public class Mine extends Interactable {
 	private boolean detonated;
 	private Image img;
-	protected final static String minePath = "res/sprites/interactables/mine.png";
+	//protected final static String minePath = "res/sprites/interactables/mine.png";
+	protected final static String minePath = "res/sprites/interactables/bombs/";
 	protected final static String mineSound = "res/audio/sound/explosion.ogg";
 	protected final static float power = .3f;
 	protected final static float radius = 100;
 	private Sound sound;
 	
-	ImageRenderComponent realMine;
+	//ImageRenderComponent realMine;
+	AnimationRenderComponent realMine;
 
 	public Mine() throws SlickException{
 		
 		super("Mine");
 		detonated = false;
 		this.setRadius(radius);
+		//Image[] images = {new Image(minePath + "bomb1.png"), new Image(minePath + "bomb2.png"), new Image(minePath + "bomb3.png"), new Image(minePath + "bomb4.png")};
 		
-		this.img = new Image(minePath);
-		realMine = new ImageRenderComponent("Mine", img);
+		//this.img = new Image(minePath);
+		//realMine = new ImageRenderComponent("Mine", img);
+		//realMine = new AnimationRenderComponent("0", 50, new ImageRenderComponent("1", new Image(minePath + "bomb1.png")),
+														//new ImageRenderComponent("2", new Image(minePath + "bomb2.png")),
+														//new ImageRenderComponent("3", new Image(minePath + "bomb3.png")),
+														//new ImageRenderComponent("4", new Image(minePath + "bomb4.png")));
+		
+		realMine = new AnimationRenderComponent("0", 50, minePath);
+		
+		
+		
 		this.AddComponent(realMine);
+		
+		realMine.setLoop(true);
+		realMine.start();
 		
 		setScale(scale);
 		
