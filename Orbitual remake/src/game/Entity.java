@@ -8,8 +8,6 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import components.Component;
-import components.AnimationRenderComponent;
-import components.ImageRenderComponent;
 
 public class Entity extends Node {
 
@@ -200,11 +198,13 @@ public class Entity extends Node {
 		return false;
 	}
 
+	// 
 	public boolean collisionSquare(Vector2f e1) {
 		return e1.x > pos.x && e1.x < pos.x + getWidth() && e1.y > pos.y
 				&& e1.y < pos.y + getHeight();
 	}
 
+	// square in square inte klar
 	public boolean collisionSquare(Entity e1) {
 		return (Math.abs((e1.getPosition().getX() - pos.x)) < getRadius()
 				&& Math.abs(e1.getPosition().getY() - pos.y) < getRadius());
