@@ -52,7 +52,7 @@ public class Mine extends Interactable {
 		realMine.setLoop(true);
 		realMine.start();
 		
-		setScale(scale);
+		setScale(scale*Game.WIDTH);
 		
 		sound = new Sound(mineSound);
 	}
