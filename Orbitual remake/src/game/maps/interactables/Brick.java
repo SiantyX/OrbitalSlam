@@ -14,59 +14,68 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import components.ImageRenderComponent;
 
-public class Brick extends Interactable{
-	protected static final float bounciness = .02f;
+public class Brick extends Interactable {
+	protected static final float bounciness = .01f;
 	protected static final String brickPath = "res/sprites/interactables/brick.png";
 	private Image img;
 	protected final static float Height = 200;
-	
 
 	public Brick(String id) throws SlickException {
 		super(id);
 		this.img = new Image(brickPath);
-		ImageRenderComponent brick = new ImageRenderComponent("Brick",img);
+		ImageRenderComponent brick = new ImageRenderComponent("Brick", img);
 		this.AddComponent(brick);
 		setHeight(Height);
-		
+
 	}
 
 	@Override
 	public void collisionCheck(StateBasedGame sb) {
 
 		ArrayList<Player> playerlist = new ArrayList<Player>();
-		playerlist = ((InGameState)sb.getState(Game.State.INGAMESTATE.ordinal())).getPlayers();
+		playerlist = ((InGameState) sb.getState(Game.State.INGAMESTATE
+				.ordinal())).getPlayers();
 
-		for (Player e : playerlist){
-			if (this.collisionRectangle(e.getEntity())){
+		for (Player e : playerlist) {
+			if (this.collisionRectangle(e.getEntity())) {
 				collision(e);
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void collision(Player player) {
 
-		Entity entity = this;
+		boolean hitTopOrBottom = (Math.abs(this.getCenterPosition().x - player.getEntity().getCenterPosition().x)) < (this.getWidth()/2 -5f + player.getEntity().getRadius());
 		
-		float degreeOfImpactX = (entity.getCenterPosition().x - player.getEntity().getCenterPosition().x);
-		float degreeOfImpactY = (entity.getCenterPosition().y - player.getEntity().getCenterPosition().y);
-		
-		float directionX = - degreeOfImpactX*bounciness;
-		float directionY = - degreeOfImpactY*bounciness;
+		float degreeOfImpactX = (this.getCenterPosition().x - player
+				.getEntity().getCenterPosition().x);
+		float degreeOfImpactY = (this.getCenterPosition().y - player
+				.getEntity().getCenterPosition().y);
 
+		float directionX;
+		float directionY;
+		if (hitTopOrBottom) {
+			directionY = -degreeOfImpactY * bounciness;
+			player.setDy(directionY);
 
-		Vector2f v = new Vector2f(directionX,directionY);
+		} else {
+			directionX = -degreeOfImpactX * bounciness;
+			player.setDx(directionX);
+		}
+
+		// Vector2f v = new Vector2f(directionX, directionY);
 		player.setHooked(false);
 
-		player.setVelocity(v);
-		
+		// player.setVelocity(v);
+
 	}
 
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

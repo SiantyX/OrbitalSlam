@@ -352,7 +352,14 @@ public class Player {
 	public String getIpaddr() {
 		return ipaddr;
 	}
-
+	
+	public void setDx(double dx){
+		this.dx = dx;	
+	}
+	public void setDy(double dy){
+		this.dy = dy;
+	}
+	
 	// COLLISION PHYSICS
 	public void collision(Player player) {
 		// ------------------------------------------------------------------------------------------------------
