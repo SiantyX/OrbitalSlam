@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -11,14 +12,17 @@ import components.ImageRenderComponent;
 import game.Entity;
 import game.Game;
 import game.Player;
+import gamestates.AudioSettingsState;
 import gamestates.InGameState;
 
 public class Mine extends Interactable {
 	private boolean detonated;
 	private Image img;
 	protected final static String minePath = "res/sprites/interactables/mine.png";
+	protected final static String mineSound = "res/audio/sound/explosion.ogg";
 	protected final static float power = .3f;
 	protected final static float radius = 100;
+	private Sound sound;
 	
 	ImageRenderComponent realMine;
 
@@ -34,6 +38,7 @@ public class Mine extends Interactable {
 		
 		setScale(scale);
 		
+		sound = new Sound(mineSound);
 	}
 
 	public void reset(){
@@ -74,6 +79,8 @@ public class Mine extends Interactable {
 		player.setStunTime(200);
 
 		player.setVelocity(v);
+		
+		sound.play(1, AudioSettingsState.SOUND_LEVEL*AudioSettingsState.MASTER_LEVEL);
 	}
 
 
