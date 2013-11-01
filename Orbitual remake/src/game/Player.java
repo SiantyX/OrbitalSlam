@@ -53,7 +53,7 @@ public class Player {
 
 	private double centriAcc;
 	private final double MAXSPINSPEED = 16;
-	private final double ACC_CONST = 600;
+	private final double ACC_CONST = 600/2;
 	private final double TIME_CONST = 16.6;
 	// -----------------------
 
@@ -61,7 +61,7 @@ public class Player {
 
 	public int KEYBIND;
 
-	private final float gravity = 0.015f;
+	private final float gravity = 0.015f/2;
 	private final float SPEED_LOST = 0.6f;
 	private final double STUN_LENGTH = 50;
 	
@@ -77,9 +77,10 @@ public class Player {
 	
 		defaultImage = new ImageRenderComponent(playerImg[num], new Image(playerImg[num] + ".png"));
 		stunnedImage = new ImageRenderComponent(playerImg[num] + "xd", new Image(playerImg[num] + "xd.png"));
+		defaultImage.setScale(stdScale*Game.WIDTH);
+		stunnedImage.setScale(stdScale*Game.WIDTH);
 		
 		entity.AddComponent(defaultImage);
-		entity.setScale(stdScale*Game.WIDTH);
 		Vector2f startPos = map.getStartPos(num, this);
 		entity.setCenterPosition(startPos);
 
