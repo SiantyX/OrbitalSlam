@@ -27,6 +27,7 @@ public abstract class GameMap {
 		interactables = new ArrayList<Interactable>();
 		numPlayers = 4;
 	}
+	
 
 	public abstract Vector2f getStartPos(int i, Player p);
 

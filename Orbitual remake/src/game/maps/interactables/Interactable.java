@@ -1,5 +1,6 @@
 package game.maps.interactables;
 
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -8,6 +9,7 @@ import game.Player;
 
 public abstract class Interactable extends Entity {
 	org.newdawn.slick.geom.Vector2f vector;
+	
 
 	public Interactable(String id) {
 		super(id);

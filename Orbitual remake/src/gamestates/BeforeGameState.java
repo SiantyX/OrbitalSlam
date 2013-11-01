@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import game.Game;
 import game.MenuButton;
 import game.maps.AnchorMap;
+import game.maps.ExperimentalMap;
 import game.maps.GameMap;
 import game.maps.RandomFunkyMap;
 
@@ -49,6 +50,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		maplist = new LinkedList<GameMap>();
 		maplist.add(new AnchorMap());
 		maplist.add(new RandomFunkyMap());
+		maplist.add(new ExperimentalMap());
 		
 		selectedMap = (GameMap) maplist.poll();
 		maplist.addLast(selectedMap);
