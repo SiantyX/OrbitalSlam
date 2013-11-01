@@ -20,6 +20,7 @@ import components.ImageRenderComponent;
 
 public class Player {
 	private boolean dead;
+	private boolean wasKeyDown;
 	private Entity entity;
 	private final String[] playerImg = new String[]{"res/sprites/smiley1", "res/sprites/smiley2", "res/sprites/smiley3", "res/sprites/smiley4", "res/sprites/smiley5", "res/sprites/smiley6", "res/sprites/smiley7.png", "res/sprites/smiley8"};
 	public static final float stdScale = 0.0005208f;
@@ -105,6 +106,8 @@ public class Player {
 		clockWise = false;
 
 		centriAcc = 0;
+		
+		wasKeyDown = false;
 		// -----------------
 
 		this.num = num;
@@ -137,11 +140,15 @@ public class Player {
 			
 			// hook button
 			Input input = gc.getInput();
-			if (input.isKeyPressed(KEYBIND)) {
+			if (input.isKeyPressed(KEYBIND) && !wasKeyDown) {
+				wasKeyDown = true;
 				hooked = !hooked;
 				if(hooked) {
 					hook();
 				}
+			}
+			if(!input.isKeyDown(KEYBIND)) {
+				wasKeyDown = false;
 			}
 		}
 

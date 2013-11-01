@@ -107,19 +107,33 @@ public class MenuButton extends Entity {
 		int mousePosY = Math.abs(Mouse.getY() - Game.app.getHeight());
 		Input input = gc.getInput();
 		
-		if(shape == null) {
+		if(mouseInThis(mousePosX, mousePosY)) {
+			if(input.isMousePressed(0)) {
+				mousePressed = true;
+				buttonPressed = 0;
+			}
+			else if(input.isMousePressed(1)) {
+				mousePressed = true;
+				buttonPressed = 1;
+			}
+			else {
+				mousePressed = false;
+			}
+		}
+		
+		/*if(shape == null) {
 			if ( mousePosX > getPosition().getX() && mousePosX < getPosition().getX() + w
 					&& mousePosY > getPosition().getY() && mousePosY < getPosition().getY() + h ) { // cursor is inside button
 				if (input.isMousePressed(0)) {
 					mousePressed = true;
-					input.clearKeyPressedRecord();
-					input.clearMousePressedRecord();
+					//input.clearKeyPressedRecord();
+					//input.clearMousePressedRecord();
 					buttonPressed = 0;
 				} 
 				else if(input.isMousePressed(1)) {
 					mousePressed = true;
-					input.clearKeyPressedRecord();
-					input.clearMousePressedRecord();
+					//input.clearKeyPressedRecord();
+					//input.clearMousePressedRecord();
 					buttonPressed = 1;
 				}
 				else {
@@ -133,21 +147,39 @@ public class MenuButton extends Entity {
 			if(shape.contains(mousePosX, mousePosY)) {
 				if(input.isMousePressed(0)) {
 					mousePressed = true;
-					input.clearKeyPressedRecord();
-					input.clearMousePressedRecord();
+					//input.clearKeyPressedRecord();
+					//input.clearMousePressedRecord();
 					buttonPressed = 0;
 				}
 				else if(input.isMousePressed(1)) {
 					mousePressed = true;
-					input.clearKeyPressedRecord();
-					input.clearMousePressedRecord();
+					//input.clearKeyPressedRecord();
+					//input.clearMousePressedRecord();
 					buttonPressed = 1;
 				}
 				else {
 					mousePressed = false;
 				}
 			}
+		}*/
+	}
+	
+	public boolean mouseInThis(int mousePosX, int mousePosY) {
+		if(shape == null) {
+			if ( mousePosX > getPosition().getX() && mousePosX < getPosition().getX() + w
+					&& mousePosY > getPosition().getY() && mousePosY < getPosition().getY() + h ) {
+				return true;
+			}
 		}
+		else {
+			shape.setX(pos.x);
+			shape.setY(pos.y);
+			if(shape.contains(mousePosX, mousePosY)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public boolean isMousePressed() {

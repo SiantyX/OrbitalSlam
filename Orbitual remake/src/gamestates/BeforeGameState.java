@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import game.Game;
 import game.MenuButton;
+import game.WriteBox;
 import game.maps.AnchorMap;
 import game.maps.ExperimentalMap;
 import game.maps.GameMap;
@@ -30,6 +31,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 	
 	private ArrayList<MenuButton> buttons;
 	private MenuButton okButton, backButton, mapButton, modeButton, scoreLimitButton;
+	private WriteBox numPlayersButton;
 	private TrueTypeFont ttf;
 	private GameMap selectedMap;
 	private LinkedList<GameMap> maplist;
@@ -43,7 +45,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		scoreLimit = 20;
 	}
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
+	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		
@@ -67,7 +69,9 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		scoreLimitButton = new MenuButton("score", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 250, 200, 50), new Color(0, 0, 0, 0), "Score limit: " + scoreLimit, ttf);
 		oldColor = scoreLimitButton.getBackColor();
 		
-		
+		numPlayersButton = new WriteBox("numplayers", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 50, 200, 50), new Color(0, 0, 0, 0), "testest", ttf);
+		numPlayersButton.setInput(gc.getInput());
+		buttons.add(numPlayersButton);
 		
 		buttons.add(okButton);
 		buttons.add(backButton);
