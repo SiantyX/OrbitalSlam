@@ -224,7 +224,6 @@ public class InGameState extends BasicGameState {
 			}
 		}
 		
-		vp.centerOn(players.get(0).getEntity().getCenterPosition());
 		map.update(gc, sb, delta);
 		deathCheck();
 

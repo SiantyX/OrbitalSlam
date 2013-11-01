@@ -27,12 +27,15 @@ public class ViewPort {
 	
 	//unfinished
 	public void setZoom(float factor) {
+		res.x /= factor;
+		res.y /= factor;
+		
 		
 	}
 	
 	//unfinished
 	public float getZoom() {
-		return 1;
+		return Game.WIDTH/res.x;
 	}
 	
 	public void setPosition(int x, int y) {

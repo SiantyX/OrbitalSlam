@@ -35,7 +35,7 @@ public class ImageRenderComponent extends Component {
 
 		pos = vp.toRelative(pos);
 		
-		currentImage.draw(pos.x, pos.y, scale);
+		currentImage.draw(pos.x, pos.y, scale*vp.getZoom());
 		if(Game.showHitbox) {
 			gr.setColor(Color.red);
 			gr.drawOval(pos.x, pos.y, currentImage.getWidth(), currentImage.getHeight());
