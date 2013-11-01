@@ -26,21 +26,20 @@ public class ViewPort {
 
 	// unfinished
 	public void setZoom(float factor) {
+		float w, h;
+		w = (float) Game.WIDTH / factor;
+		h = (float) Game.HEIGHT / factor;
 
 		if (factor < 1f) {
-			res.x = Game.WIDTH / factor;
-			res.y = Game.HEIGHT / factor;
-
-			pos.x = (Game.WIDTH - res.x) / 4;
-			pos.y = (Game.HEIGHT - res.y) / 4;
+			pos.x = ((float)Game.WIDTH - w) / 4;
+			pos.y = ((float)Game.HEIGHT - h) / 4;
 		} else {
-			res.x = Game.WIDTH / factor;
-			res.y = Game.HEIGHT / factor;
-
-			pos.x = (Game.WIDTH - res.x);
-			pos.y = (Game.HEIGHT - res.y);
-
+			pos.x = ((float)Game.WIDTH - w);
+			pos.y = ((float)Game.HEIGHT - h);
 		}
+		
+		res.x = w;
+		res.y = h;
 	}
 
 	// unfinished

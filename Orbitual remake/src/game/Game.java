@@ -27,7 +27,7 @@ public class Game extends StateBasedGame {
 	public static AppGameContainer app;
 	public static int WIDTH = 1920;
 	public static int HEIGHT = 1080;
-	public static boolean fullscreen = true;
+	public static boolean fullscreen = false;
 	public static boolean showHitbox = false;
 	
 	public static int centerHeight;
@@ -80,7 +80,7 @@ public class Game extends StateBasedGame {
 			app.setDisplayMode(WIDTH, HEIGHT, fullscreen);
 			app.setTargetFrameRate(120);
 			app.setShowFPS(false);
-			app.setSmoothDeltas(true);
+			app.setSmoothDeltas(false);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
