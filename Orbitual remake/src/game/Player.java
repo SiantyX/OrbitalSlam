@@ -334,8 +334,9 @@ public class Player {
 	}
 	
 	public boolean deathCheck(ViewPort vp) {
-		if(getEntity().getCenterPosition().x < vp.getPosX() || getEntity().getCenterPosition().x > vp.getResX()+vp.getPosX()
-				|| getEntity().getCenterPosition().y < vp.getPosY() || getEntity().getCenterPosition().y > vp.getResY()+vp.getPosY()) {
+		Vector2f tmp = vp.toRelative(getEntity().getCenterPosition());
+		if(tmp.x < 0 || getEntity().getCenterPosition().x > vp.getResX()+vp.getPosX()
+				|| tmp.y < 0 || getEntity().getCenterPosition().y > vp.getResY()+vp.getPosY()) {
 			die();
 			return true;
 		}
