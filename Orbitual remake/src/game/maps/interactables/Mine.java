@@ -16,14 +16,11 @@ import gamestates.InGameState;
 public class Mine extends Interactable {
 	private boolean detonated;
 	private Image img;
-	private Image noImg;
-	protected final static String minePath = "res/sprites/mine.png";
-	protected final static String emptyPath ="res/sprites/empty.png";
+	protected final static String minePath = "res/sprites/interactables/mine.png";
 	protected final static float power = .3f;
 	protected final static float radius = 100;
 	
 	ImageRenderComponent realMine;
-	ImageRenderComponent invMine;
 
 	public Mine() throws SlickException{
 		
@@ -32,20 +29,16 @@ public class Mine extends Interactable {
 		this.setRadius(radius);
 		
 		this.img = new Image(minePath);
-		this.noImg = new Image(emptyPath);
 		realMine = new ImageRenderComponent("Mine", img);
-		invMine = new ImageRenderComponent("Empty", noImg);
 		this.AddComponent(realMine);
-		this.AddComponent(invMine);
 		
-		setScale((float) 0.2);
+		setScale(scale);
 		
 	}
 
 	public void reset(){
 		detonated = false;
 		this.changeImage(realMine);
-
 	}
 
 	public void collisionCheck(StateBasedGame sb) {
@@ -61,7 +54,6 @@ public class Mine extends Interactable {
 
 	@Override
 	public void collision(Player player) {
-		
 		if (detonated)
 			return;
 		
@@ -77,11 +69,11 @@ public class Mine extends Interactable {
 		Vector2f v = new Vector2f(directionX,directionY);
 		detonated = true;
 		player.setHooked(false);
-		this.changeImage(invMine);
+		
+		this.clear();
 		player.setStunTime(200);
 
 		player.setVelocity(v);
-		
 	}
 
 

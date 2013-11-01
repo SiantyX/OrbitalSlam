@@ -8,8 +8,8 @@ import game.Entity;
 import game.Player;
 
 public abstract class Interactable extends Entity {
-	org.newdawn.slick.geom.Vector2f vector;
-	
+	protected Vector2f vector;
+	protected final float scale = 0.2f;
 
 	public Interactable(String id) {
 		super(id);

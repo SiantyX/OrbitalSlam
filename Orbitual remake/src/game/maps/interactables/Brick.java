@@ -16,7 +16,7 @@ import components.ImageRenderComponent;
 
 public class Brick extends Interactable{
 	protected static final float bounciness = .02f;
-	protected static final String brickPath = "res/sprites/brick.png";
+	protected static final String brickPath = "res/sprites/interactables/brick.png";
 	private Image img;
 	protected final static float Height = 200;
 	

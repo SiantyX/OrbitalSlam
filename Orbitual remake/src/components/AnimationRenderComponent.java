@@ -18,23 +18,24 @@ public class AnimationRenderComponent extends Component {
 	private float fps;
 	private SXTimer timer;
 	private ImageRenderComponent currentIRC;
+	private boolean loop;
+	private boolean started;
+	private boolean done;
 
 	public AnimationRenderComponent(String id, float fps, ImageRenderComponent ... images) {
 		super(id);
 		this.fps = fps;
-		timer = new SXTimer(Math.round(1/(fps*1000)));
 		
 		for(ImageRenderComponent img : images) {
 			renderImages.add(img);
 		}
 		
-		currentIRC = renderImages.get(0);
+		init();
 	}
 	
 	public AnimationRenderComponent(String id, float fps, String folderPath) throws SlickException {
 		super(id);
 		this.fps = fps;
-		timer = new SXTimer(Math.round(1/(fps*1000)));
 		
 		File folder = new File(folderPath);
 		if(!folder.exists()) return;
@@ -49,16 +50,50 @@ public class AnimationRenderComponent extends Component {
 			renderImages.add(new ImageRenderComponent(id + renderImages.size(), new Image(file.getAbsolutePath())));
 		}
 		
+		init();
+	}
+	
+	private void init() {
+		timer = new SXTimer(Math.round(1/(fps*1000)));
 		currentIRC = renderImages.get(0);
+		currentImage = currentIRC.getImage();
+		loop = false;
+		started = false;
+		done = false;
+	}
+	
+	public void setLoop(boolean l) {
+		loop = l;
+	}
+	
+	public void start() {
+		started = true;
+		done = false;
+		currentIRC = renderImages.get(0);
+		currentImage = currentIRC.getImage();
+	}
+	
+	public void stop() {
+		started = false;
+		done = false;
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
+		if(!started || done) return;
+		
 		if(timer.isTriggered() >= 0) {
 			int i = renderImages.indexOf(currentIRC);
 			i++;
-			if(i >= renderImages.size())
-				i = 0;
+			if(i >= renderImages.size()) {
+				if(loop)
+					i = 0;
+				else {
+					done = true;
+					return;
+				}
+			}
+			
 			currentIRC = renderImages.get(i);
 			currentImage = currentIRC.getImage();
 		}
