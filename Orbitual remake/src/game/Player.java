@@ -23,7 +23,7 @@ public class Player {
 	private boolean wasKeyDown;
 	private Entity entity;
 	private final String[] playerImg = new String[]{"res/sprites/smiley1", "res/sprites/smiley2", "res/sprites/smiley3", "res/sprites/smiley4", "res/sprites/smiley5", "res/sprites/smiley6", "res/sprites/smiley7.png", "res/sprites/smiley8"};
-	public static final float stdScale = 0.0005208f;
+	public static final float stdScale = 0.0005208f/2;
 	public static final Color[] PLAYER_COLORS = new Color[]{Color.red, Color.blue, new Color(25, 235, 184), new Color(84, 0, 140), Color.yellow, Color.orange, Color.green, Color.pink, Color.gray, new Color(89, 42, 4)};
 	public Color myColor;
 	private int num;

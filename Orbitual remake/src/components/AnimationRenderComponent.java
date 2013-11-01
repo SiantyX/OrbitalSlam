@@ -5,6 +5,7 @@ import game.ViewPort;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -70,7 +71,6 @@ public class AnimationRenderComponent extends Component {
 		});
 		
 		for(File file : fileList) {
-			System.out.println("path: "+file.getAbsolutePath());
 			ImageRenderComponent temp = new ImageRenderComponent(id + renderImages.size(), new Image(file.getAbsolutePath()));
 			temp.setOwnerEntity(owner);
 			renderImages.add(temp);

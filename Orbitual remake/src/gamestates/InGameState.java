@@ -229,7 +229,7 @@ public class InGameState extends BasicGameState {
 //			vp.setZoom(vp.getZoom()+delta/10000.0f);
 //		}
 		
-		System.out.println(vp.getZoom());
+//		System.out.println(vp.getZoom());
 		
 		map.update(gc, sb, delta);
 		deathCheck();

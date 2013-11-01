@@ -9,7 +9,7 @@ import game.Player;
 
 public abstract class Interactable extends Entity {
 	protected Vector2f vector;
-	protected final float scale = 0.2f;
+	protected final float scale = 0.2f/2;
 
 	public Interactable(String id) {
 		super(id);
