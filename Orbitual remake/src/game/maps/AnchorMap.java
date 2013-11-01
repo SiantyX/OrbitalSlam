@@ -57,17 +57,12 @@ public class AnchorMap extends GameMap {
 		this.startPercentY = startPercentY;
 		
 		this.numAncPerColumn = numAnc/numAncPerRow;
-		
-		
-		
 	}
 	
 	public void createMap(ViewPort vp) throws SlickException {
+		anchors.clear();
+		
 		this.numPlayers = numPlayers;
-		Vector2f tmp = new Vector2f((int)Math.round(Game.HEIGHT * startPercentY), (int)Math.round(Game.WIDTH * startPercentX));
-		tmp = vp.toRelative(tmp);
-		this.startPosY = Math.round(tmp.x);
-		this.startPosX = Math.round(tmp.y);
 		
 		for(int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
@@ -76,10 +71,16 @@ public class AnchorMap extends GameMap {
 			e.AddComponent(c);
 			// homemade
 			e.setScale(stdScale*Game.WIDTH); // trololol
-			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((vp.getResX()-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((vp.getResY()-(2*startPosY))/(numAncPerColumn-1))));
+			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
+			pos = vp.toAbsolute(pos);
 			e.setPosition(pos);
 			anchors.add(e);
 		}
+		
+		Vector2f tmp = new Vector2f(startPosX, startPosY);
+		tmp = vp.toAbsolute(tmp);
+		this.startPosY = Math.round(tmp.x);
+		this.startPosX = Math.round(tmp.y);
 	}
 	
 	
@@ -104,7 +105,7 @@ public class AnchorMap extends GameMap {
 	}
 
 	@Override
-	public Vector2f getStartPos(int i, Player p) {
+	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
 		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
 	}
 

@@ -81,8 +81,6 @@ public class Player {
 		stunnedImage.setScale(stdScale*Game.WIDTH);
 		
 		entity.AddComponent(defaultImage);
-		Vector2f startPos = map.getStartPos(num, this);
-		entity.setCenterPosition(startPos);
 
 		dead = false;
 
@@ -114,7 +112,7 @@ public class Player {
 		this.num = num;
 	}
 	
-	public Player(int num, AnchorMap map, String username, String ipaddr) throws SlickException {
+	public Player(int num, GameMap map, String username, String ipaddr) throws SlickException {
 		this(num, map);
 		this.username = username;
 		this.ipaddr = ipaddr;

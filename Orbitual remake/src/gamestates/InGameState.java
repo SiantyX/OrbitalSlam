@@ -78,6 +78,8 @@ public class InGameState extends BasicGameState {
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
 			Player p = new Player(i, map);
+			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
+			p.getEntity().setCenterPosition(startPos);
 			p.KEYBIND = keyBinds[i];
 			players.add(p);
 			playersAlive.add(players.get(i));
@@ -109,15 +111,15 @@ public class InGameState extends BasicGameState {
 	private void reInit(GameContainer gc, StateBasedGame sb) throws SlickException {
 		for(Player player : players) {
 			Entity e = player.getEntity();
-			Vector2f v = new Vector2f(e.getPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
-			e.setPosition(v);
+			Vector2f v = new Vector2f(e.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
+			e.setCenterPosition(v);
 			e.setScale(Player.stdScale*Game.WIDTH);
 		}
 
 		ArrayList<Entity> anchors = map.getAnchors();
 		for(Entity e : anchors) {
-			Vector2f v = new Vector2f(e.getPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
-			e.setPosition(v);
+			Vector2f v = new Vector2f(e.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
+			e.setCenterPosition(v);
 		}
 	}
 
@@ -133,6 +135,8 @@ public class InGameState extends BasicGameState {
 		players.clear();
 		for(int i = 0; i < numLocalPlayers; i++) {
 			Player p = new Player(i, map);
+			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
+			p.getEntity().setCenterPosition(startPos);
 			p.setScore(tmpAL.get(i));
 			p.KEYBIND = keyBinds[i];
 			players.add(p);

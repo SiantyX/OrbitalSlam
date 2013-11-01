@@ -44,6 +44,8 @@ public class ExperimentalMap extends GameMap {
 	}
 	
 	public void createMap(ViewPort vp) throws SlickException{
+		anchors.clear();
+		
 		Brick brick = new Brick("Brick");
 		brick.setPosition(new Vector2f(0,500));
 		interactables.add(brick);
@@ -55,17 +57,21 @@ public class ExperimentalMap extends GameMap {
 			e.AddComponent(c);
 			// homemade
 			e.setScale(stdScale*Game.WIDTH); 
-			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((vp.getResX()-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((vp.getResY()-(2*startPosY))/(numAncPerColumn-1))));
+			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
+			pos = vp.toAbsolute(pos);
 			e.setPosition(pos);
 			anchors.add(e);
 		}
 			
-		
+		Vector2f tmp = new Vector2f(startPosX, startPosY);
+		tmp = vp.toAbsolute(tmp);
+		this.startPosY = Math.round(tmp.x);
+		this.startPosX = Math.round(tmp.y);
 		
 	}
 
 	@Override
-	public Vector2f getStartPos(int i, Player p) {
+	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
 		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
 	}
 	

@@ -61,13 +61,13 @@ public class ViewPort {
 
 	public Vector2f toRelative(Vector2f v) {
 		Vector2f tmp = new Vector2f();
-		tmp.set(v.x * getZoom() - pos.x, v.y * getZoom() - pos.y);
+		tmp.set((v.x - pos.x) * getZoom(), (v.y - pos.y) * getZoom());
 		return tmp;
 	}
 
 	public Vector2f toAbsolute(Vector2f v) {
 		Vector2f tmp = new Vector2f();
-		tmp.set(pos.x + v.x / getZoom(), pos.y + v.y / getZoom());
+		tmp.set(v.x/Game.WIDTH * res.x + pos.x, v.y/Game.HEIGHT * res.y + pos.y);
 		return tmp;
 	}
 

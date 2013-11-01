@@ -25,8 +25,6 @@ public abstract class GameMap {
 	protected final String anchorPath = "res/sprites/interactables/anchorstar.png";
 	protected final float stdScale = 0.00002f;
 	protected float scale;
-	protected float actualWidth;
-	protected float actualHeight;
 
 	public GameMap() {
 		anchors = new ArrayList<Entity>();
@@ -35,7 +33,7 @@ public abstract class GameMap {
 	}
 	
 
-	public abstract Vector2f getStartPos(int i, Player p);
+	public abstract Vector2f getStartPos(int i, Entity e, ViewPort vp);
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
 		for (Entity e : anchors) {

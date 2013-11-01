@@ -37,12 +37,16 @@ public class RandomFunkyMap extends GameMap {
 		rand = new Random();
 		numAnc = rand.nextInt(32) + 25;
 		numMines = rand.nextInt(8);
-
 	}
 
 	public void createMap(ViewPort vp) throws SlickException {
-		actualWidth = vp.getResX();
-		actualHeight = vp.getResY();
+		anchors.clear();
+		startPositions.clear();
+		mapPlayers.clear();
+		interactables.clear();
+		
+		float actualWidth = vp.getResX();
+		float actualHeight = vp.getResY();
 		
 		for (int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
@@ -82,14 +86,15 @@ public class RandomFunkyMap extends GameMap {
 	}
 
 	// handlar om att de inte skall spawna i varandra
-	public Vector2f getStartPos(int i, Entity e) {
+	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
 		int x, y;
-		Vector2f vector = null;
+		Vector2f vector;
 		do {
-			x = (int) Math.round(rand.nextFloat() * (actualWidth / 2)
-					+ actualWidth / 4);
-			y = (int) Math.round(rand.nextFloat() * (actualHeight / 2));
+			x = (int) Math.round(rand.nextFloat() * (Game.WIDTH / 2)
+					+ Game.WIDTH / 4);
+			y = (int) Math.round(rand.nextFloat() * (Game.HEIGHT / 2));
 			vector = new Vector2f(x, y);
+			vector = vp.toAbsolute(vector);
 			e.setCenterPosition(vector);
 		} while(collisionCheck(e));
 		
@@ -104,11 +109,4 @@ public class RandomFunkyMap extends GameMap {
 	public String toString() {
 		return "Random Map";
 	}
-
-	@Override
-	public Vector2f getStartPos(int i, Player p) {
-		// TODO Auto-generated method stub
-		return getStartPos(i,p.getEntity());
-	}
-
 }
