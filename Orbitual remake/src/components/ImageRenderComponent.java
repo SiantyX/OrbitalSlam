@@ -22,10 +22,11 @@ public class ImageRenderComponent extends Component {
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr) {
 		Vector2f pos = owner.getPosition();
 
-		currentImage.draw(pos.x, pos.y, scale);
+		//currentImage.draw(pos.x, pos.y, scale);
+		currentImage.draw(pos.x, pos.y, getWidth(), getHeight());
 		if(Game.showHitbox) {
 			gr.setColor(Color.red);
-			gr.drawOval(pos.x, pos.y, currentImage.getWidth(), currentImage.getHeight());
+			gr.drawOval(pos.x, pos.y, getWidth(), getHeight());
 		}
 	}
 	
@@ -35,10 +36,11 @@ public class ImageRenderComponent extends Component {
 
 		pos = vp.toRelative(pos);
 		
-		currentImage.draw(pos.x, pos.y, scale*vp.getZoom());
+		currentImage.draw(pos.x, pos.y, getWidth()*vp.getZoom(), getHeight()*vp.getZoom());
+		//currentImage.draw(pos.x, pos.y, scale*vp.getZoom());
 		if(Game.showHitbox) {
 			gr.setColor(Color.red);
-			gr.drawOval(pos.x, pos.y, currentImage.getWidth(), currentImage.getHeight());
+			gr.drawOval(pos.x, pos.y, getWidth()*vp.getZoom(), getHeight()*vp.getZoom());
 		}
 	}
 

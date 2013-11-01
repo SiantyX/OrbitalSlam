@@ -23,14 +23,9 @@ public class Brick extends Interactable {
 		this.img = new Image(brickPath);
 		ImageRenderComponent brick = new ImageRenderComponent("Brick", img);
 		this.AddComponent(brick);
+		brick.setScaleWidth(2);
+		brick.setScaleHeight(0.5f);
 
-	}
-	
-	public void MultiplyHeightBy(int i){
-		setRelativeHeight(i);
-	}
-	public void MultiplyWidthBy(int i){
-		setRelativeWidth(i);
 	}
 
 	@Override
