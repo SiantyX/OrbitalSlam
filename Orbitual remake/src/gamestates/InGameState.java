@@ -26,7 +26,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class InGameState extends BasicGameState implements KeyListener {
+public class InGameState extends BasicGameState {
 	private final int ID;
 
 	private int keyBinds[];
@@ -160,7 +160,6 @@ public class InGameState extends BasicGameState implements KeyListener {
 		}
 
 		if(onCountDown) {
-			FontUtils.drawCenter(scoreFont, "Press F1 - F8 to change number of players", Game.centerWidth - 300, 10, 600);
 			FontUtils.drawCenter(ttf, new Integer((((int)countDown/1000) + 1) == 4 ? 3 : (((int)countDown/1000) + 1)).toString(), Game.centerWidth, Game.centerHeight - 100, 20);
 		}
 
@@ -290,13 +289,6 @@ public class InGameState extends BasicGameState implements KeyListener {
 	
 	public ArrayList<Player> getPlayers(){
 		return playersAlive;
-	}
-
-	public void keyPressed(int key, char c) {
-		if(key >= Input.KEY_F1 && key <= Input.KEY_F8) {
-			numLocalPlayers = key - Input.KEY_F1 + 1;
-			numPlayersChanged = true;
-		}
 	}
 	
 	public void setControls(int keyBinds[]) {
