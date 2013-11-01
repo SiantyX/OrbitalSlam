@@ -21,7 +21,7 @@ public abstract class GameMap {
 	protected int numPlayers;
 
 	protected final String anchorPath = "res/sprites/interactables/anchorstar.png";
-	protected final float stdScale = 0.00002f/2;
+	protected final float stdScale = 0.00002f;
 
 	public GameMap() {
 		anchors = new ArrayList<Entity>();
