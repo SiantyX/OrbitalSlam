@@ -27,7 +27,7 @@ public class Game extends StateBasedGame {
 	public static AppGameContainer app;
 	public static int WIDTH = 1920;
 	public static int HEIGHT = 1080;
-	public static boolean fullscreen = false;
+	public static boolean fullscreen = true;
 	public static boolean showHitbox = false;
 	
 	public static int centerHeight;

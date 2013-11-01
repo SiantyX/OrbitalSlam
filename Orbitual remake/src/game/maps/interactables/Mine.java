@@ -19,39 +19,27 @@ import gamestates.InGameState;
 public class Mine extends Interactable {
 	private boolean detonated;
 	private Image img;
-	//protected final static String minePath = "res/sprites/interactables/mine.png";
-	protected final static String minePath = "res/sprites/interactables/bombs/";
+	protected final static String minePath = "res/sprites/interactables/mine.png";
 	protected final static String mineSound = "res/audio/sound/explosion.ogg";
+	protected final static String explPath = "res/sprites/interactables/explosions";
 	protected final static float power = .3f;
 	protected final static float radius = 100;
 	private Sound sound;
 	
-	//ImageRenderComponent realMine;
-	AnimationRenderComponent realMine;
+	private ImageRenderComponent mineRender;
 
 	public Mine() throws SlickException{
 		
 		super("Mine");
 		detonated = false;
 		this.setRadius(radius);
-		//Image[] images = {new Image(minePath + "bomb1.png"), new Image(minePath + "bomb2.png"), new Image(minePath + "bomb3.png"), new Image(minePath + "bomb4.png")};
-		
-		//this.img = new Image(minePath);
-		//realMine = new ImageRenderComponent("Mine", img);
-		//realMine = new AnimationRenderComponent("0", 50, new ImageRenderComponent("1", new Image(minePath + "bomb1.png")),
-														//new ImageRenderComponent("2", new Image(minePath + "bomb2.png")),
-														//new ImageRenderComponent("3", new Image(minePath + "bomb3.png")),
-														//new ImageRenderComponent("4", new Image(minePath + "bomb4.png")));
-		
-		realMine = new AnimationRenderComponent("0", 50, minePath);
 		
 		
-		
-		this.AddComponent(realMine);
-		
-		realMine.setLoop(true);
-		realMine.start();
-		
+		mineRender = new ImageRenderComponent("Mine", new Image(minePath));
+		//mineRender.setScale(scale*Game.WIDTH);
+
+		this.AddComponent(mineRender);
+	
 		setScale(scale*Game.WIDTH);
 		
 		sound = new Sound(mineSound);
@@ -59,7 +47,7 @@ public class Mine extends Interactable {
 
 	public void reset(){
 		detonated = false;
-		this.changeImage(realMine);
+		this.changeImage(mineRender);
 	}
 
 	public void collisionCheck(StateBasedGame sb) {
@@ -78,10 +66,8 @@ public class Mine extends Interactable {
 		if (detonated)
 			return;
 		
-		Entity entity = this;
-		
-		float degreeOfImpactX = (entity.getCenterPosition().x - player.getEntity().getCenterPosition().x);
-		float degreeOfImpactY = (entity.getCenterPosition().y - player.getEntity().getCenterPosition().y);
+		float degreeOfImpactX = (this.getCenterPosition().x - player.getEntity().getCenterPosition().x);
+		float degreeOfImpactY = (this.getCenterPosition().y - player.getEntity().getCenterPosition().y);
 		
 		float directionX = - degreeOfImpactX*power;
 		float directionY = - degreeOfImpactY*power;
@@ -91,16 +77,13 @@ public class Mine extends Interactable {
 		detonated = true;
 		player.setHooked(false);
 		
-		this.clear();
 		player.setStunTime(200);
-
 		player.setVelocity(v);
-		
 		sound.play(1, AudioSettingsState.SOUND_LEVEL*AudioSettingsState.MASTER_LEVEL);
+
+		this.clear();
+		
 	}
-
-
-
 
 
 }

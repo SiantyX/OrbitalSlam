@@ -24,6 +24,7 @@ public class AnimationRenderComponent extends Component {
 	private boolean loop;
 	private boolean started;
 	private boolean done;
+	private boolean runOnce;
 
 	
 	public AnimationRenderComponent(String id, float fps, Image ... images) {
@@ -103,12 +104,16 @@ public class AnimationRenderComponent extends Component {
 		started = false;
 		done = false;
 	}
+	
+	public boolean isDone() {
+		return done;
+	}
+	
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
-		if(!started || done) return;
-		
-		
+		if(!started) return;
+
 		if(timer.isTriggered() >= 0) {
 			int i = renderImages.indexOf(currentIRC);
 			i++;
@@ -124,6 +129,8 @@ public class AnimationRenderComponent extends Component {
 			currentIRC = renderImages.get(i);
 			currentImage = currentIRC.getImage();
 		}
+		
+		
 	}
 
 	
