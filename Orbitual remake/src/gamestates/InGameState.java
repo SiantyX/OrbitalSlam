@@ -65,7 +65,7 @@ public class InGameState extends BasicGameState {
 		bg = new Image("res/orbitalbg1.jpg");
 		
 		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
-		vp.setZoom(2.0f);
+		vp.setZoom(0.5f);
 
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
@@ -224,6 +224,12 @@ public class InGameState extends BasicGameState {
 				}
 			}
 		}
+		
+		if(vp.getZoom() < 2) {
+			vp.setZoom(vp.getZoom()+delta/10000.0f);
+		}
+		
+		System.out.println(vp.getZoom());
 		
 		map.update(gc, sb, delta);
 		deathCheck();
