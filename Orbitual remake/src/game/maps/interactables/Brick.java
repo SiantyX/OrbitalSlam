@@ -26,7 +26,7 @@ public class Brick extends Interactable{
 		this.img = new Image(brickPath);
 		ImageRenderComponent brick = new ImageRenderComponent("Brick",img);
 		this.AddComponent(brick);
-		this.setHeight(Height);
+		setHeight(Height);
 		
 	}
 
@@ -37,7 +37,7 @@ public class Brick extends Interactable{
 		playerlist = ((InGameState)sb.getState(Game.State.INGAMESTATE.ordinal())).getPlayers();
 
 		for (Player e : playerlist){
-			if (this.collisionSquare(e.getEntity())){
+			if (this.collisionRectangle(e.getEntity())){
 				collision(e);
 			}
 		}

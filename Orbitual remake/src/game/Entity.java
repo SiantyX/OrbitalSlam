@@ -209,6 +209,15 @@ public class Entity extends Node {
 		return (Math.abs((e1.getPosition().getX() - pos.x)) < getRadius()
 				&& Math.abs(e1.getPosition().getY() - pos.y) < getRadius());
 	}
+	
+	public boolean collisionRectangle(Entity e1){
+		float distanceX = Math.abs(e1.getCenterPosition().x - getCenterPosition().x);
+		float distanceY = Math.abs(e1.getCenterPosition().y - getCenterPosition().y);
+		float sizeOfHitboxX = e1.getRadius() + getWidth()/2;
+		float sizeOfHitboxY = e1.getRadius() + getHeight()/2;
+		return (distanceX < sizeOfHitboxX && distanceY < sizeOfHitboxY);
+		
+	}
 
 	public void clear() {
 		components.clear();
