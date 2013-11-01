@@ -15,12 +15,19 @@ public class Label extends Node {
 	private TrueTypeFont ttf;
 	private Color color;
 	
+	public Label(String str, TrueTypeFont font, int x, int y, Color color) {
+		super(x, y);
+		this.text = str;
+		this.color = color;
+		this.ttf = font;
+	}
+	
 	public Label(String str, Font font, int x, int y, Color color) {
 		super(x, y);
 		this.font = font;
 		this.text = str;
 		this.color = color;
-		ttf = new TrueTypeFont(font, true);
+		this.ttf = new TrueTypeFont(font, true);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
@@ -74,5 +81,13 @@ public class Label extends Node {
 	
 	public Color getColor() {
 		return color;
+	}
+	
+	public float getWidth() {
+		return ttf.getWidth(text);
+	}
+	
+	public float getHeight() {
+		return ttf.getHeight();
 	}
 }

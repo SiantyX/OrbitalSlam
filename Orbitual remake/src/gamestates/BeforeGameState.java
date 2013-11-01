@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import game.Game;
+import game.Label;
 import game.MenuButton;
 import game.WriteBox;
+import game.WriteBoxWithLabel;
 import game.maps.AnchorMap;
 import game.maps.ExperimentalMap;
 import game.maps.GameMap;
@@ -20,6 +22,7 @@ import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -30,8 +33,9 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 	private final int ID;
 	
 	private ArrayList<MenuButton> buttons;
-	private MenuButton okButton, backButton, mapButton, modeButton, scoreLimitButton;
-	private WriteBox numPlayersButton;
+	private MenuButton okButton, backButton, mapButton, scoreLimitButton;
+	private ArrayList<WriteBoxWithLabel> wBWLs;
+	private WriteBoxWithLabel numPlayersWBWL;
 	private TrueTypeFont ttf;
 	private GameMap selectedMap;
 	private LinkedList<GameMap> maplist;
@@ -48,6 +52,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
+		wBWLs = new ArrayList<WriteBoxWithLabel>();
 		
 		maplist = new LinkedList<GameMap>();
 		maplist.add(new AnchorMap());
@@ -69,9 +74,17 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		scoreLimitButton = new MenuButton("score", new Rectangle(Game.centerWidth - 100, Game.centerHeight - 250, 200, 50), new Color(0, 0, 0, 0), "Score limit: " + scoreLimit, ttf);
 		oldColor = scoreLimitButton.getBackColor();
 		
-		numPlayersButton = new WriteBox("numplayers", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 50, 200, 50), new Color(0, 0, 0, 0), "testest", ttf);
+		/*numPlayersLabel = new Label("Number of players:", ttf, Game.centerWidth - ttf.getWidth("Number of players:"), Game.centerHeight + 50, Color.white);
+		
+		numPlayersButton = new WriteBox("numplayers", new Rectangle(numPlayersLabel.getX() + numPlayersLabel.getWidth(), numPlayersLabel.getY() - 25 + ttf.getHeight()/2, 200, 50), new Color(0, 0, 0, 0), "2", ttf);
 		numPlayersButton.setInput(gc.getInput());
-		buttons.add(numPlayersButton);
+		numPlayersButton.setAcceptable("1234567890");*/
+		
+		numPlayersWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight), 200, "Number of players:", "2", Color.transparent, Color.white);
+		numPlayersWBWL.wb.setInput(gc.getInput());
+		numPlayersWBWL.wb.setAcceptable("1234567890");
+		
+		wBWLs.add(numPlayersWBWL);
 		
 		buttons.add(okButton);
 		buttons.add(backButton);
@@ -92,6 +105,10 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
+		}
+		
+		for(WriteBoxWithLabel wbwl : wBWLs) {
+			wbwl.render(gc, sb, g);
 		}
 		
 	}
@@ -125,6 +142,10 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
+		}
+		
+		for(WriteBoxWithLabel wbwl : wBWLs) {
+			wbwl.update(gc, sb, delta);
 		}
 		
 		if (okButton.isMousePressed()) {

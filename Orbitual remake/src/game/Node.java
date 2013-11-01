@@ -13,6 +13,11 @@ public abstract class Node {
 		children = new ArrayList<Node>();
 	}
 	
+	public Node(Vector2f v) {
+		pos = v;
+		children = new ArrayList<Node>();
+	}
+	
 	public ArrayList<Node> getChildren() {
 		return children;
 	}
