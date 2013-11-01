@@ -27,6 +27,7 @@ public class Brick extends Interactable {
 		this.AddComponent(brick);
 		setHeight(Height);
 		setRelativeHeight(2);
+		setRelativeWidth(2);
 
 	}
 

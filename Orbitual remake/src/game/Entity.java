@@ -183,14 +183,15 @@ public class Entity extends Node {
 	}
 	public void setRelativeHeight(int i){
 		components.get(0).setRelativeHeight(i);
-//		this.setCenterPositionRectangle(new Vector2f((this.getPosition().x + this.getWidth()/2), (this.getPosition().y + this.getHeight()/2)));
+	}
+	
+	public void setRelativeWidth(int i){
+		components.get(0).setRelativeWidth(i);
+		
 	}
 	
 
-	private void setCenterPositionRectangle(Vector2f vector) {
-		moveTo(vector.x - this.getWidth()/2, vector.y - this.getHeight()/2);
-		
-	}
+
 
 	public float getWidth() {
 		return components.get(0).getWidth();

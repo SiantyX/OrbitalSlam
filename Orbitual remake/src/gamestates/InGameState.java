@@ -225,9 +225,9 @@ public class InGameState extends BasicGameState {
 			}
 		}
 		
-		if(vp.getZoom() < 2) {
-			vp.setZoom(vp.getZoom()+delta/10000.0f);
-		}
+//		if(vp.getZoom() < 2) {
+//			vp.setZoom(vp.getZoom()+delta/10000.0f);
+//		}
 		
 		System.out.println(vp.getZoom());
 		

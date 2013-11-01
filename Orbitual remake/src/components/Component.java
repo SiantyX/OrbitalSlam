@@ -72,4 +72,10 @@ public abstract class Component {
 	public float getHeight() {
 		return currentImage.getHeight()*scale;
 	}
+
+	public void setRelativeWidth(int proportion) {
+		currentImage = currentImage.getSubImage(0, 0, (int) (getWidth()), (int)getHeight()/proportion);
+		scale *= proportion;
+		
+	}
 }
