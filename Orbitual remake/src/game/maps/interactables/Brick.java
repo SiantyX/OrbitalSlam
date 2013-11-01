@@ -15,20 +15,23 @@ import org.newdawn.slick.state.StateBasedGame;
 import components.ImageRenderComponent;
 
 public class Brick extends Interactable {
-	protected static final float bounciness = .01f;
+	private float brickPowerAbsorption = 0;
 	protected static final String brickPath = "res/sprites/interactables/brick.png";
 	private Image img;
-	protected final static float Height = 200;
 
 	public Brick(String id) throws SlickException {
 		super(id);
 		this.img = new Image(brickPath);
 		ImageRenderComponent brick = new ImageRenderComponent("Brick", img);
 		this.AddComponent(brick);
-		setHeight(Height);
-		setRelativeHeight(2);
-		setRelativeWidth(2);
 
+	}
+	
+	public void MultiplyHeightBy(int i){
+		setRelativeHeight(i);
+	}
+	public void MultiplyWidthBy(int i){
+		setRelativeWidth(i);
 	}
 
 	@Override
@@ -45,26 +48,21 @@ public class Brick extends Interactable {
 		}
 
 	}
-	
 
 	@Override
 	public void collision(Player player) {
 
-		boolean hitTopOrBottom = (Math.abs(this.getCenterPositionRectangle().x - player.getEntity().getCenterPosition().x)) < (this.getWidth()/2 -5f + player.getEntity().getRadius());
-		
-		float degreeOfImpactX = (this.getCenterPositionRectangle().x - player
-				.getEntity().getCenterPosition().x);
-		float degreeOfImpactY = (this.getCenterPosition().y - player
-				.getEntity().getCenterPosition().y);
+		boolean hitTopOrBottom = (Math.abs(this.getCenterPositionRectangle().x
+				- player.getEntity().getCenterPosition().x)) < (this.getWidth() / 2 - 10f + player
+				.getEntity().getRadius());
 
 		float directionX;
 		float directionY;
 		if (hitTopOrBottom) {
-			directionY = -degreeOfImpactY * bounciness;
+			directionY = -player.getVelocity().y + brickPowerAbsorption;
 			player.setDy(directionY);
-
 		} else {
-			directionX = -degreeOfImpactX * bounciness;
+			directionX = -player.getVelocity().x;
 			player.setDx(directionX);
 		}
 

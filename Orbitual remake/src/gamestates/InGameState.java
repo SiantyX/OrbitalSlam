@@ -65,7 +65,7 @@ public class InGameState extends BasicGameState {
 		bg = new Image("res/orbitalbg1.jpg");
 		
 		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
-		vp.setZoom(0.5f);
+//		vp.setZoom(0.5f);
 
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();

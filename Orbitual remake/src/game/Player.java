@@ -282,6 +282,15 @@ public class Player {
 	public double getDy() {
 		return dy;
 	}
+	
+	public void increaseDy(double increment){
+		dy += increment;	
+	}
+	
+	public void increaseDx(double increment){
+		dx += increment;
+		
+	}
 
 	public double getSpeed() {
 		return speed;
