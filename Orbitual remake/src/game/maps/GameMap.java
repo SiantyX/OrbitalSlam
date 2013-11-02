@@ -11,9 +11,12 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
+
+import components.ImageRenderComponent;
 
 public abstract class GameMap {
 	protected ArrayList<Entity> anchors;
@@ -39,8 +42,6 @@ public abstract class GameMap {
 		interactables = new ArrayList<Interactable>();
 		numPlayers = 4;
 		
-		startPosX = (int)Math.round(Game.WIDTH * startPercentX );
-		startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 	}
 	
 
@@ -66,6 +67,19 @@ public abstract class GameMap {
 			i.reset();
 		
 	}
+	
+	protected void addAnchor(int i, Vector2f pos, ViewPort vp) throws SlickException{
+		Entity e = new Entity("Anchor " + Integer.toString(i));
+		Image img = new Image(anchorPath);
+		ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
+		e.AddComponent(c);
+		// homemade
+		e.setScale(stdScale*Game.WIDTH); 
+		pos = vp.toAbsolute(pos);
+		e.setPosition(pos);
+		anchors.add(e);
+		
+	}
 
 	public int getNumPlayers() {
 		return numPlayers;
@@ -74,9 +88,14 @@ public abstract class GameMap {
 	public int getScorePlacementY() {
 		return (Game.HEIGHT / 18);
 	}
-	protected Vector2f standardStartPosition(int i){
+	protected Vector2f standardStartPosition(int i, ViewPort vp){
 		
-		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
+		startPosX = (int)Math.round(Game.WIDTH * startPercentX );
+		startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
+		Vector2f vector = new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
+		vp.toAbsolute(vector);
+		
+		return vector;
 	}
 
 	public int getScorePlacementX(int i) {
