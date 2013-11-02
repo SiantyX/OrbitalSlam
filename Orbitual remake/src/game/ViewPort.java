@@ -31,11 +31,8 @@ public class ViewPort {
 		h = (float) Game.HEIGHT / factor;
 
 		if (factor < 1f) {
-			pos.x = ((float)Game.WIDTH - w) / 4;
-			pos.y = ((float)Game.HEIGHT - h) / 4;
-		} else {
-			pos.x = ((float)Game.WIDTH - w);
-			pos.y = ((float)Game.HEIGHT - h);
+			pos.x = pos.x + (res.x - w)/2;
+			pos.y = pos.y + (res.y - h)/2;
 		}
 		
 		res.x = w;
