@@ -53,17 +53,22 @@ public class Brick extends Interactable {
 		float directionX;
 		float directionY = 0;
 		if (hitTopOrBottom) {
-			directionY = -player.getVelocity().y;
+
+			if (player.getVelocity().y < 2f && player.getVelocity().y > -0.5f)
+				directionY = -0.5f;
+			else {
+				directionY = -player.getVelocity().y * 3 / 4;
+
+			}
+
 			player.setDy(directionY);
+
 		} else {
 			directionX = -player.getVelocity().x;
 			player.setDx(directionX);
 		}
 
-		// Vector2f v = new Vector2f(directionX, directionY);
 		player.setHooked(false);
-
-		// player.setVelocity(v);
 
 	}
 
