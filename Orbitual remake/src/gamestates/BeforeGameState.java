@@ -10,6 +10,7 @@ import game.MenuButton;
 import game.WriteBox;
 import game.WriteBoxWithLabel;
 import game.maps.AnchorMap;
+import game.maps.EverChangingMap;
 import game.maps.ExperimentalMap;
 import game.maps.GameMap;
 import game.maps.RandomFunkyMap;
@@ -53,6 +54,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		maplist.add(new AnchorMap());
 		maplist.add(new RandomFunkyMap());
 		maplist.add(new ExperimentalMap());
+		maplist.add(new EverChangingMap());
 		
 		selectedMap = (GameMap) maplist.poll();
 		maplist.addLast(selectedMap);

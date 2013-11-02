@@ -18,6 +18,7 @@ public class Brick extends Interactable {
 	protected static final String brickPath = "res/sprites/interactables/brick.png";
 	private Image img;
 	private final float bounciness = 0.9f;
+	private final float slipperyness = 0.95f;
 
 	public Brick(String id) throws SlickException {
 		super(id);
@@ -26,11 +27,12 @@ public class Brick extends Interactable {
 		this.AddComponent(brick);
 
 	}
-	
-	public void setScaleWidth(float a){
+
+	public void setScaleWidth(float a) {
 		this.getComponent("Brick").setScaleWidth(a);
 	}
-	public void setScaleHeight(float a ){
+
+	public void setScaleHeight(float a) {
 		this.getComponent("Brick").setScaleHeight(a);
 	}
 
@@ -57,16 +59,17 @@ public class Brick extends Interactable {
 				.getEntity().getRadius());
 
 		float directionX;
-		float directionY = 0;
-		if (hitTopOrBottom) {
+		float directionY;
 
-			if (player.getVelocity().y < 0.5f && player.getVelocity().y > -0.5f)
+		if (hitTopOrBottom) {
+			if (player.getVelocity().y < 0.5f && player.getVelocity().y > -0.5f){
 				directionY = -0.5f;
+			}
 			else {
 				directionY = -player.getVelocity().y * bounciness;
-
 			}
-
+			
+			player.setDx(player.getVelocity().x*slipperyness);
 			player.setDy(directionY);
 
 		} else {

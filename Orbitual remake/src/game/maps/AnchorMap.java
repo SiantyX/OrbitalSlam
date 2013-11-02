@@ -18,12 +18,7 @@ import components.ImageRenderComponent;
 
 public class AnchorMap extends GameMap {
 	
-	private int startPosX;
-	private double startPercentX;
 	private int numAncPerRow;
-	
-	private int startPosY;
-	private double startPercentY;
 	private int numAncPerColumn;
 	
 	// default map
@@ -33,12 +28,8 @@ public class AnchorMap extends GameMap {
 		numAnc = 12;
 		
 		
-		startPercentX = 0.2;
-		startPosX = (int)Math.round(Game.WIDTH * startPercentX);
 		numAncPerRow = 4;
 		
-		startPercentY = 0.23;
-		startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
 		numAncPerColumn = numAnc/numAncPerRow;
 		
 		numPlayers = 4;
@@ -65,16 +56,8 @@ public class AnchorMap extends GameMap {
 		this.numPlayers = numPlayers;
 		
 		for(int i = 0; i < numAnc; i++) {
-			Entity e = new Entity("Anchor " + Integer.toString(i));
-			Image img = new Image(anchorPath);
-			ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
-			e.AddComponent(c);
-			// homemade
-			e.setScale(stdScale*Game.WIDTH); // trololol
 			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
-			pos = vp.toAbsolute(pos);
-			e.setPosition(pos);
-			anchors.add(e);
+			addAnchor(i, pos, vp);
 		}
 		
 		Vector2f tmp = new Vector2f(startPosX, startPosY);
@@ -106,7 +89,7 @@ public class AnchorMap extends GameMap {
 
 	@Override
 	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
-		return standardStartPosition(i);
+		return standardStartPosition(i, vp);
 	}
 
 	@Override

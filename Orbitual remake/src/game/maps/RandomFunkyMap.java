@@ -36,7 +36,7 @@ public class RandomFunkyMap extends GameMap {
 		
 		rand = new Random();
 		numAnc = rand.nextInt(32) + 25;
-		numMines = rand.nextInt(8);
+		numMines = rand.nextInt(10);
 	}
 
 	public void createMap(ViewPort vp) throws SlickException {
@@ -45,22 +45,11 @@ public class RandomFunkyMap extends GameMap {
 		mapPlayers.clear();
 		interactables.clear();
 		
-		float actualWidth = vp.getResX();
-		float actualHeight = vp.getResY();
-		
 		for (int i = 0; i < numAnc; i++) {
-			Entity e = new Entity("Anchor " + Integer.toString(i));
-			Image img = new Image(anchorPath);
-			ImageRenderComponent c = new ImageRenderComponent("Anchor "
-					+ Integer.toString(i), img);
-			e.AddComponent(c);
-			// homemade
-			e.setScale(stdScale * Game.WIDTH);
 			Vector2f pos = new Vector2f(rand.nextFloat() * Game.WIDTH,
 					rand.nextFloat() * Game.HEIGHT);
-			pos = vp.toAbsolute(pos);
-			e.setCenterPosition(pos);
-			anchors.add(e);
+			
+			addAnchor(i, pos,vp);
 		}
 		
 		Mine a;
