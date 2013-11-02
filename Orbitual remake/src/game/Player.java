@@ -120,10 +120,6 @@ public class Player {
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {		
 		// check if dead
-		/*if(entity.getCenterPosition().x < 0 || entity.getCenterPosition().x > Game.WIDTH
-				|| entity.getCenterPosition().y < 0 || entity.getCenterPosition().y > Game.HEIGHT) {
-			dead = true;
-		}*/
 		if(dead) return;
 
 		if(stunTime != 0) {
@@ -150,11 +146,16 @@ public class Player {
 				wasKeyDown = false;
 			}
 		}
+		
+		if (!anchorList.contains(hookedTo)){
+			hooked = false;
+		}
 
 		// fall
 		if(!hooked) {
 			dy += gravity*delta;
 		}
+		
 		// spin
 		else {
 			if(clockWise) {

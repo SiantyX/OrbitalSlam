@@ -68,6 +68,7 @@ public abstract class GameMap {
 		
 	}
 	
+
 	protected void addAnchor(int i, Vector2f pos, ViewPort vp) throws SlickException{
 		Entity e = new Entity("Anchor " + Integer.toString(i));
 		Image img = new Image(anchorPath);
@@ -101,14 +102,14 @@ public abstract class GameMap {
 	public int getScorePlacementX(int i) {
 		return (Game.WIDTH / numPlayers) * (i) + Game.HEIGHT / (numPlayers * 2);
 	}
-	public void update(GameContainer gc, StateBasedGame sb, int delta){
+	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException{
 		for (Interactable i : interactables){
 			i.collisionCheck(sb);
 			i.update(gc, sb, delta);
 		}
 		mapSpecificChange();
 	}
-	public abstract void mapSpecificChange();
+	public abstract void mapSpecificChange() throws SlickException;
 
 
 	public abstract String toString();
