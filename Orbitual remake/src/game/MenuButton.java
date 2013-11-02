@@ -34,7 +34,7 @@ public class MenuButton extends Entity {
 	private Color color;
 	protected String text;
 	private Color txtColor;
-	private TrueTypeFont ttf;
+	protected TrueTypeFont ttf;
 	
 	private Sound sound;
 	

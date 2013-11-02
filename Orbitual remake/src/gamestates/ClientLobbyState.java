@@ -17,7 +17,7 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class ClientLobbyState extends LobbyState {
 	private Thread updateThread;
-	
+
 	public ClientLobbyState(int id) {
 		super(id);
 	}
@@ -40,7 +40,7 @@ public class ClientLobbyState extends LobbyState {
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
-		
+
 		if(hndlr.started) {
 			ClientMultiplayerState.lobby = hndlr.currentLobby;
 			hndlr.close();
@@ -50,22 +50,24 @@ public class ClientLobbyState extends LobbyState {
 					100));
 		}
 
-		if(cancelButton.isMousePressed()) {
-			hndlr.close();
-			hndlr = null;
+		if(cancelButton.isMousePressed() || hndlr == null) {
+			if(hndlr != null) {
+				hndlr.close();
+				hndlr = null;
+			}
 			sb.enterState(Game.State.BROWSERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
-		
+
 		users.clear();
 		for(int i = 0; i < players.size(); i++) {
 			users.add(new MenuButton(players.get(i), new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (i*50), 100, 30), Color.black,
 					players.get(i).length() < 1 ? "Unknown" : players.get(i), ttf, Color.yellow));
 		}
-		
+
 
 	}
-	
+
 	public void sendText(String str) {
 		hndlr.sendChatUpdate(Game.username + ": " + str);
 	}

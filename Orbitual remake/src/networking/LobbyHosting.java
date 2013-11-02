@@ -58,7 +58,7 @@ public class LobbyHosting extends Hosting {
 		}
 		catch (IOException e) {
 			System.out.println("IOException in accept()");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

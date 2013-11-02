@@ -63,11 +63,11 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		backButton = new MenuButton("Back", new Rectangle(Game.centerWidth + 50, Game.centerHeight + 200, 200, 50), Color.white, "Back", ttf);
 		mapButton = new MenuButton(selectedMap.toString(), new Rectangle(Game.centerWidth - 100, Game.centerHeight - 150, 200, 50), Color.white, selectedMap.toString(), ttf);
 		
-		scoreLimitWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight - Game.HEIGHT/4.32f), 200, "Score limit:", "20", Color.transparent, Color.white);
+		scoreLimitWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight - Game.HEIGHT/4.32f), true, 50, "Score limit:", "20", Color.lightGray, Color.white);
 		scoreLimitWBWL.wb.setInput(gc.getInput());
 		scoreLimitWBWL.wb.setAcceptable("1234567890");
 		
-		numPlayersWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight), 200, "Number of players:", "2", Color.transparent, Color.white);
+		numPlayersWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight), true, 50, "Number of players:", "2", Color.lightGray, Color.white);
 		numPlayersWBWL.wb.setInput(gc.getInput());
 		numPlayersWBWL.wb.setAcceptable("1234567890");
 		

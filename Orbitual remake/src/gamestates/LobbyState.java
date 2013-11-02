@@ -5,6 +5,7 @@ import game.Label;
 import game.MenuButton;
 import game.MessageBox;
 import game.Player;
+import game.WriteBoxWithLabel;
 
 import java.awt.Font;
 import java.io.IOException;
@@ -25,20 +26,20 @@ import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public abstract class LobbyState extends BasicGameState implements KeyListener {
+public abstract class LobbyState extends BasicGameState {
 	private final int ID;
 	
 	protected String hostname;
 	protected ArrayList<MenuButton> buttons;
-	protected MenuButton startButton, cancelButton, textButton;
-	protected boolean justChanged;
-	protected boolean textChange;
+	protected MenuButton startButton, cancelButton;
+	protected WriteBoxWithLabel chatWBWL;
 	protected TrueTypeFont ttf, bigText;
 	//private ArrayList<Player> players;
 	protected ArrayList<MenuButton> users;
@@ -61,28 +62,22 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 		users = new ArrayList<MenuButton>();
 		players = new CopyOnWriteArrayList<String>();
 
-		textChange = false;
-		justChanged = false;
-
 		Font f = new Font("Arial", Font.PLAIN, 18);
 		ttf = new TrueTypeFont(f, true);
 		
-		
-		saylabel = new Label("Say: ", f, Game.centerWidth - (Game.WIDTH/5 - 40)/2 - 20, Game.centerHeight + 320, Color.white);
-
 		f = new Font("Comic Sans", Font.ITALIC, 50);
 		bigText = new TrueTypeFont(f, true);
 
 		cancelButton = new MenuButton("cancel", new Rectangle(Game.centerWidth - 300, Game.centerHeight + 400, 200, 50), Color.white, "Cancel", ttf);
-		textButton = new MenuButton("text", new Rectangle(Game.centerWidth - (Game.WIDTH/5 - 40)/2 + 20, Game.centerHeight + 300, Game.WIDTH/5 - 40, 50), Color.lightGray, "...", ttf, Color.white);
-		textButton.fillRect(false);
-		textButton.writeCenter(false);
+		
+		chatWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth - (Game.WIDTH/5)/2, Game.centerHeight + 300), Game.WIDTH/5, "Say:", "", Color.lightGray, Color.white);
+		chatWBWL.wb.setInput(gc.getInput());
+		chatWBWL.wb.setDeselectOnEnter(false);
 		
 		mbox = new MessageBox(Game.WIDTH/5, Game.HEIGHT/5, Game.centerWidth - Game.WIDTH/10, Game.centerHeight + Game.HEIGHT / 14, Color.lightGray, Color.white, ttf);
 
-
 		buttons.add(cancelButton);
-		buttons.add(textButton);
+		//buttons.add(textButton);
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException {
@@ -95,7 +90,8 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 			button.render(gc, sb, g);
 		}
 		
-		saylabel.render(gc, sb, g);
+		chatWBWL.render(gc, sb, g);
+		//saylabel.render(gc, sb, g);
 		mbox.render(gc, sb, g);
 	}
 
@@ -106,30 +102,12 @@ public abstract class LobbyState extends BasicGameState implements KeyListener {
 		for (MenuButton button : users) {
 			button.update(gc, sb, delta);
 		}
-
-		Input input = gc.getInput();
 		
-		if(textButton.isMousePressed()) {
-			textChange = true;
-			textButton.setText("");
-		}
-	}
-
-	public void keyPressed(int key, char c) {
-		if(textChange) {
-			if(key == Input.KEY_ENTER) {
-				textChange = false;
-				sendText(textButton.getText());
-				textButton.setText("...");
-			}
-			else if(key == Input.KEY_ESCAPE) {
-				textChange = false;
-				justChanged = true;
-				textButton.setText("...");
-			}
-			else if(((int) c >= 32 && (int) c <= 126) || (int) c == 229 || (int) c == 228 || (int) c == 246) {
-				textButton.setText(textButton.getText() + c);
-			}
+		chatWBWL.update(gc, sb, delta);
+		
+		if(chatWBWL.wb.isCommit() && chatWBWL.wb.getText().length() != 0) {
+			sendText(chatWBWL.wb.getText());
+			chatWBWL.wb.setText("");
 		}
 	}
 	

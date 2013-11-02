@@ -23,6 +23,8 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	private boolean doubleClick;
 	private Input input;
 	private String defText;
+	private boolean deselectOnEnter;
+	private boolean comitted;
 
 	public WriteBox(String id, Shape shape, Color color, String text, TrueTypeFont ttf) throws SlickException {
 		super(id, shape, color, text, ttf);
@@ -43,6 +45,8 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		doubleClick = false;
 		writeCenter(false);
 		defText = text;
+		deselectOnEnter = true;
+		comitted = false;
 	}
 
 	public void setAcceptable(String a) {
@@ -55,6 +59,10 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	
 	public void setDefaultText(String s) {
 		defText = s;
+	}
+	
+	public void setDeselectOnEnter(boolean b) {
+		deselectOnEnter = b;
 	}
 	
 	@Override
@@ -113,8 +121,10 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 			text = defText;
 		}
 		else if(key == Input.KEY_ENTER) {
-			focused = false;
+			if(deselectOnEnter)
+				focused = false;
 			removeEnd("|");
+			comitted = true;
 		}
 		else if(key == Input.KEY_BACK) {
 			removeEnd("|");
@@ -135,6 +145,12 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		}
 	}
 	
+	public boolean isCommit() {
+		boolean b = comitted;
+		comitted = false;
+		return b;
+	}
+	
 	public boolean removeEnd(String s) {
 		if(text.length()-s.length() < 0) {
 			return false;
@@ -153,7 +169,9 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	
 	public void addText(char c) {
 		removeEnd("|");
-		text += c;
+		String s = text + c;
+		if(ttf.getWidth(s) < this.getWidth())
+			text += c;
 	}
 
 	@Override
