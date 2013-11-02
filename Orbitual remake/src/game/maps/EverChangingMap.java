@@ -18,7 +18,7 @@ public class EverChangingMap extends GameMap {
 	
 	public EverChangingMap(){
 		super();
-		numAnc = 50;
+		numAnc = 150;
 		rand = new Random();
 	}
 
@@ -43,7 +43,7 @@ public class EverChangingMap extends GameMap {
 
 	@Override
 	public void mapSpecificChange() throws SlickException {
-		Entity e = anchors.remove(rand.nextInt(numAnc));
+		anchors.remove(rand.nextInt(numAnc));
 		addAnchor(1, new Vector2f(rand.nextFloat() * Game.WIDTH,
 					rand.nextFloat() * Game.HEIGHT), vp);
 		
