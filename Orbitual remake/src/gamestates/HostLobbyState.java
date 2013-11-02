@@ -62,8 +62,6 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 		
 		if(startButton.isMousePressed()) {
 			hosted.setAllKeys("start");
-			hosted.close();
-			ServerMultiplayerState.names = players;
 			sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal()).init(gc, sb);
 			sb.enterState(Game.State.SERVERMULTIPLAYERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
