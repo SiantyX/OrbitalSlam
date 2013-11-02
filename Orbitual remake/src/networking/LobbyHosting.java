@@ -78,11 +78,12 @@ public class LobbyHosting extends Hosting {
 				// display chat message n send it
 				mbox.addMessage(wholemsg);
 				
-				for (SelectionKey k : selector.keys()) {
+				setAllKeys(message);
+				/*for (SelectionKey k : selector.keys()) {
 					if(!k.equals(serverKey)) {
 						addAttach(key, message);
 					}
-				}
+				}*/
 			}
 
 			if(parts[0].equals("name")) {
