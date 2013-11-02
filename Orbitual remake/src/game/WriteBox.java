@@ -25,17 +25,18 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	private String defText;
 	private boolean deselectOnEnter;
 	private boolean comitted;
+	private static String standardAccept = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖabcdefghijklmnopqrstuvwxyzåäö ,.-;:_\'¨´+0987654321§!\"#¤%&/()=?`^*\\@£$€{[]}~áéñàèÁÉÑıİüÜÿâÂêÊûÛ<>|";
 
 	public WriteBox(String id, Shape shape, Color color, String text, TrueTypeFont ttf) throws SlickException {
 		super(id, shape, color, text, ttf);
 		init();
 	}
-	
+
 	public WriteBox(String id, Shape shape, Color color, String text, TrueTypeFont ttf, Color color2) throws SlickException {
 		super(id, shape, color, text, ttf, color2);
 		init();
 	}
-	
+
 	private void init() {
 		focused = false;
 		acceptable = "";
@@ -52,26 +53,26 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	public void setAcceptable(String a) {
 		acceptable = a;
 	}
-	
+
 	public void removeFocus() {
 		focused = false;
 	}
-	
+
 	public void setDefaultText(String s) {
 		defText = s;
 	}
-	
+
 	public void setDeselectOnEnter(boolean b) {
 		deselectOnEnter = b;
 	}
-	
+
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
 		super.update(gc, sb, delta);
-		
+
 		int mousePosX = Mouse.getX();
 		int mousePosY = Math.abs(Mouse.getY() - Game.app.getHeight());
-		
+
 		if(globalLeftPress) {
 			if(mouseInThis(mousePosX, mousePosY)) {
 				if(doubleClick) {
@@ -89,11 +90,11 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 				focused = false;
 			}
 		}
-		
+
 		doubleClick = false;
 		globalLeftPress = false;
 		globalRightPress = false;
-		
+
 		if(focused) {
 			if(timer.isTriggered() >= 0) {
 				if(!removeEnd("|")) {
@@ -105,7 +106,7 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 			removeEnd("|");
 		}
 	}
-	
+
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) {
 		super.render(gc, sb, g);
@@ -114,7 +115,7 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	@Override
 	public void keyPressed(int key, char c) {
 		if(!focused) return;
-		
+
 		if(key == Input.KEY_ESCAPE) {
 			input.clearKeyPressedRecord();
 			focused = false;
@@ -136,7 +137,9 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 			}
 		}
 		else if(acceptable.equals("")) {
-			addText(c);
+			if(standardAccept.contains(Character.toString(c))) {
+				addText(c);
+			}
 		}
 		else {
 			if(acceptable.contains(Character.toString(c))) {
@@ -144,13 +147,13 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 			}
 		}
 	}
-	
+
 	public boolean isCommit() {
 		boolean b = comitted;
 		comitted = false;
 		return b;
 	}
-	
+
 	public boolean removeEnd(String s) {
 		if(text.length()-s.length() < 0) {
 			return false;
@@ -161,12 +164,12 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		}
 		return false;
 	}
-	
+
 	public String getText() {
 		removeEnd("|");
 		return text;
 	}
-	
+
 	public void addText(char c) {
 		removeEnd("|");
 		String s = text + c;
@@ -207,7 +210,7 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 		else if(button == Input.MOUSE_RIGHT_BUTTON) {
 			globalRightPress = true;
 		}
-		
+
 		if(clickCount % 2 == 0) {
 			doubleClick = true;
 		}
@@ -219,30 +222,30 @@ public class WriteBox extends MenuButton implements KeyListener, MouseListener {
 	@Override
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(int button, int x, int y) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseWheelMoved(int change) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
