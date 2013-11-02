@@ -109,4 +109,10 @@ public class RandomFunkyMap extends GameMap {
 	public String toString() {
 		return "Random Map";
 	}
+
+	@Override
+	public void mapSpecificChange() {
+		// TODO Auto-generated method stub
+		
+	}
 }
