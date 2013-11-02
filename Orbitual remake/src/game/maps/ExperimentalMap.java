@@ -74,7 +74,13 @@ public class ExperimentalMap extends GameMap {
 
 	@Override
 	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
-		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
+		return standardStartPosition(i);
+	}
+
+	@Override
+	public void mapSpecificChange() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

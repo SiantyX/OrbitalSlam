@@ -63,6 +63,16 @@ public abstract class GameMap {
 	public int getScorePlacementY() {
 		return (Game.HEIGHT / 18);
 	}
+	protected Vector2f standardStartPosition(int i){
+		
+		double startPercentX = 0.2;
+		double startPercentY = 0.23;
+		
+		int startPosX = (int)Math.round(Game.WIDTH * startPercentX );
+		int startPosY = (int)Math.round(Game.HEIGHT * startPercentY);
+		
+		return new Vector2f(startPosX*(i+1), startPosY - (startPosY/3));
+	}
 
 	public int getScorePlacementX(int i) {
 		return (Game.WIDTH / numPlayers) * (i) + Game.HEIGHT / (numPlayers * 2);
@@ -72,7 +82,11 @@ public abstract class GameMap {
 			i.collisionCheck(sb);
 			i.update(gc, sb, delta);
 		}
+		mapSpecificChange();
 	}
+	public abstract void mapSpecificChange();
+
+
 	public abstract String toString();
 
 }
