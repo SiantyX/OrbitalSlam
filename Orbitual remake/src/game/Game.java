@@ -1,5 +1,7 @@
 package game;
 
+import java.io.File;
+
 import gamestates.AfterGameState;
 import gamestates.AudioSettingsState;
 import gamestates.BeforeGameState;
@@ -29,25 +31,25 @@ public class Game extends StateBasedGame {
 	public static int HEIGHT = 1080;
 	public static boolean fullscreen = false;
 	public static boolean showHitbox = false;
-	
+
 	public static int centerHeight;
 	public static int centerWidth;
-	
+
 	public static int LASTID;
-	
+
 	public static final int MAX_PLAYERS = 4;//8;
-	
+
 	public static String username = "Player";
-	
+
 	public static Music MENU_MUSIC;
 	public static Music INGAME_MUSIC;
-	
+
 	public static enum State {
 		MENUSTATE, DISPLAYMODESTATE, PAUSEMENUSTATE, SETTINGSSTATE,	AUDIOSETTINGSSTATE, CONTROLSSETTINGSSTATE,
 		BEFOREGAMESTATE, INGAMESTATE, AFTERGAMESTATE,
 		BROWSERSTATE, HOSTLOBBYSTATE, CLIENTMULTIPLAYERSTATE, CLIENTLOBBYSTATE, SERVERMULTIPLAYERSTATE
 	}
-	
+
 	public Game() {
 		super("Orbital Slam");
 	}
@@ -71,10 +73,14 @@ public class Game extends StateBasedGame {
 		addState(new ClientLobbyState(State.CLIENTLOBBYSTATE.ordinal()));
 		addState(new ServerMultiplayerState(State.SERVERMULTIPLAYERSTATE.ordinal()));
 	}
-	
-	
+
+
 	public static void main(String[] args) {
-		
+		System.setProperty("java.library.path", "libs");
+
+		//Extracted from Distributing Your LWJGL Application
+		System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
+
 		try {
 			app = new AppGameContainer(new Game());
 			app.setDisplayMode(WIDTH, HEIGHT, fullscreen);

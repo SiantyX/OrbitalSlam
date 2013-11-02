@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Font;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -18,7 +20,7 @@ public class WriteBoxWithLabel extends Node {
 		
 		if(isBetween) {
 			float wholeWidth = Math.round(ttf.getWidth(labelText)) + writeWidth;
-		
+			
 			label = new Label(labelText, ttf, Math.round(centerPos.x - wholeWidth/2), Math.round(centerPos.y), txtColor);
 			wb = new WriteBox(boxText, new Rectangle(label.getX() + label.getWidth(), centerPos.y, writeWidth, ttf.getHeight()), bgColor, boxText, ttf, txtColor);
 		}

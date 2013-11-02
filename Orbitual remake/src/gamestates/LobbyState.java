@@ -62,11 +62,11 @@ public abstract class LobbyState extends BasicGameState {
 		users = new ArrayList<MenuButton>();
 		players = new CopyOnWriteArrayList<String>();
 
-		Font f = new Font("Arial", Font.PLAIN, 18);
-		ttf = new TrueTypeFont(f, true);
-		
-		f = new Font("Comic Sans", Font.ITALIC, 50);
+		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		bigText = new TrueTypeFont(f, true);
+		
+		f = new Font("Arial", Font.PLAIN, 18);
+		ttf = new TrueTypeFont(f, true);
 
 		cancelButton = new MenuButton("cancel", new Rectangle(Game.centerWidth - 300, Game.centerHeight + 400, 200, 50), Color.white, "Cancel", ttf);
 		
