@@ -16,6 +16,8 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class ClientLobbyState extends LobbyState {
+	private Thread updateThread;
+	
 	public ClientLobbyState(int id) {
 		super(id);
 	}
@@ -28,16 +30,25 @@ public class ClientLobbyState extends LobbyState {
 		if(Game.LASTID == Game.State.BROWSERSTATE.ordinal()) {
 			Runnable updateLobby = new Runnable() {
 				public void run() {
-					hndlr.updateClientLobby(players, mbox.getMessages());
+					hndlr.updateClientLobby(players, mbox);
 				}
 			};
-			Thread thread = new Thread(updateLobby);
-			thread.start();
+			Thread updateThread = new Thread(updateLobby);
+			updateThread.start();
 		}
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
+		
+		if(hndlr.started) {
+			ClientMultiplayerState.lobby = hndlr.currentLobby;
+			hndlr.close();
+			ClientMultiplayerState.names = players;
+			sb.getState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal()).init(gc, sb);
+			sb.enterState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+					100));
+		}
 
 		if(cancelButton.isMousePressed()) {
 			hndlr.close();
@@ -52,17 +63,10 @@ public class ClientLobbyState extends LobbyState {
 					players.get(i).length() < 1 ? "Unknown" : players.get(i), ttf, Color.yellow));
 		}
 		
-		if(hndlr.started) {
-			ClientMultiplayerState.lobby = hndlr.currentLobby;
-			hndlr.close();
-			ClientMultiplayerState.names = players;
-			sb.getState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal()).init(gc, sb);
-			sb.enterState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
-		}
+
 	}
 	
 	public void sendText(String str) {
-		mbox.addMessage(str);
+		hndlr.sendChatUpdate(Game.username + ": " + str);
 	}
 }

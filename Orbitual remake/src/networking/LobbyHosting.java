@@ -79,7 +79,9 @@ public class LobbyHosting extends Hosting {
 				mbox.addMessage(wholemsg);
 				
 				for (SelectionKey k : selector.keys()) {
-					addAttach(key, message);
+					if(!k.equals(serverKey)) {
+						addAttach(key, message);
+					}
 				}
 			}
 
@@ -100,7 +102,8 @@ public class LobbyHosting extends Hosting {
 		} 
 		catch (IOException e) {
 			removePlayer(key);
-			e.printStackTrace();
+			System.out.println("A player disconnected.");
+			//e.printStackTrace();
 		}
 	}
 
@@ -131,7 +134,8 @@ public class LobbyHosting extends Hosting {
 		}
 		catch (IOException e) {
 			removePlayer(key);
-			e.printStackTrace();
+			System.out.println("A player disconnected.");
+			//e.printStackTrace();
 		}
 	}
 

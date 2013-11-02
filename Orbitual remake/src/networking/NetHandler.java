@@ -1,6 +1,7 @@
 package networking;
 
 import game.Game;
+import game.MessageBox;
 import gamestates.ClientLobbyState;
 
 import java.io.DataInputStream;
@@ -18,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.nio.channels.UnresolvedAddressException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -35,18 +37,16 @@ public class NetHandler {
 	}
 
 	public boolean JoinLobby(Lobby l) throws IOException {
-		currentLobby = l;
-
 		try {
 			if(sc.isConnected()) return true;
 			sc = SocketChannel.open();
 			sc.configureBlocking(false);
-			sc.connect(new InetSocketAddress(currentLobby.getIpAddress(), port));
+			sc.connect(new InetSocketAddress(l.getIpAddress(), port));
 			long oldTime = System.currentTimeMillis();
 			while(!sc.finishConnect() && ((System.currentTimeMillis() - oldTime) < 5000)) {
 			}
 			if(!sc.finishConnect()) {
-				System.out.println("Couldn't connect to server " + currentLobby.getIpAddress() + " at port " + port);
+				System.out.println("Couldn't connect to server " + l.getIpAddress() + " at port " + port);
 				return false;
 			}
 
@@ -58,6 +58,7 @@ public class NetHandler {
 				sc.write(Charset.defaultCharset().encode(buffer));
 			}
 
+			currentLobby = l;
 			return true;
 		}
 		catch (ConnectException e) {
@@ -69,7 +70,7 @@ public class NetHandler {
 	public void sendChatUpdate(String str) {
 		try {
 			ClientLobbyState.hndlr = this;
-			CharBuffer buffer = CharBuffer.wrap("chat\n" + Game.username + ": " + str);
+			CharBuffer buffer = CharBuffer.wrap("chat\n" + str);
 			System.out.println("Sending chat update");
 			while(buffer.hasRemaining()) {
 				sc.write(Charset.defaultCharset().encode(buffer));
@@ -81,7 +82,7 @@ public class NetHandler {
 		}
 	}
 
-	public void updateClientLobby(CopyOnWriteArrayList<String> players, CopyOnWriteArrayList<String> mboxList) {
+	public void updateClientLobby(CopyOnWriteArrayList<String> players, MessageBox mbox) {
 		try {
 			while (currentLobby != null) {
 				ByteBuffer inbuffer = ByteBuffer.allocate(1024);
@@ -115,13 +116,13 @@ public class NetHandler {
 					for(int i = 1; i < parts.length; i++) {
 						wholemsg += parts[i];
 					}
-					mboxList.add(wholemsg);
+					mbox.addMessage(wholemsg);
 				}
 			}
 		}
 		catch (IOException e) {
-			System.out.println("!update client error!");
-			e.printStackTrace();
+			System.out.println("Disconnected from server.");
+			//e.printStackTrace();
 		}
 		finally {
 			close();
@@ -145,6 +146,10 @@ public class NetHandler {
 		}
 		catch (ConnectException e) {
 			System.out.println("Couldn't connect to server " + ipaddr + " at port " + port);
+			return false;
+		}
+		catch (UnresolvedAddressException e) {
+			System.out.println("Couldn't connect to DNS server for " + ipaddr + " at port " + port);
 			return false;
 		}
 	}

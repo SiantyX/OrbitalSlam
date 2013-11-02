@@ -35,6 +35,7 @@ public abstract class Hosting extends Thread {
 	protected Selector selector;
 	protected ServerSocketChannel server;
 	protected SXTimer timer;
+	protected SelectionKey serverKey;
 
 	public Hosting(String hostname, int maxPlayers) throws IOException {
 		hndlr = new NetHandler();
@@ -60,6 +61,7 @@ public abstract class Hosting extends Thread {
 			server.configureBlocking(false);
 			server.socket().bind(new InetSocketAddress(port));
 			server.register(selector, SelectionKey.OP_ACCEPT);	
+			serverKey = server.keyFor(selector);
 
 			// update server with host
 			beforeSelect();

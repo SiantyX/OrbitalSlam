@@ -27,7 +27,7 @@ import org.newdawn.slick.util.FontUtils;
 
 public class BrowserState extends BasicGameState implements KeyListener {
 	private final int ID;
-	
+
 	private ArrayList<MenuButton> buttons;
 	private ArrayList<MenuButton> lobbys;
 	private MenuButton backButton, refreshButton, createButton, userButton;
@@ -36,32 +36,32 @@ public class BrowserState extends BasicGameState implements KeyListener {
 
 	private ArrayList<Lobby> browser;
 	private Thread ref;
-	
+
 	private boolean changeName;
 	private boolean justChanged;
 	private Color oldColor;
-	
+
 	public BrowserState(int id) {
 		ID = id;
 	}
-	
+
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		lobbys = new ArrayList<MenuButton>();
 		browser = new ArrayList<Lobby>();
 		justChanged = false;
 		changeName = false;
-		
+
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		bigText = new TrueTypeFont(f, true);
 
 		f = new Font("Arial", Font.BOLD, 14);
 		ttf = new TrueTypeFont(f, true);
-		
+
 		backButton = new MenuButton("refresh", new Rectangle(Game.centerWidth - 400, Game.centerHeight + 400, 200, 50), Color.white, "Back", ttf);
 		refreshButton = new MenuButton("back", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 400, 200, 50), Color.white, "Refresh", ttf);
 		createButton = new MenuButton("create", new Rectangle(Game.centerWidth + 200, Game.centerHeight + 400, 200, 50), Color.white, "Host Game", ttf);
-		
+
 		userButton = new MenuButton("user", new Rectangle(Game.centerWidth - 100, Game.centerHeight + 300, 200, 50), Color.black, "Name: " + Game.username, ttf, Color.white);
 		oldColor = userButton.getBackColor();
 
@@ -73,7 +73,7 @@ public class BrowserState extends BasicGameState implements KeyListener {
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException {
 		FontUtils.drawCenter(bigText, "Game Browser", Game.centerWidth - 300, Game.centerHeight/3, 600);
-		
+
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
 		}
@@ -91,24 +91,24 @@ public class BrowserState extends BasicGameState implements KeyListener {
 		}
 
 		Input input = gc.getInput();
-		
+
 		if(justChanged) {
 			input.clearKeyPressedRecord();
 			justChanged = false;
 		}
-		
+
 		if(changeName) {
 			if(!userButton.getBackColor().equals(new Color(40, 40, 40))) {
 				oldColor = userButton.getBackColor();
 				userButton.setBackColor(new Color(40, 40, 40));
 			}
 		}
-		
+
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
 			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
-		
+
 		if(refreshButton.isMousePressed()) {
 			try {
 				refresh();
@@ -116,35 +116,38 @@ public class BrowserState extends BasicGameState implements KeyListener {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if(createButton.isMousePressed()) {
 			Game.LASTID = getID();
 			sb.getState(Game.State.HOSTLOBBYSTATE.ordinal()).init(gc, sb);
 			sb.enterState(Game.State.HOSTLOBBYSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
-		
+
 		for(MenuButton button : lobbys) {
 			if(button.isMousePressed()) {
 				//connect to button
 				System.out.println("connecting to " + browser.get(Integer.parseInt(button.getId())).getName());
+				Game.LASTID = getID();
 				try {
-				NetHandler hndlr = new NetHandler();
-				if(hndlr.JoinLobby(browser.get(Integer.parseInt(button.getId()))))
-					sb.enterState(Game.State.CLIENTLOBBYSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black, 100));
+					NetHandler hndlr = new NetHandler();
+					if(hndlr.JoinLobby(browser.get(Integer.parseInt(button.getId())))) {
+						sb.getState(Game.State.CLIENTLOBBYSTATE.ordinal()).init(gc, sb);
+						sb.enterState(Game.State.CLIENTLOBBYSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black, 100));
+					}
 				}
 				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		if (userButton.isMousePressed()) {
 			changeName = true;
 			userButton.setText("");
 		}
 	}
-	
+
 	public void refresh() throws UnknownHostException, IOException {
 		final NetHandler h = new NetHandler();
 		Runnable r = new Runnable() {
@@ -169,7 +172,7 @@ public class BrowserState extends BasicGameState implements KeyListener {
 		ref = new Thread(r);
 		ref.start();
 	}
-	
+
 	public void keyPressed(int key, char c) {
 		if(changeName) {
 			if(key == Input.KEY_ENTER) {
