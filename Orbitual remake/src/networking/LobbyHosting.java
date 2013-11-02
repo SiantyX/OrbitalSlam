@@ -150,6 +150,7 @@ public class LobbyHosting extends Hosting {
 			if(s.split("\\@")[1].equals(ipaddr)) {
 				players.remove(s);
 				key.cancel();
+				setAllKeys("name");
 				return true;
 			}
 		}

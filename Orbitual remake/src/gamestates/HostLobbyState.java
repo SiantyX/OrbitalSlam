@@ -76,7 +76,10 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 		}
 		
 		mbox = hosted.getBox();
-		for(int i = 0; i < players.size(); i++) {
+		users.add(new MenuButton(players.get(0), new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200, 100, 30), Color.black,
+				"(Host) " + Game.username, ttf, Color.yellow));
+		
+		for(int i = 1; i < players.size(); i++) {
 			users.add(new MenuButton(players.get(i), new Rectangle(Game.centerWidth - 50, Game.centerHeight - 200 + (i*50), 100, 30), Color.black,
 					players.get(i).split("\\@")[0].length() < 1 ? "Unknown" : players.get(i).split("\\@")[0], ttf, Color.yellow));
 		}
