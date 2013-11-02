@@ -48,7 +48,9 @@ public class ExperimentalMap extends GameMap {
 		
 		Brick brick = new Brick("Brick");
 		brick.setPosition(new Vector2f(0,500));
+		brick.setScaleWidth(5);
 		interactables.add(brick);
+		
 		
 		for(int i = 0; i < numAnc; i++) {
 			Entity e = new Entity("Anchor " + Integer.toString(i));
