@@ -16,7 +16,6 @@ import components.ImageRenderComponent;
 
 public class Brick extends Interactable {
 	protected static final String brickPath = "res/sprites/interactables/brick.png";
-	private Image img;
 	private final float bounciness = 0.9f;
 	private final float slipperyness = 0.95f;
 
@@ -55,30 +54,27 @@ public class Brick extends Interactable {
 	public void collision(Player player) {
 
 		boolean hitTopOrBottom = (Math.abs(this.getCenterPositionRectangle().x
-				- player.getEntity().getCenterPosition().x)) < (this.getWidth() / 2 - 10f + player
+				- player.getEntity().getCenterPosition().x)) < (this.getWidth() / 2 - 15f + player
 				.getEntity().getRadius());
 
 		float directionX;
 		float directionY;
 
 		if (hitTopOrBottom) {
-			/*
+
 			if (player.getVelocity().y < 0.5f && player.getVelocity().y > -1f) {
-				directionY = -0.4f;
-				player.getEntity().setCenterPosition(
-						new Vector2f(player.getEntity().getCenterPosition().x,
-								- player.getEntity().getRadius()
-										- this.getHeight() / 2
-										+ this.getCenterPosition().y));
+				directionY = -0.5f;
 			} else {
-				directionY = -player.getVelocity().y * bounciness;
-			
-				
-			}*/
-			directionY = -player.getVelocity().y * 1;
+				directionY = -player.getVelocity().y * 1;
+
+			}
+			player.getEntity().setCenterPosition(
+					new Vector2f(player.getEntity().getCenterPosition().x,
+							-player.getEntity().getRadius() - this.getHeight()
+									/ 2 + this.getCenterPosition().y));
+
 			player.setDy(directionY);
 			player.setDx(player.getVelocity().x * slipperyness);
-			
 
 		} else {
 			directionX = -player.getVelocity().x * bounciness;

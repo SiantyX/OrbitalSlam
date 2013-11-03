@@ -18,7 +18,6 @@ import gamestates.InGameState;
 
 public class Mine extends Interactable {
 	private boolean detonated;
-	private Image img;
 	protected final static String minePath = "res/sprites/interactables/mine.png";
 	protected final static String mineSound = "res/audio/sound/explosion.ogg";
 	protected final static String explPath = "res/sprites/interactables/explosions";
@@ -33,8 +32,7 @@ public class Mine extends Interactable {
 		super("Mine");
 		detonated = false;
 		this.setRadius(radius);
-		
-		
+			
 		mineRender = new ImageRenderComponent("Mine", new Image(minePath));
 		this.AddComponent(mineRender);
 		setScale(scale*Game.WIDTH);

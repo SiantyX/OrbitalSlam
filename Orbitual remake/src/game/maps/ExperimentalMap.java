@@ -5,6 +5,7 @@ import game.Game;
 import game.Player;
 import game.ViewPort;
 import game.maps.interactables.Brick;
+import game.maps.interactables.powerups.EpicMass;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -39,6 +40,10 @@ public class ExperimentalMap extends GameMap {
 		brick.setPosition(new Vector2f(0,500));
 		brick.setScaleWidth(5);
 		interactables.add(brick);
+		
+		EpicMass epicmass = new EpicMass("mass");
+		epicmass.setPosition(new Vector2f(300,200));
+		interactables.add(epicmass);
 		
 		
 		for(int i = 0; i < numAnc; i++) {

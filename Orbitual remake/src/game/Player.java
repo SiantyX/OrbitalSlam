@@ -2,6 +2,7 @@ package game;
 
 import game.maps.AnchorMap;
 import game.maps.GameMap;
+import game.maps.interactables.powerups.PowerUp;
 import gamestates.AudioSettingsState;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class Player {
 	private int num;
 	private int score;
 	private Sound sound;
+	private ArrayList<PowerUp> activePowerUps;
 	
 	private ImageRenderComponent defaultImage;
 	private ImageRenderComponent stunnedImage;
@@ -74,6 +76,7 @@ public class Player {
 
 	public Player(int num, GameMap map) throws SlickException {
 		entity = new Entity(playerImg[num]);
+		activePowerUps = new ArrayList<PowerUp>();
 	
 		defaultImage = new ImageRenderComponent(playerImg[num], new Image(playerImg[num] + ".png"));
 		stunnedImage = new ImageRenderComponent(playerImg[num] + "xd", new Image(playerImg[num] + "xd.png"));
@@ -318,6 +321,10 @@ public class Player {
 		return mass;
 	}
 	
+	public void setMass(double mass){
+		this.mass = mass;
+	}
+	
 	public int getScore() {
 		return score;
 	}
@@ -386,6 +393,14 @@ public class Player {
 	}
 	public void setDy(double dy){
 		this.dy = dy;
+	}
+	
+	public void powerUpEpicMass(){
+		this.mass *= 5;
+	}
+	
+	public void AddPowerUp(PowerUp pow){
+		activePowerUps.add(pow);
 	}
 	
 	// COLLISION PHYSICS
@@ -464,6 +479,11 @@ public class Player {
 	}
 
 	public void reset(Vector2f startPos) {
+		for (PowerUp p :activePowerUps){
+			p.powerDown(this);
+		}
+		activePowerUps.clear();
+		
 		getEntity().setCenterPosition(startPos);
 		dx = 0;
 		dy = 0;

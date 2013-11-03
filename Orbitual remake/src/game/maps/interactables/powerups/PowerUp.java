@@ -1,32 +1,23 @@
 package game.maps.interactables.powerups;
+
 import org.newdawn.slick.state.StateBasedGame;
 
 import game.Player;
-import game.maps.interactables.*;
+import game.maps.interactables.Interactable;
 
-public class PowerUp extends Interactable{
+public abstract class PowerUp extends Interactable {
 
 	public PowerUp(String id) {
 		super(id);
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void collisionCheck(StateBasedGame sb) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void collisionCheck(StateBasedGame sb);
 
-	@Override
-	public void collision(Player player) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void collision(Player player);
 
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void reset();
+	
+	public abstract void powerDown(Player player);
 
 }

@@ -5,6 +5,7 @@ import game.Game;
 import game.Player;
 import game.ViewPort;
 import game.maps.interactables.Mine;
+import game.maps.interactables.powerups.EpicMass;
 
 import java.util.ArrayList;
 import java.util.HashMap;

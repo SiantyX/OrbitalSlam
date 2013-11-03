@@ -25,14 +25,13 @@ public class AnchorMap extends GameMap {
 	public AnchorMap() throws SlickException {
 		
 		super();
+		
 		numAnc = 12;
-		
-		
+			
 		numAncPerRow = 4;
 		
 		numAncPerColumn = numAnc/numAncPerRow;
 		
-		numPlayers = 4;
 		
 		
 	}
@@ -59,6 +58,7 @@ public class AnchorMap extends GameMap {
 			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
 			addAnchor(i, pos, vp);
 		}
+		
 		
 		Vector2f tmp = new Vector2f(startPosX, startPosY);
 		tmp = vp.toAbsolute(tmp);
