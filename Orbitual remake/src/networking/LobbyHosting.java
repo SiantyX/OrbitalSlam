@@ -30,7 +30,7 @@ public class LobbyHosting extends Hosting {
 		server.socket().bind(new InetSocketAddress(port));
 		server.register(selector, SelectionKey.OP_ACCEPT);	
 		serverKey = server.keyFor(selector);
-		
+
 		Runnable r = new Runnable() {
 			public void run() {
 				while(!closing && inLobby) {
@@ -70,40 +70,43 @@ public class LobbyHosting extends Hosting {
 
 	protected void read(SelectionKey key) {
 		try {
-			String message = readIncomingMessage(key);
-			String parts[] = message.split("\\n");
+			String msg = readIncomingMessage(key);
+			//String parts[] = message.split("\\n");
 
-			String wholemsg = "";
-			if(parts.length > 1) {
-				for(int i = 1; i < parts.length; i++) {
-					wholemsg += parts[i];
+			String[] packages = splitPackages(msg);
+			for(String pak : packages) {
+				String[] parts = splitInfo(pak);
+
+				String wholemsg = "";
+				if(parts.length > 1) {
+					for(int i = 1; i < parts.length; i++) {
+						wholemsg += parts[i];
+					}
 				}
-			}
 
-			if(parts[0].equals("chat")) {
-				// display chat message n send it
-				mbox.addMessage(wholemsg);
-				
-				setAllKeys(message);
-				/*for (SelectionKey k : selector.keys()) {
+				if(parts[0].equals("chat")) {
+					// display chat message n send it
+					mbox.addMessage(wholemsg);
+
+					setAllKeys(msg);
+					/*for (SelectionKey k : selector.keys()) {
 					if(!k.equals(serverKey)) {
 						addAttach(key, message);
 					}
 				}*/
-			}
-
-			else if(parts[0].equals("name")) {
-				// change list of names and send name update to everyone
-				String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
-				for(String s : players) {
-					if(s.split("\\@")[1].equals(ipaddr)) {
-						players.remove(s);
-					}
 				}
-				players.add(wholemsg + "@" + ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
 
-				for(SelectionKey k : selector.keys()) {
-					addAttach(k, message);
+				else if(parts[0].equals("name")) {
+					// change list of names and send name update to everyone
+					String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
+					for(String s : players) {
+						if(s.split("\\@")[1].equals(ipaddr)) {
+							players.remove(s);
+						}
+					}
+					players.add(wholemsg + "@" + ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
+
+					setAllKeys(makePlayerList());
 				}
 			}
 		} 
@@ -119,29 +122,9 @@ public class LobbyHosting extends Hosting {
 			SocketChannel channel = (SocketChannel) key.channel();
 			if(key.attachment() != null) {
 				String atch = popAttach(key);
-				String[] parts = atch.split("\\n");
+				//String[] parts = atch.split("\\n");
 
-				if(parts[0].equals("chat")) {
-					writeMessage(key, atch);
-				}
-				
-				else if(parts[0].equals("start")) {
-					writeMessage(key, atch);
-				}
-				
-				else if(parts[0].equals("name")) {
-					// send name update
-					String tmp = "names\n";
-					for(String s : players) {
-						String[] p = s.split("\\@");
-						String str = p[0];
-						if(p[1].equals("127.0.0.1")) {
-							tmp += "(Host) ";
-						}
-						tmp += (str.length() < 1 ? "Unknown" : str) + "\n";
-					}
-					writeMessage(key, tmp);
-				}
+				writeMessage(key, atch);
 			}
 		}
 		catch (IOException e) {
@@ -161,7 +144,7 @@ public class LobbyHosting extends Hosting {
 			if(s.split("\\@")[1].equals(ipaddr)) {
 				players.remove(s);
 				key.cancel();
-				setAllKeys("name");
+				setAllKeys(makePlayerList());
 				return true;
 			}
 		}
@@ -169,10 +152,23 @@ public class LobbyHosting extends Hosting {
 		return false;
 	}
 	
+	public String makePlayerList() {
+		String tmp = "!names\n";
+		for(String s : players) {
+			String[] p = s.split("\\@");
+			String str = p[0];
+			if(p[1].equals("127.0.0.1")) {
+				tmp += "(Host) ";
+			}
+			tmp += (str.length() < 1 ? "Unknown" : str) + "\n";
+		}
+		return tmp;
+	}
+
 	public MessageBox getBox() {
 		return mbox;
 	}
-	
+
 	public void addToBox(String str) {
 		mbox.addMessage(str);
 	}

@@ -54,7 +54,7 @@ public class NetHandler {
 
 			// connected
 			ClientLobbyState.hndlr = this;
-			CharBuffer buffer = CharBuffer.wrap("name\n" + Game.username);
+			CharBuffer buffer = CharBuffer.wrap("!name\n" + Game.username);
 			System.out.println("Sending username");
 			while(buffer.hasRemaining()) {
 				sc.write(Charset.defaultCharset().encode(buffer));
@@ -72,7 +72,7 @@ public class NetHandler {
 	public void sendChatUpdate(String str) {
 		try {
 			ClientLobbyState.hndlr = this;
-			CharBuffer buffer = CharBuffer.wrap("chat\n" + str);
+			CharBuffer buffer = CharBuffer.wrap("!chat\n" + str);
 			System.out.println("Sending chat update");
 			while(buffer.hasRemaining()) {
 				sc.write(Charset.defaultCharset().encode(buffer));
@@ -87,7 +87,7 @@ public class NetHandler {
 	public void sendHookUpdate() {
 		try {
 			ClientLobbyState.hndlr = this;
-			CharBuffer buffer = CharBuffer.wrap("hook");
+			CharBuffer buffer = CharBuffer.wrap("!hook");
 			System.out.println("Sending hook update.");
 			while(buffer.hasRemaining()) {
 				sc.write(Charset.defaultCharset().encode(buffer));

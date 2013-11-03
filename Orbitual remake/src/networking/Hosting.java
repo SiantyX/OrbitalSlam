@@ -234,7 +234,7 @@ public abstract class Hosting extends Thread {
 
 	protected void writeMessage(SelectionKey key, String msg) throws IOException {
 		SocketChannel channel = (SocketChannel) key.channel();
-		CharBuffer buffer = CharBuffer.wrap(msg);
+		CharBuffer buffer = CharBuffer.wrap("!" + msg);
 		while(buffer.hasRemaining()) {
 			channel.write(Charset.defaultCharset().encode(buffer));
 		}
@@ -261,6 +261,20 @@ public abstract class Hosting extends Thread {
 		else {
 			((CopyOnWriteArrayList<String>)key.attachment()).add(msg);
 		}
+	}
+	
+	public String[] splitPackages(String msg) {
+		String[] tmp = msg.split("\\!");
+		String[] rSplit = new String[tmp.length-1];
+		for(int i = 1; i < tmp.length; i++) {
+			rSplit[i-1] = tmp[i];
+		}
+
+		return rSplit;
+	}
+
+	public String[] splitInfo(String msg) {
+		return msg.split("\\n");
 	}
 
 	protected abstract void accept();

@@ -24,11 +24,16 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
+import components.SXTimer;
+
 public class ServerMultiplayerState extends MultiplayerState {
 	private InGameHosting hosted;
+	private SXTimer updatePosTimer;
+	private static final float tickRate = 64;
 
 	public ServerMultiplayerState(int id) {
 		super(id);
+		updatePosTimer = new SXTimer(Math.round(1000/tickRate));
 	}
 
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
@@ -50,7 +55,7 @@ public class ServerMultiplayerState extends MultiplayerState {
 		for(int i = 0; i < players.size(); i++) {
 			hosted.ipplayermap.put(names.get(i).split("\\@")[1], players.get(i));
 		}
-		
+
 		players.get(0).KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[8];
 	}
 
@@ -63,12 +68,14 @@ public class ServerMultiplayerState extends MultiplayerState {
 
 		hooked = players.get(0).isHooked();
 		if(hooked != oldHooked) {
-			hosted.setAllKeys("!hook" + "\n" + "0" + "\n" + new Boolean(hooked).toString() + "\n" + players.get(0).getEntity().getPosition().x + "\n" + players.get(0).getEntity().getPosition().y + "\n" + players.get(0).getDx() + "\n" + players.get(0).getDy());
+			hosted.setAllKeys("hook" + "\n" + "0" + "\n" + new Boolean(hooked).toString() + "\n" + players.get(0).getEntity().getPosition().x + "\n" + players.get(0).getEntity().getPosition().y + "\n" + players.get(0).getDx() + "\n" + players.get(0).getDy());
 			oldHooked = hooked;
 		}
-		
-		for(Player p : players) {
-			hosted.setAllKeys("!pos" + "\n" + players.indexOf(p) + "\n" + p.getEntity().getPosition().x + "\n" + p.getEntity().getPosition().y + "\n" + p.getDx() + "\n" + p.getDy());
+
+		if(updatePosTimer.isTriggered() >= 0) {
+			for(Player p : players) {
+				hosted.setAllKeys("pos" + "\n" + players.indexOf(p) + "\n" + p.getEntity().getPosition().x + "\n" + p.getEntity().getPosition().y + "\n" + p.getDx() + "\n" + p.getDy());
+			}
 		}
 	}
 

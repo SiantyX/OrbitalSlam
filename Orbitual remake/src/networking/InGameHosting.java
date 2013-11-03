@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class InGameHosting extends Hosting {
 	public Map<String, Player> ipplayermap;
-	
+
 	public InGameHosting(Hosting host) {
 		super(host);
 		ipplayermap = new HashMap<String, Player>();
@@ -34,27 +34,25 @@ public class InGameHosting extends Hosting {
 	protected void beforeSelect() throws IOException {
 		return;
 	}
-	
+
 	protected void read(SelectionKey key) {
 		try {
-			String message = readIncomingMessage(key);
-			String parts[] = message.split("\\n");
+			String msg = readIncomingMessage(key);
+			//String parts[] = message.split("\\n");
 
-			String wholemsg = "";
-			if(parts.length > 1) {
-				for(int i = 1; i < parts.length; i++) {
-					wholemsg += parts[i];
-				}
-			}
-			
-			if(parts[0].equals("hook")) {
-				Player tmp = ipplayermap.get(((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
-				if(tmp.acceptHook()) {
-					if(tmp.hook()) {
-						setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "true" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
-					}
-					else {
-						setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "false" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+			String[] packages = splitPackages(msg);
+			for(String pak : packages) {
+				String[] parts = splitInfo(pak);
+
+				if(parts[0].equals("hook")) {
+					Player tmp = ipplayermap.get(((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
+					if(tmp.acceptHook()) {
+						if(tmp.hook()) {
+							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "true" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+						}
+						else {
+							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "false" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+						}
 					}
 				}
 			}
@@ -71,15 +69,9 @@ public class InGameHosting extends Hosting {
 			SocketChannel channel = (SocketChannel) key.channel();
 			if(key.attachment() != null) {
 				String atch = popAttach(key);
-				String[] parts = atch.split("\\n");
-				
-				if(parts[0].equals("hook")) {
-					writeMessage(key, atch);
-				}
-				
-				else if(parts[0].equals("pos")) {
-					writeMessage(key, atch);
-				}
+				//String[] parts = atch.split("\\n");
+
+				writeMessage(key, atch);
 			}
 		}
 		catch (IOException e) {
