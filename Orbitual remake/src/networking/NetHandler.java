@@ -112,7 +112,7 @@ public class NetHandler {
 				inbuffer.clear();
 				if(msg.length() < 1) continue;
 
-				System.out.println("Server says: " + msg);
+				//System.out.println("Server says: " + msg);
 
 				String[] packages = splitPackages(msg);
 				for(String pak : packages) {
