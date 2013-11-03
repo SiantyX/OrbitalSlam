@@ -83,7 +83,7 @@ public class NetHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sendHookUpdate() {
 		try {
 			ClientLobbyState.hndlr = this;
@@ -114,48 +114,54 @@ public class NetHandler {
 
 				System.out.println("Server says: " + msg);
 
-				String[] parts = msg.split("\\n");
-				if(msg.equals("kick")) {
-					break;
-				}
-				else if(msg.equals("start")) {
-					started = true;
-				}
-				else if(parts[0].equals("names")) {
-					players.clear();
-					for(int i = 1; i < parts.length; i++) {
-						if(!parts[i].equals(""))
-							players.add(parts[i]);
+				String[] packages = splitPackages(msg);
+				for(String pak : packages) {
+					String[] info = splitInfo(pak);
+
+					//handleInfo
+					String[] parts = msg.split("\\n");
+					if(msg.equals("kick")) {
+						break;
 					}
-				}
-				else if(parts[0].equals("chat")) {
-					String wholemsg = "";
-					for(int i = 1; i < parts.length; i++) {
-						wholemsg += parts[i];
+					else if(msg.equals("start")) {
+						started = true;
 					}
-					mbox.addMessage(wholemsg);
-				}
-				else if(parts[0].equals("hook")) {
-					Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
-					if(parts[2].equals("true")) {
-						p.setHooked(false);
-						p.hook();
+					else if(parts[0].equals("names")) {
+						players.clear();
+						for(int i = 1; i < parts.length; i++) {
+							if(!parts[i].equals(""))
+								players.add(parts[i]);
+						}
 					}
-					else {
-						p.setHooked(false);
+					else if(parts[0].equals("chat")) {
+						String wholemsg = "";
+						for(int i = 1; i < parts.length; i++) {
+							wholemsg += parts[i];
+						}
+						mbox.addMessage(wholemsg);
 					}
-					p.setDx(Float.parseFloat(parts[5]));
-					p.setDy(Float.parseFloat(parts[6]));
-					p.getEntity().getPosition().x = Float.parseFloat(parts[3]);
-					p.getEntity().getPosition().y = Float.parseFloat(parts[4]);
-				}
-				
-				else if(parts[0].equals("pos")) {
-					Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
-					p.setDx(Float.parseFloat(parts[4]));
-					p.setDy(Float.parseFloat(parts[5]));
-					p.getEntity().getPosition().x = Float.parseFloat(parts[2]);
-					p.getEntity().getPosition().y = Float.parseFloat(parts[3]);
+					else if(parts[0].equals("hook")) {
+						Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
+						if(parts[2].equals("true")) {
+							p.setHooked(false);
+							p.hook();
+						}
+						else {
+							p.setHooked(false);
+						}
+						p.setDx(Float.parseFloat(parts[5]));
+						p.setDy(Float.parseFloat(parts[6]));
+						p.getEntity().getPosition().x = Float.parseFloat(parts[3]);
+						p.getEntity().getPosition().y = Float.parseFloat(parts[4]);
+					}
+
+					else if(parts[0].equals("pos")) {
+						Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
+						p.setDx(Float.parseFloat(parts[4]));
+						p.setDy(Float.parseFloat(parts[5]));
+						p.getEntity().getPosition().x = Float.parseFloat(parts[2]);
+						p.getEntity().getPosition().y = Float.parseFloat(parts[3]);
+					}
 				}
 			}
 		}
@@ -166,6 +172,28 @@ public class NetHandler {
 		finally {
 			close();
 		}
+	}
+
+	public String[] splitPackages(String msg) {
+		String[] tmp = msg.split("\\!");
+		String[] rSplit = new String[tmp.length-1];
+		for(int i = 1; i < tmp.length; i++) {
+			rSplit[i-1] = tmp[i];
+		}
+
+		return rSplit;
+	}
+
+	public String[] splitInfo(String msg) {
+		return msg.split("\\n");
+	}
+
+	public void handlePos(String[] parts) {
+		Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
+		p.setDx(Float.parseFloat(parts[4]));
+		p.setDy(Float.parseFloat(parts[5]));
+		p.getEntity().getPosition().x = Float.parseFloat(parts[2]);
+		p.getEntity().getPosition().y = Float.parseFloat(parts[3]);
 	}
 
 	public boolean connectToMainServer() throws IOException {
