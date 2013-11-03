@@ -462,4 +462,29 @@ public class Player {
 		
 		sound.play(1, AudioSettingsState.SOUND_LEVEL*AudioSettingsState.MASTER_LEVEL);
 	}
+
+	public void reset(Vector2f startPos) {
+		getEntity().setCenterPosition(startPos);
+		dx = 0;
+		dy = 0;
+		hooked = false;
+		
+		dead = false;
+		
+		hookedTo = null;
+		
+		stunTime = 0;
+		
+		speed = 0;
+
+		wSpeed = 0;
+		degrees = 0;
+		hookLength = 0;
+
+		clockWise = false;
+
+		centriAcc = 0;
+		
+		wasKeyDown = false;
+	}
 }

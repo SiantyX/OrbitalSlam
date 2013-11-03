@@ -120,25 +120,13 @@ public class InGameState extends BasicGameState {
 	}
 
 	private void newRound(StateBasedGame sb) throws SlickException {
-		ArrayList<Integer> tmpAL = new ArrayList<Integer>();
-
-		for(Player player : players) {
-			tmpAL.add(player.getScore());
-		}
-
-		// players
 		playersAlive.clear();
-		players.clear();
-		for(int i = 0; i < numLocalPlayers; i++) {
-			Player p = new Player(i, map);
-			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
-			p.getEntity().setCenterPosition(startPos);
-			p.setScore(tmpAL.get(i));
-			p.KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[i];
-			players.add(p);
+		for(int i = 0; i < players.size(); i++) {
+			Vector2f startPos = map.getStartPos(i, players.get(i).getEntity(), vp);
+			players.get(i).reset(startPos);
 			playersAlive.add(players.get(i));
 		}
-
+		
 		startCountDown();
 	}
 

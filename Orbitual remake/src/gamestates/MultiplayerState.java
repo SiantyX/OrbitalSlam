@@ -123,15 +123,9 @@ public abstract class MultiplayerState extends BasicGameState {
 	}
 
 	protected void newRound(StateBasedGame sb) throws SlickException {
-		ArrayList<Integer> tmpAL = new ArrayList<Integer>();
-
-		for(Player player : players) {
-			tmpAL.add(player.getScore());
-		}
-
 		// players
-		playersAlive.clear();
-		players.clear();
+
+		/*players.clear();
 		for(int i = 0; i < names.size(); i++) {
 			Player p = new Player(i, map);
 			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
@@ -139,8 +133,14 @@ public abstract class MultiplayerState extends BasicGameState {
 			p.setScore(tmpAL.get(i));
 			players.add(p);
 			playersAlive.add(players.get(i));
+		}*/		
+		playersAlive.clear();
+		for(int i = 0; i < players.size(); i++) {
+			Vector2f startPos = map.getStartPos(i, players.get(i).getEntity(), vp);
+			players.get(i).reset(startPos);
+			playersAlive.add(players.get(i));
 		}
-
+		
 		startCountDown();
 	}
 
