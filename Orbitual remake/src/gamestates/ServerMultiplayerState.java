@@ -59,8 +59,8 @@ public class ServerMultiplayerState extends MultiplayerState {
 		hooked = players.get(0).isHooked();
 		if(hooked != oldHooked) {
 			hosted.setAllKeys("hook" + "\n" + "0" + "\n" + players.get(0).getEntity().getPosition().x + "\n" + players.get(0).getEntity().getPosition().y + "\n" + players.get(0).getDx() + "\n" + players.get(0).getDy());
+			oldHooked = hooked;
 		}
-		
 	}
 
 	public void setHoster(InGameHosting hosted) {
