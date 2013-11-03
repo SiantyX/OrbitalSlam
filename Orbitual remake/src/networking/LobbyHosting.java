@@ -4,6 +4,7 @@ import game.Game;
 import game.MessageBox;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -14,20 +15,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import components.SXTimer;
 
 public class LobbyHosting extends Hosting {
-	private CopyOnWriteArrayList<String> players;
 	private MessageBox mbox;
 
 	public LobbyHosting(String hostname, int maxPlayers, MessageBox mbox) throws IOException {
 		super(hostname, maxPlayers);
-		players = new CopyOnWriteArrayList<String>();
-		players.add(Game.username + "@127.0.0.1");
 		this.mbox = mbox;
 	}
 
-	protected void beforeSelect() {
+	protected void beforeSelect() throws IOException {
+		timer = new SXTimer(updateInterval);
+		selector = Selector.open();
+		server = ServerSocketChannel.open();
+		server.configureBlocking(false);
+		server.socket().bind(new InetSocketAddress(port));
+		server.register(selector, SelectionKey.OP_ACCEPT);	
+		serverKey = server.keyFor(selector);
+		
 		Runnable r = new Runnable() {
 			public void run() {
-				while(!closing) {
+				while(!closing && inLobby) {
 					if(timer.isTriggered() >= 0) {
 						try {
 							hndlr.updateHost(hostname, players.size(), maxPlayers);
@@ -86,7 +92,7 @@ public class LobbyHosting extends Hosting {
 				}*/
 			}
 
-			if(parts[0].equals("name")) {
+			else if(parts[0].equals("name")) {
 				// change list of names and send name update to everyone
 				String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
 				for(String s : players) {
@@ -118,6 +124,11 @@ public class LobbyHosting extends Hosting {
 				if(parts[0].equals("chat")) {
 					writeMessage(key, atch);
 				}
+				
+				else if(parts[0].equals("start")) {
+					writeMessage(key, atch);
+				}
+				
 				else if(parts[0].equals("name")) {
 					// send name update
 					String tmp = "names\n";

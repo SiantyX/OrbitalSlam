@@ -2,7 +2,9 @@ package networking;
 
 import game.Game;
 import game.MessageBox;
+import game.Player;
 import gamestates.ClientLobbyState;
+import gamestates.MultiplayerState;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -81,6 +83,21 @@ public class NetHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendHookUpdate() {
+		try {
+			ClientLobbyState.hndlr = this;
+			CharBuffer buffer = CharBuffer.wrap("hook");
+			System.out.println("Sending hook update.");
+			while(buffer.hasRemaining()) {
+				sc.write(Charset.defaultCharset().encode(buffer));
+			}
+		}
+		catch (IOException e) {
+			System.out.println("Couldn't send hook update.");
+			e.printStackTrace();
+		}
+	}
 
 	public void updateClientLobby(CopyOnWriteArrayList<String> players, MessageBox mbox) {
 		try {
@@ -117,6 +134,14 @@ public class NetHandler {
 						wholemsg += parts[i];
 					}
 					mbox.addMessage(wholemsg);
+				}
+				else if(parts[0].equals("hook")) {
+					Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
+					p.setHooked(p.isHooked());
+					p.getEntity().getPosition().x = Integer.parseInt(parts[2]);
+					p.getEntity().getPosition().y = Integer.parseInt(parts[3]);
+					p.setDx(Float.parseFloat(parts[4]));
+					p.setDy(Float.parseFloat(parts[5]));
 				}
 			}
 		}

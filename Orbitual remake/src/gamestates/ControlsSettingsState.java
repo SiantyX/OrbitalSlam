@@ -29,8 +29,8 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 	private TrueTypeFont bigText;
 
 	private final int defualtKeyBinds[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
-	private int keyBinds[];
-	private int keyBindChanges[];
+	private static int keyBinds[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
+	private static int keyBindChanges[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
 
 	private int lastPressed;
 	private int pressed;
@@ -38,15 +38,11 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 
 	public ControlsSettingsState(int id) {
 		ID = id;
-		
-		keyBinds = defualtKeyBinds.clone();
-		keyBindChanges = defualtKeyBinds.clone();
 	}
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
-		((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setKeyBinds(keyBinds);
 
 		buttons = new ArrayList<MenuButton>();
 
@@ -119,6 +115,8 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 				sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 						100));
 				((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setControls(keyBinds);
+				((ServerMultiplayerState) sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal())).setControls(keyBinds);
+				((ClientMultiplayerState) sb.getState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal())).setControls(keyBinds);
 			}
 
 			if (input.isKeyPressed(Input.KEY_ESCAPE) || cancelButton.isMousePressed()) {
@@ -133,6 +131,10 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 				}
 			}
 		}
+	}
+	
+	public int[] getKeyBinds() {
+		return keyBinds;
 	}
 
 	public void keyPressed(int key, char c) {

@@ -42,10 +42,12 @@ public class ClientLobbyState extends LobbyState {
 		super.update(gc, sb, delta);
 
 		if(hndlr.started) {
-			ClientMultiplayerState.lobby = hndlr.currentLobby;
-			hndlr.close();
+			ClientMultiplayerState.hndlr = hndlr;
+			//hndlr.close();
 			ClientMultiplayerState.names = players;
+			InGameState.finished = true;
 			sb.getState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal()).init(gc, sb);
+			InGameState.finished = false;
 			sb.enterState(Game.State.CLIENTMULTIPLAYERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}

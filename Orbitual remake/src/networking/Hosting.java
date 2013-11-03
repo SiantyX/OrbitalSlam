@@ -32,10 +32,16 @@ public abstract class Hosting extends Thread {
 	protected int maxPlayers;
 	protected String hostname;
 	protected boolean inLobby;
+	protected boolean changeHostingState;
 	protected Selector selector;
 	protected ServerSocketChannel server;
 	protected SXTimer timer;
 	protected SelectionKey serverKey;
+	protected boolean isAcceptable;
+	protected boolean isConnectable;
+	protected boolean isReadable;
+	protected boolean isWritable;
+	CopyOnWriteArrayList<String> players;
 
 	public Hosting(String hostname, int maxPlayers) throws IOException {
 		hndlr = new NetHandler();
@@ -43,31 +49,54 @@ public abstract class Hosting extends Thread {
 		this.maxPlayers = maxPlayers;
 		closing = false;
 		inLobby = true;
+		selector = null;
+		server = null;
+		changeHostingState = false;
+		isAcceptable = false;
+		isConnectable = false;
+		isReadable = false;
+		isWritable = false;
+		players = new CopyOnWriteArrayList<String>();
+		players.add(Game.username + "@127.0.0.1");
+	}
+
+	public Hosting(Hosting host) {
+		hndlr = host.hndlr;
+		hostname = host.hostname;
+		maxPlayers = host.maxPlayers;
+		closing = host.closing;
+		inLobby = host.inLobby;
+		selector = host.selector;
+		server = host.server;
+		isAcceptable = false;
+		isConnectable = false;
+		isReadable = false;
+		isWritable = false;
+		players = host.players;
 	}
 
 	public void run() {
-		timer = new SXTimer(updateInterval);
-		
-		selector = null;
-		server = null;
-		boolean isAcceptable = false;
-		boolean isConnectable = false;
-		boolean isReadable = false;
-		boolean isWritable = false;
-
 		try {
-			selector = Selector.open();
-			server = ServerSocketChannel.open();
-			server.configureBlocking(false);
-			server.socket().bind(new InetSocketAddress(port));
-			server.register(selector, SelectionKey.OP_ACCEPT);	
-			serverKey = server.keyFor(selector);
-
 			// update server with host
 			beforeSelect();
 
 			while(true)
 			{
+				if(changeHostingState) {
+					int l = 0;
+					for(SelectionKey k : selector.keys()) {
+						//System.out.println(((CopyOnWriteArrayList<String>)k.attachment()));
+						if(k.equals(serverKey)) continue;
+
+						if(((CopyOnWriteArrayList<String>)k.attachment()).contains("start")) {
+							l++;
+						}
+					}
+					if(l == 0) {
+						break;
+					}
+				}
+
 				if(closing) {
 					server.socket().close();
 					server.close();
@@ -123,13 +152,18 @@ public abstract class Hosting extends Thread {
 			System.out.println("Closed hosting");
 		}
 		finally {
-			try {
-				selector.close();
-				server.socket().close();
-				server.close();
+			if(changeHostingState) {
+				changeHostingState = false;
 			}
-			catch (IOException e) {
-				e.printStackTrace();
+			else {
+				try {
+					selector.close();
+					server.socket().close();
+					server.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -156,11 +190,19 @@ public abstract class Hosting extends Thread {
 		inLobby = n;
 	}
 
+	public void changeHost() {
+		changeHostingState = true;
+	}
+
+	public void wakeup() {
+		selector.wakeup();
+	}
+
 	public void setAllKeys(String str) {
 		try {
 			Set<SelectionKey> tmp = selector.keys();
 			for(SelectionKey key : tmp) {
-				if(!key.isValid()) continue;
+				if(!key.isValid() || key.equals(serverKey)) continue;
 				addAttach(key, str);
 			}
 		}
@@ -224,5 +266,5 @@ public abstract class Hosting extends Thread {
 	protected abstract void accept();
 	protected abstract void read(SelectionKey key);
 	protected abstract void write(SelectionKey key);
-	protected abstract void beforeSelect();
+	protected abstract void beforeSelect() throws IOException;
 }

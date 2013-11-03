@@ -1,5 +1,9 @@
 package networking;
 
+import game.MessageBox;
+import game.Player;
+import gamestates.MultiplayerState;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -7,36 +11,93 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.nio.channels.SelectionKey;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class InGameHosting {
-	private DatagramSocket server;
-	private final int port = 7661;
-	private final int bSize = 512;
-	public static ArrayList<InetAddress> ipaddrs;
+public class InGameHosting extends Hosting {
+	public Map<String, Player> ipplayermap;
+	
+	public InGameHosting(Hosting host) {
+		super(host);
+		ipplayermap = new HashMap<String, Player>();
+	}
 
-	public InGameHosting() {
+	@Override
+	protected void accept() {
+		return;
+	}
+
+	@Override
+	protected void beforeSelect() throws IOException {
+		return;
+	}
+	
+	protected void read(SelectionKey key) {
 		try {
-			server = new DatagramSocket(port);
-		}
-		catch(IOException e) {
-			System.out.println("Couldn't listen to " + port);
+			String message = readIncomingMessage(key);
+			String parts[] = message.split("\\n");
+
+			String wholemsg = "";
+			if(parts.length > 1) {
+				for(int i = 1; i < parts.length; i++) {
+					wholemsg += parts[i];
+				}
+			}
+			
+			if(parts[0].equals("hook")) {
+				Player tmp = ipplayermap.get(((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
+				tmp.setHooked(!tmp.isHooked());
+				setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+			}
+		} 
+		catch (IOException e) {
+			removePlayer(key);
+			System.out.println("A player disconnected.");
+			//e.printStackTrace();
 		}
 	}
 
-	public void recieve() {
+	protected void write(SelectionKey key) {
 		try {
-			byte[] buffer = new byte[bSize];
-			DatagramPacket packet = new DatagramPacket(buffer, bSize);
-			while(true) {
-				buffer = new byte[bSize];
-				packet = new DatagramPacket(buffer, bSize);
-				server.receive(packet);
+			SocketChannel channel = (SocketChannel) key.channel();
+			if(key.attachment() != null) {
+				String atch = popAttach(key);
+				String[] parts = atch.split("\\n");
+				
+				if(parts[0].equals("hook")) {
+					writeMessage(key, atch);
+				}
 			}
 		}
-		catch(IOException e) {
-			// recieve error
+		catch (IOException e) {
+			removePlayer(key);
+			System.out.println("A player disconnected.");
+			//e.printStackTrace();
 		}
+	}
+
+	// extra methods -------------------------------------------
+	////////////////////////////////////////////////////////////
+
+
+	protected boolean removePlayer(SelectionKey key) {
+		String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
+		for(String s : players) {
+			if(s.split("\\@")[1].equals(ipaddr)) {
+				players.remove(s);
+				key.cancel();
+				setAllKeys("name");
+				return true;
+			}
+		}
+		key.cancel();
+		return false;
+	}
+
+	public CopyOnWriteArrayList<String> getPlayers() {
+		return players;
 	}
 }

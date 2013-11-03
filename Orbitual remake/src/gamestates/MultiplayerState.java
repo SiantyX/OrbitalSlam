@@ -5,6 +5,7 @@ import game.Game;
 import game.Player;
 import game.ViewPort;
 import game.maps.AnchorMap;
+import game.maps.GameMap;
 
 import java.awt.Font;
 import java.util.ArrayList;
@@ -15,9 +16,11 @@ import networking.Lobby;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -27,17 +30,17 @@ import org.newdawn.slick.util.FontUtils;
 public abstract class MultiplayerState extends BasicGameState {
 	private final int ID;
 
-	public static CopyOnWriteArrayList<String> names;
+	public static CopyOnWriteArrayList<String> names = new CopyOnWriteArrayList<String>();
+	
+	protected boolean oldHooked;
+	protected boolean hooked;
 
 	// INGAME SPECIFIC
 	private int keyBinds[];
-	private AnchorMap map;
+	private GameMap map;
 	public static ArrayList<Player> players;
-	static int numLocalPlayers = 2;
-	private static boolean numPlayersChanged = false;
 
-	public static boolean finished = true;
-
+	private boolean finished;
 	private TrueTypeFont ttf;
 	private TrueTypeFont scoreFont;
 
@@ -47,53 +50,79 @@ public abstract class MultiplayerState extends BasicGameState {
 	private static boolean onCountDown;
 	
 	private int scoreLimit;
+
+	private Image bg;
 	
 	private ViewPort vp;
 
 	public MultiplayerState(int id) {
 		ID = id;
 		scoreLimit = 20;
+		oldHooked = false;
+		hooked = false;
 	}
 	
 
+	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
-		if(names != null) {
-			playersAlive = new ArrayList<Player>();
-			map = new AnchorMap();
-			players = new ArrayList<Player>();
+		if(!InGameState.finished) {
+			reInit(gc, sb);
+			return;
+		}
 
-			//if(names.size() > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
+		if(names.isEmpty()) return;
+		
+		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
+		vp.setZoom(1 - 0.25f*(names.size()-2));
+		
+		playersAlive = new ArrayList<Player>();
+		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
+		map.createMap(vp);
+		players = new ArrayList<Player>();
+		
+		bg = new Image("res/orbitalbg1.jpg");
+	
+		Player.anchorList = map.getAnchors();
+		// players
+		for(int i = 0; i < names.size(); i++) {
+			Player p = new Player(i, map);
+			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
+			p.getEntity().setCenterPosition(startPos);
+			players.add(p);
+			playersAlive.add(players.get(i));
+		}
 
-			Player.anchorList = map.getAnchors();
-			// players
+		// font for winner
+		Font f = new Font("Comic Sans", Font.ITALIC, 50);
+		ttf = new TrueTypeFont(f, true);
 
-			for(int i = 0; i < names.size(); i++) {
-				Player p = new Player(i, map);
-				if(names.get(i).equals(Game.username))
-					p.KEYBIND = keyBinds[i];
-				else
-					p.KEYBIND = 9999;
-				players.add(p);
-				playersAlive.add(players.get(i));
-			}
+		scoreFont = new TrueTypeFont(new Font("Arial", Font.BOLD, 18), true);
 
-			// font for winner
-			Font f = new Font("Comic Sans", Font.ITALIC, 50);
-			ttf = new TrueTypeFont(f, true);
+		finished = false;
 
-			scoreFont = new TrueTypeFont(new Font("Arial", Font.BOLD, 18), true);
+		DisplayModeState.OLD_WIDTH = Game.WIDTH;
+		DisplayModeState.OLD_HEIGHT = Game.HEIGHT;
 
-			finished = false;
+		countDown = 3 * 1000;
+		onCountDown = true;
+	}
+	
+	private void reInit(GameContainer gc, StateBasedGame sb) throws SlickException {
+		for(Player player : players) {
+			Entity e = player.getEntity();
+			Vector2f v = new Vector2f(e.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
+			e.setCenterPosition(v);
+			e.setScale(Player.stdScale*Game.WIDTH);
+		}
 
-			DisplayModeState.OLD_WIDTH = Game.WIDTH;
-			DisplayModeState.OLD_HEIGHT = Game.HEIGHT;
-
-			countDown = 3 * 1000;
-			onCountDown = true;
+		ArrayList<Entity> anchors = map.getAnchors();
+		for(Entity e : anchors) {
+			Vector2f v = new Vector2f(e.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
+			e.setCenterPosition(v);
 		}
 	}
 
-	private void newRound() throws SlickException {
+	protected void newRound(StateBasedGame sb) throws SlickException {
 		ArrayList<Integer> tmpAL = new ArrayList<Integer>();
 
 		for(Player player : players) {
@@ -105,10 +134,8 @@ public abstract class MultiplayerState extends BasicGameState {
 		players.clear();
 		for(int i = 0; i < names.size(); i++) {
 			Player p = new Player(i, map);
-			if(names.get(i).equals(Game.username))
-				p.KEYBIND = keyBinds[i];
-			else
-				p.KEYBIND = 9999;
+			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
+			p.getEntity().setCenterPosition(startPos);
 			p.setScore(tmpAL.get(i));
 			players.add(p);
 			playersAlive.add(players.get(i));
@@ -117,7 +144,11 @@ public abstract class MultiplayerState extends BasicGameState {
 		startCountDown();
 	}
 
-	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException {
+	@Override
+	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
+			throws SlickException {
+		bg.draw(0, 0, (float) Game.WIDTH/2560);
+
 		map.render(gc, sb, g, vp);
 
 		if(players.isEmpty()) return;
@@ -128,11 +159,10 @@ public abstract class MultiplayerState extends BasicGameState {
 		FontUtils.drawCenter(scoreFont, "Score limit: " + scoreLimit, 10, 10, 200);
 
 		for(int i = 0; i < names.size(); i++) {
-			FontUtils.drawCenter(scoreFont, names.get(i) + (i+1) + ": " + players.get(i).getScore(), map.getStartPosX() + i * ((Game.WIDTH - map.getStartPosX()*2) / (map.getNumPlayers()-1)) - Game.WIDTH/14, 40, 100, Player.PLAYER_COLORS[i]);
+			FontUtils.drawCenter(scoreFont, "Player " + (i+1) + ": " + players.get(i).getScore(),map.getScorePlacementX(i), map.getScorePlacementY(), 100, Player.PLAYER_COLORS[i]);
 		}
 
 		if(onCountDown) {
-			//FontUtils.drawCenter(scoreFont, "Press F1 - F8 to change number of players", Game.centerWidth - 300, 10, 600);
 			FontUtils.drawCenter(ttf, new Integer((((int)countDown/1000) + 1) == 4 ? 3 : (((int)countDown/1000) + 1)).toString(), Game.centerWidth, Game.centerHeight - 100, 20);
 		}
 
@@ -151,7 +181,10 @@ public abstract class MultiplayerState extends BasicGameState {
 		}
 	}
 
+	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
+		if(finished)
+			return;
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			Game.LASTID = getID();
@@ -159,12 +192,6 @@ public abstract class MultiplayerState extends BasicGameState {
 			Game.MENU_MUSIC.loop();
 			Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(Game.State.PAUSEMENUSTATE.ordinal());
-		}
-
-		if(numPlayersChanged) {
-			finished = true;
-			numPlayersChanged = false;
-			init(gc, sb);
 		}
 
 		// 3 sec countdown stop update
@@ -178,6 +205,7 @@ public abstract class MultiplayerState extends BasicGameState {
 		}
 
 		if(players.isEmpty()) return;
+		
 		if(!playersAlive.isEmpty()) {
 			ArrayList<Player> tmpPlayers = new ArrayList<Player>();
 			for(Player player : playersAlive) {
@@ -192,12 +220,13 @@ public abstract class MultiplayerState extends BasicGameState {
 				}
 			}
 		}
-
+	
+		map.update(gc, sb, delta);
 		deathCheck();
 
 		ArrayList<Player> winners = new ArrayList<Player>();
 
-		if((playersAlive.size() == 1 && numLocalPlayers > 1) || (playersAlive.size() < 1)) {
+		if((playersAlive.size() == 1 && names.size() > 1) || (playersAlive.size() < 1)) {
 			for(Player player : players) {
 				if(player.getScore() >= scoreLimit) {
 					winners.add(player);
@@ -220,7 +249,8 @@ public abstract class MultiplayerState extends BasicGameState {
 						2000));
 			}
 			else {
-				newRound();
+				map.reset();
+				newRound(sb);
 			}
 		}
 
@@ -228,7 +258,7 @@ public abstract class MultiplayerState extends BasicGameState {
 		if(!playersAlive.isEmpty() && playersAlive.size() > 1) {
 			for(int i = 0; i < playersAlive.size() - 1; i++) {
 				for(int j = i+1; j < playersAlive.size(); j++) {
-					if(collisionCircle(playersAlive.get(i).getEntity(), playersAlive.get(j).getEntity())) {
+					if(playersAlive.get(i).getEntity().collisionCircle(playersAlive.get(j).getEntity())) {
 						playersAlive.get(i).collision(playersAlive.get(j));
 					}
 				}
@@ -236,27 +266,15 @@ public abstract class MultiplayerState extends BasicGameState {
 		}
 	}
 
-	private boolean collisionCircle(Entity e1, Entity e2) {
-		float radii = e1.getRadius() + e2.getRadius();
-		float dx = e2.getPosition().x + e2.getRadius() - e1.getPosition().x - e1.getRadius();
-		float dy = e2.getPosition().y + e2.getRadius() - e1.getPosition().y - e1.getRadius();
-		if( dx * dx + dy * dy < radii * radii){
-			return true;
-		}
-		return false;
-	}
 
 	private void deathCheck() {
 		// check if dead
 		for(Player player : playersAlive) {
-			if(player.getEntity().getCenterPosition().x < 0 || player.getEntity().getCenterPosition().x > Game.WIDTH
-					|| player.getEntity().getCenterPosition().y < 0 || player.getEntity().getCenterPosition().y > Game.HEIGHT) {
-				player.die();
+			if(player.deathCheck(vp)) {
 				for(Player otherPlayer : playersAlive) {
 					if(otherPlayer.equals(player)) continue;
 					otherPlayer.addScore(1);
 				}
-
 				// SCREEN FLASH HERE
 			}
 		}
@@ -267,10 +285,13 @@ public abstract class MultiplayerState extends BasicGameState {
 		onCountDown = true;
 	}
 	
+	public ArrayList<Player> getPlayers(){
+		return playersAlive;
+	}
+	
 	public void setControls(int keyBinds[]) {
-		for(int i = 0; i < numLocalPlayers; i++) {
-			players.get(i).KEYBIND = keyBinds[i];
-		}
+		this.keyBinds = keyBinds;
+		players.get(0).KEYBIND = keyBinds[8];
 	}
 	
 	public void setKeyBinds(int keyBinds[]) {
@@ -280,9 +301,9 @@ public abstract class MultiplayerState extends BasicGameState {
 	public void setScoreLimit(int score) {
 		scoreLimit = score;
 	}
-
+	
+	@Override
 	public int getID() {
 		return ID;
 	}
 }
-

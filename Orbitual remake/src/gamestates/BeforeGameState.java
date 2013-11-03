@@ -125,6 +125,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 			((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setNumPlayers(Integer.parseInt(numPlayersWBWL.wb.getText()));
 			InGameState.finished = true;
 			sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
+			InGameState.finished = false;
 			Game.INGAME_MUSIC.loop();
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,

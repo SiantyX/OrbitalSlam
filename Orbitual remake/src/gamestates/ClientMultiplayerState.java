@@ -1,14 +1,18 @@
 package gamestates;
 
+import game.Game;
 import networking.Lobby;
+import networking.NetHandler;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class ClientMultiplayerState extends MultiplayerState {
-	public static Lobby lobby = null;
+public class ClientMultiplayerState extends MultiplayerState implements KeyListener {
+	public static NetHandler hndlr;
+	private int keyBind;
 	
 	public ClientMultiplayerState(int id) {
 		super(id);
@@ -16,6 +20,10 @@ public class ClientMultiplayerState extends MultiplayerState {
 	
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		super.init(gc, sb);
+		
+		if(hndlr != null) {
+			keyBind = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[8];
+		}
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException {
@@ -24,5 +32,11 @@ public class ClientMultiplayerState extends MultiplayerState {
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
+	}
+	
+	public void keyPressed(int key, char c) {
+		if(key == keyBind) {
+			hndlr.sendHookUpdate();
+		}
 	}
 }

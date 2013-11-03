@@ -29,11 +29,9 @@ import org.newdawn.slick.util.FontUtils;
 public class InGameState extends BasicGameState {
 	private final int ID;
 
-	private int keyBinds[];
 	private GameMap map;
 	public static ArrayList<Player> players;
 	static int numLocalPlayers = 2;
-	private static boolean numPlayersChanged = false;
 
 	public static boolean finished = true;
 
@@ -80,7 +78,7 @@ public class InGameState extends BasicGameState {
 			Player p = new Player(i, map);
 			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
 			p.getEntity().setCenterPosition(startPos);
-			p.KEYBIND = keyBinds[i];
+			p.KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[i];
 			players.add(p);
 			playersAlive.add(players.get(i));
 		}
@@ -90,8 +88,6 @@ public class InGameState extends BasicGameState {
 		ttf = new TrueTypeFont(f, true);
 
 		scoreFont = new TrueTypeFont(new Font("Arial", Font.BOLD, 18), true);
-
-		finished = false;
 
 		DisplayModeState.OLD_WIDTH = Game.WIDTH;
 		DisplayModeState.OLD_HEIGHT = Game.HEIGHT;
@@ -123,7 +119,7 @@ public class InGameState extends BasicGameState {
 		}
 	}
 
-	private void newRound() throws SlickException {
+	private void newRound(StateBasedGame sb) throws SlickException {
 		ArrayList<Integer> tmpAL = new ArrayList<Integer>();
 
 		for(Player player : players) {
@@ -138,7 +134,7 @@ public class InGameState extends BasicGameState {
 			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
 			p.getEntity().setCenterPosition(startPos);
 			p.setScore(tmpAL.get(i));
-			p.KEYBIND = keyBinds[i];
+			p.KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[i];
 			players.add(p);
 			playersAlive.add(players.get(i));
 		}
@@ -194,12 +190,6 @@ public class InGameState extends BasicGameState {
 			Game.MENU_MUSIC.loop();
 			Game.MENU_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
 			sb.enterState(Game.State.PAUSEMENUSTATE.ordinal());
-		}
-
-		if(numPlayersChanged) {
-			finished = true;
-			numPlayersChanged = false;
-			init(gc, sb);
 		}
 
 		// 3 sec countdown stop update
@@ -264,7 +254,7 @@ public class InGameState extends BasicGameState {
 			}
 			else {
 				map.reset();
-				newRound();
+				newRound(sb);
 			}
 		}
 
@@ -303,16 +293,6 @@ public class InGameState extends BasicGameState {
 		return playersAlive;
 	}
 	
-	public void setControls(int keyBinds[]) {
-		for(int i = 0; i < numLocalPlayers; i++) {
-			players.get(i).KEYBIND = keyBinds[i];
-		}
-	}
-	
-	public void setKeyBinds(int keyBinds[]) {
-		this.keyBinds = keyBinds;
-	}
-	
 	public void setScoreLimit(int score) {
 		scoreLimit = score;
 	}
@@ -324,5 +304,11 @@ public class InGameState extends BasicGameState {
 	@Override
 	public int getID() {
 		return ID;
+	}
+
+	public void setControls(int[] keyBinds) {
+		for(int i = 0; i < players.size(); i++) {
+			players.get(i).KEYBIND = keyBinds[i];
+		}
 	}
 }

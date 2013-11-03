@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import networking.Hosting;
+import networking.InGameHosting;
 import networking.LobbyHosting;
 import networking.NetHandler;
 
@@ -61,8 +62,12 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 		players = hosted.getPlayers();
 		
 		if(startButton.isMousePressed()) {
-			hosted.setAllKeys("start");
+			InGameHosting tmpHost = startGame();
+			InGameState.finished = true;
+			MultiplayerState.names = players;
+			((ServerMultiplayerState) sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal())).setHoster(tmpHost);
 			sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal()).init(gc, sb);
+			InGameState.finished = false;
 			sb.enterState(Game.State.SERVERMULTIPLAYERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
@@ -86,6 +91,19 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 	public void sendText(String str) {
 		hosted.addToBox(Game.username + ": " + str);
 		hosted.setAllKeys("chat\n" + Game.username + ": " + str);
+	}
+	
+	public InGameHosting startGame() {
+		hosted.setAllKeys("start");
+		hosted.setInLobby(false);
+		hosted.changeHost();
+		hosted.wakeup();
+		try {
+			hosted.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return new InGameHosting(hosted);
 	}
 }
 /*	private String hostname;

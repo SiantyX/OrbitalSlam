@@ -330,6 +330,13 @@ public class Player {
 	
 	public void setHooked(boolean h) {
 		hooked = h;
+		if(hooked) {
+			hook();
+		}
+	}
+	
+	public boolean isHooked() {
+		return hooked;
 	}
 	
 	public boolean deathCheck(ViewPort vp) {
