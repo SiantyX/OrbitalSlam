@@ -49,8 +49,14 @@ public class InGameHosting extends Hosting {
 			
 			if(parts[0].equals("hook")) {
 				Player tmp = ipplayermap.get(((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
-				if(tmp.hook())
-					setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+				if(tmp.acceptHook()) {
+					if(tmp.hook()) {
+						setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "true" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+					}
+					else {
+						setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "false" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+					}
+				}
 			}
 		} 
 		catch (IOException e) {

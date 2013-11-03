@@ -178,9 +178,18 @@ public class Player {
 		speed = Math.hypot(dx, dy);
 		entity.translate((float)(dx*delta/TIME_CONST), (float)(dy*delta/TIME_CONST));
 	}
+	
+	public boolean acceptHook() {
+		if(stunTime > 0 || isDead()) {
+			return false;
+		}
+		
+		return true;
+	}
 
 	public boolean hook() {
-		if(stunTime > 0 || isDead() || hooked) {
+		if(!acceptHook() || hooked) {
+			hooked = false;
 			return false;
 		}
 		
