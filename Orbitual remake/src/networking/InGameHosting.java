@@ -70,8 +70,8 @@ public class InGameHosting extends Hosting {
 			if(key.attachment() != null) {
 				String atch = popAttach(key);
 				//String[] parts = atch.split("\\n");
-
-				writeMessage(key, atch);
+				if(!atch.equals(""))
+					writeMessage(key, atch);
 			}
 		}
 		catch (IOException e) {

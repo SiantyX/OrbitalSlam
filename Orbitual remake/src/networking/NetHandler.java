@@ -120,10 +120,10 @@ public class NetHandler {
 
 					//handleInfo
 					String[] parts = msg.split("\\n");
-					if(msg.equals("kick")) {
+					if(parts[0].equals("kick")) {
 						break;
 					}
-					else if(msg.equals("start")) {
+					else if(parts[0].equals("start")) {
 						started = true;
 					}
 					else if(parts[0].equals("names")) {

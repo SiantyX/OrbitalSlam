@@ -239,7 +239,7 @@ public abstract class Hosting extends Thread {
 			channel.write(Charset.defaultCharset().encode(buffer));
 		}
 		buffer.clear();
-		System.out.println("Wrote: " + msg + " to " + channel.getRemoteAddress().toString());
+		System.out.println("Wrote: " + "!" + msg + " to " + channel.getRemoteAddress().toString());
 	}
 
 	protected String popAttach(SelectionKey key) {

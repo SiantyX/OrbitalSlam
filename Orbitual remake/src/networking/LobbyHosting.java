@@ -124,7 +124,8 @@ public class LobbyHosting extends Hosting {
 				String atch = popAttach(key);
 				//String[] parts = atch.split("\\n");
 
-				writeMessage(key, atch);
+				if(!atch.equals(""))
+					writeMessage(key, atch);
 			}
 		}
 		catch (IOException e) {
@@ -153,7 +154,7 @@ public class LobbyHosting extends Hosting {
 	}
 	
 	public String makePlayerList() {
-		String tmp = "!names\n";
+		String tmp = "names\n";
 		for(String s : players) {
 			String[] p = s.split("\\@");
 			String str = p[0];
