@@ -137,17 +137,14 @@ public class Player {
 			Input input = gc.getInput();
 			if (input.isKeyPressed(KEYBIND) && !wasKeyDown) {
 				wasKeyDown = true;
-				hooked = !hooked;
-				if(hooked) {
-					hook();
-				}
+				hook();
 			}
 			if(!input.isKeyDown(KEYBIND)) {
 				wasKeyDown = false;
 			}
 		}
 		
-		if (!anchorList.contains(hookedTo)){
+		if (!anchorList.contains(hookedTo)) {
 			hooked = false;
 		}
 
@@ -182,7 +179,13 @@ public class Player {
 		entity.translate((float)(dx*delta/TIME_CONST), (float)(dy*delta/TIME_CONST));
 	}
 
-	private void hook() {
+	public boolean hook() {
+		if(stunTime > 0 || isDead() || hooked) {
+			return false;
+		}
+		
+		hooked = true;
+		
 		// get closest anchor
 		hookLength = 10000;
 		for(Entity e : anchorList) {
@@ -247,6 +250,8 @@ public class Player {
 		// ----------------------------------
 
 		centriAcc = ACC_CONST/(hookLength*hookLength);
+		
+		return true;
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
@@ -330,9 +335,6 @@ public class Player {
 	
 	public void setHooked(boolean h) {
 		hooked = h;
-		if(hooked) {
-			hook();
-		}
 	}
 	
 	public boolean isHooked() {
