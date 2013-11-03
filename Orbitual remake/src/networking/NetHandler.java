@@ -116,10 +116,9 @@ public class NetHandler {
 
 				String[] packages = splitPackages(msg);
 				for(String pak : packages) {
-					String[] info = splitInfo(pak);
+					String[] parts = splitInfo(pak);
 
 					//handleInfo
-					String[] parts = msg.split("\\n");
 					if(parts[0].equals("kick")) {
 						break;
 					}
