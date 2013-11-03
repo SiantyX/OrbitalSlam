@@ -25,8 +25,6 @@ public class ExperimentalMap extends GameMap {
 		
 		numAncPerColumn = numAnc/numAncPerRow;
 		
-		numPlayers = 4;
-		
 		
 	}
 	
