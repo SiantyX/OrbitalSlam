@@ -155,11 +155,13 @@ public class NetHandler {
 					}
 
 					else if(parts[0].equals("pos")) {
-						Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
-						p.setDx(Float.parseFloat(parts[4]));
-						p.setDy(Float.parseFloat(parts[5]));
-						p.getEntity().getPosition().x = Float.parseFloat(parts[2]);
-						p.getEntity().getPosition().y = Float.parseFloat(parts[3]);
+						if(!(MultiplayerState.players == null) && !MultiplayerState.players.isEmpty()) {
+							Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
+							p.setDx(Float.parseFloat(parts[4]));
+							p.setDy(Float.parseFloat(parts[5]));
+							p.getEntity().getPosition().x = Float.parseFloat(parts[2]);
+							p.getEntity().getPosition().y = Float.parseFloat(parts[3]);
+						}
 					}
 				}
 			}
