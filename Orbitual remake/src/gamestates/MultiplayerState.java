@@ -47,7 +47,7 @@ public abstract class MultiplayerState extends BasicGameState {
 	private ArrayList<Player> playersAlive;
 
 	private static double countDown;
-	private static boolean onCountDown;
+	protected static boolean onCountDown;
 	
 	private int scoreLimit;
 

@@ -35,7 +35,7 @@ public class ClientMultiplayerState extends MultiplayerState implements KeyListe
 	}
 	
 	public void keyPressed(int key, char c) {
-		if(key == keyBind) {
+		if(key == keyBind && !onCountDown) {
 			hndlr.sendHookUpdate();
 		}
 	}

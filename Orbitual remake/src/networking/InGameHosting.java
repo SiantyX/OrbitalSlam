@@ -68,6 +68,10 @@ public class InGameHosting extends Hosting {
 				String[] parts = atch.split("\\n");
 				
 				if(parts[0].equals("hook")) {
+					if(parts[1].equals("-1")) {
+						int g = 1 + 2;
+						g = g + 3;
+					}
 					writeMessage(key, atch);
 				}
 			}

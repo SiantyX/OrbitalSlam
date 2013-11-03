@@ -26,7 +26,7 @@ import org.newdawn.slick.util.FontUtils;
 
 public class ServerMultiplayerState extends MultiplayerState {
 	private InGameHosting hosted;
-	
+
 	public ServerMultiplayerState(int id) {
 		super(id);
 	}
@@ -38,13 +38,18 @@ public class ServerMultiplayerState extends MultiplayerState {
 				hosted.ipplayermap.put(names.get(i).split("\\@")[1], players.get(i));
 			}
 			hosted.start();
-			
+
 			players.get(0).KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[8];
 		}
 	}
-	
+
 	public void newRound(StateBasedGame sb) throws SlickException {
 		super.newRound(sb);
+
+		hosted.ipplayermap.clear();
+		for(int i = 0; i < players.size(); i++) {
+			hosted.ipplayermap.put(names.get(i).split("\\@")[1], players.get(i));
+		}
 		
 		players.get(0).KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[8];
 	}
@@ -55,7 +60,7 @@ public class ServerMultiplayerState extends MultiplayerState {
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
-		
+
 		hooked = players.get(0).isHooked();
 		if(hooked != oldHooked) {
 			hosted.setAllKeys("hook" + "\n" + "0" + "\n" + players.get(0).getEntity().getPosition().x + "\n" + players.get(0).getEntity().getPosition().y + "\n" + players.get(0).getDx() + "\n" + players.get(0).getDy());
