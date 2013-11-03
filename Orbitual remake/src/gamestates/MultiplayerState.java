@@ -73,7 +73,7 @@ public abstract class MultiplayerState extends BasicGameState {
 		if(names.isEmpty()) return;
 		
 		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
-		vp.setZoom(1 - 0.25f*(names.size()-2));
+		vp.setZoom(1 - 0.25f*(names.size()-1));
 		
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
