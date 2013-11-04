@@ -27,17 +27,6 @@ public class LoadState extends BasicGameState{
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
-		final GameContainer g = gc;
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-
-			}
-		};
-
-		initThread = new Thread(r);
-		//initThread.start();
-		
 		addAll();
 		allStates = Game.State.values();
 		nextLoad = 1;
@@ -51,6 +40,7 @@ public class LoadState extends BasicGameState{
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		loadNext(gc, sb);
+		
 		if(nextLoad == allStates.length) {
 			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black));
 		}
