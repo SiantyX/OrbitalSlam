@@ -172,7 +172,7 @@ public class Player {
 		// fall
 		if (!hooked) {
 			dy += gravity * delta;
-			dDegrees += (degrees - oldDegrees)/200;
+			dDegrees -= (degrees - oldDegrees)/200;
 		}
 
 		// spin

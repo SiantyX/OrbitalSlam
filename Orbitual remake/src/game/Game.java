@@ -12,6 +12,7 @@ import gamestates.ControlsSettingsState;
 import gamestates.DisplayModeState;
 import gamestates.HostLobbyState;
 import gamestates.InGameState;
+import gamestates.LoadState;
 import gamestates.MenuState;
 import gamestates.MultiplayerState;
 import gamestates.PauseMenuState;
@@ -22,6 +23,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Game extends StateBasedGame {
@@ -45,33 +47,13 @@ public class Game extends StateBasedGame {
 	public static Music INGAME_MUSIC;
 
 	public static enum State {
-		MENUSTATE, DISPLAYMODESTATE, PAUSEMENUSTATE, SETTINGSSTATE,	AUDIOSETTINGSSTATE, CONTROLSSETTINGSSTATE,
+		LOADSTATE, MENUSTATE, DISPLAYMODESTATE, PAUSEMENUSTATE, SETTINGSSTATE,	AUDIOSETTINGSSTATE, CONTROLSSETTINGSSTATE,
 		BEFOREGAMESTATE, INGAMESTATE, AFTERGAMESTATE,
 		BROWSERSTATE, HOSTLOBBYSTATE, CLIENTMULTIPLAYERSTATE, CLIENTLOBBYSTATE, SERVERMULTIPLAYERSTATE
 	}
 
 	public Game() {
 		super("Orbital Slam");
-	}
-
-	@Override
-	public void initStatesList(GameContainer arg0) throws SlickException {
-		centerHeight = app.getHeight()/2;
-		centerWidth = app.getWidth()/2;
-		addState(new MenuState(State.MENUSTATE.ordinal()));
-		addState(new DisplayModeState(State.DISPLAYMODESTATE.ordinal()));
-		addState(new BeforeGameState(State.BEFOREGAMESTATE.ordinal()));
-		addState(new InGameState(State.INGAMESTATE.ordinal()));
-		addState(new PauseMenuState(State.PAUSEMENUSTATE.ordinal()));
-		addState(new SettingsState(State.SETTINGSSTATE.ordinal()));
-		addState(new AudioSettingsState(State.AUDIOSETTINGSSTATE.ordinal()));
-		addState(new ControlsSettingsState(State.CONTROLSSETTINGSSTATE.ordinal()));
-		addState(new AfterGameState(State.AFTERGAMESTATE.ordinal()));
-		addState(new BrowserState(State.BROWSERSTATE.ordinal()));
-		addState(new HostLobbyState(State.HOSTLOBBYSTATE.ordinal()));
-		addState(new ClientMultiplayerState(State.CLIENTMULTIPLAYERSTATE.ordinal()));
-		addState(new ClientLobbyState(State.CLIENTLOBBYSTATE.ordinal()));
-		addState(new ServerMultiplayerState(State.SERVERMULTIPLAYERSTATE.ordinal()));
 	}
 
 
@@ -82,14 +64,25 @@ public class Game extends StateBasedGame {
 		System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
 
 		try {
-			app = new AppGameContainer(new Game());
+			Game game = new Game();
+			app = new AppGameContainer(game);
 			app.setDisplayMode(WIDTH, HEIGHT, fullscreen);
+			centerHeight = app.getHeight()/2;
+			centerWidth = app.getWidth()/2;
 			app.setTargetFrameRate(120);
 			app.setShowFPS(false);
 			app.setSmoothDeltas(false);
+			app.setUpdateOnlyWhenVisible(false);
+			app.setAlwaysRender(true);
 			app.start();
+
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void initStatesList(GameContainer container) throws SlickException {
+		addState(new LoadState(State.LOADSTATE.ordinal(), this));
 	}
 }

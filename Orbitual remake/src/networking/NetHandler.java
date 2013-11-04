@@ -228,7 +228,7 @@ public class NetHandler {
 
 	public void GetLobbys(ArrayList<Lobby> browser) throws IOException {
 		if(connectToMainServer()) {
-			CharBuffer buffer = CharBuffer.wrap("servers");
+			CharBuffer buffer = CharBuffer.wrap("!servers");
 			System.out.println("Requesting lobby list.");
 			while(buffer.hasRemaining()) {
 				sc.write(Charset.defaultCharset().encode(buffer));
@@ -264,7 +264,7 @@ public class NetHandler {
 
 	public void updateHost(String name, int curp, int maxp) throws IOException {
 		if(connectToMainServer()) {
-			CharBuffer buffer = CharBuffer.wrap("host_" + 7661 + " " + name + " " + curp + " " + maxp);
+			CharBuffer buffer = CharBuffer.wrap("!host_" + 7661 + " " + name + " " + curp + " " + maxp);
 			System.out.println("Sending host update");
 			while(buffer.hasRemaining()) {
 				sc.write(Charset.defaultCharset().encode(buffer));
