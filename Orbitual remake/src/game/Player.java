@@ -135,12 +135,14 @@ public class Player {
 		this.ipaddr = ipaddr;
 	}
 
-	public void update(GameContainer gc, StateBasedGame sb, int delta) {
+	public void update(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp) {
 		// check if dead
 		if (dead)
 			return;
 
-		defaultImage.setRotation((float) dDegrees);
+		//defaultImage.setRotation((float) dDegrees);
+		entity.setAllRotation((float) dDegrees);
+		entity.update(gc, sb, delta, vp);
 
 		if (stunTime != 0) {
 			entity.changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);
@@ -170,19 +172,19 @@ public class Player {
 		// fall
 		if (!hooked) {
 			dy += gravity * delta;
-//			dDegrees += (degrees - oldDegrees)/50;
+			dDegrees += (degrees - oldDegrees)/200;
 		}
 
 		// spin
 		else {
-//			double oldDegrees = degrees;
+			double oldDegrees = degrees;
 			if (clockWise) {
 				degrees -= wSpeed * delta / TIME_CONST;
 			} else {
 				degrees += wSpeed * delta / TIME_CONST;
 			}
 			
-//			dDegrees += degrees - oldDegrees;
+			dDegrees -= degrees - oldDegrees;
 			dx = hookedTo.getCenterPosition().x
 					+ Math.cos(degrees * Math.PI / 180) * hookLength
 					- entity.getCenterPosition().x;
@@ -571,5 +573,8 @@ public class Player {
 		centriAcc = 0;
 
 		wasKeyDown = false;
+		
+		entity.setAllRotation(0);
+		entity.changeImage(defaultImage);
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import game.Entity;
@@ -34,6 +35,7 @@ public abstract class Component {
 	}
 
 	public abstract void update(GameContainer gc, StateBasedGame sb, int delta);
+	public abstract void update(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp);
 	public abstract void render(GameContainer gc, StateBasedGame sb, Graphics gr);
 	public abstract void render(GameContainer gc, StateBasedGame sb, Graphics gr, ViewPort vp);
 	
@@ -70,7 +72,7 @@ public abstract class Component {
 	}
 
 	public void setRotation(float rotation) {
-		currentImage.rotate(getRotation() - rotation);
+		//currentImage.rotate(getRotation() - rotation);
 		this.rotation = rotation;
 	}
 
@@ -84,5 +86,14 @@ public abstract class Component {
 	
 	public float getHeight() {
 		return currentImage.getHeight()*scale*scaleHeight;
+	}
+	
+	public Vector2f getMidPoint(float x, float y, float width, float height, float rotation) {
+	    double angle_rad = rotation * Math.PI / 180;
+	    double cosa = Math.cos(angle_rad);
+	    double sina = Math.sin(angle_rad);
+	    double wp = width/2;
+	    double hp = height/2;
+	    return new Vector2f((float) (x + wp * cosa - hp * sina), (float) (y + wp * sina + hp * cosa));
 	}
 }

@@ -112,6 +112,8 @@ public class AnimationRenderComponent extends Component {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
+		currentIRC.update(gc, sb, delta);
+		
 		if(!started) return;
 
 		if(timer.isTriggered() >= 0) {
@@ -129,8 +131,6 @@ public class AnimationRenderComponent extends Component {
 			currentIRC = renderImages.get(i);
 			currentImage = currentIRC.getImage();
 		}
-		
-		
 	}
 
 	
@@ -146,5 +146,28 @@ public class AnimationRenderComponent extends Component {
 		currentIRC.setOwnerEntity(owner);
 		currentIRC.setScale(scale);
 		currentIRC.render(gc, sb, gr, vp);
+	}
+
+	@Override
+	public void update(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp) {
+		currentIRC.update(gc, sb, delta, vp);
+		
+		if(!started) return;
+
+		if(timer.isTriggered() >= 0) {
+			int i = renderImages.indexOf(currentIRC);
+			i++;
+			if(i >= renderImages.size()) {
+				if(loop)
+					i = 0;
+				else {
+					done = true;
+					return;
+				}
+			}
+			
+			currentIRC = renderImages.get(i);
+			currentImage = currentIRC.getImage();
+		}
 	}
 }

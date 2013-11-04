@@ -12,12 +12,13 @@ import components.Component;
 public class Entity extends Node {
 
 	private String id;
-
+	private float rotation;
 	private ArrayList<Component> components = null;
 
 	public Entity(String id) {
 		super(0, 0);
 		this.id = id;
+		rotation = 0;
 
 		components = new ArrayList<Component>();
 	}
@@ -64,6 +65,10 @@ public class Entity extends Node {
 	public void setCenterPosition(Vector2f vector2f) {
 		moveTo(vector2f.x - getRadius(), vector2f.y - getRadius());
 	}
+	
+	public float getAllRotation() {
+		return rotation;
+	}
 
 	public float getRotation() {
 		if (components.isEmpty())
@@ -77,6 +82,10 @@ public class Entity extends Node {
 			return 1;
 
 		return getComponent(id).getRotation();
+	}
+	
+	public void setAllRotation(float rotate) {
+		this.rotation = rotate;
 	}
 
 	public void setRotation(float rotate) {
@@ -124,6 +133,12 @@ public class Entity extends Node {
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
 		for (Component component : components) {
 			component.update(gc, sb, delta);
+		}
+	}
+	
+	public void update(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp) {
+		for (Component component : components) {
+			component.update(gc, sb, delta, vp);
 		}
 	}
 

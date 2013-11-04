@@ -202,7 +202,7 @@ public class InGameState extends BasicGameState {
 					playersAlive.remove(player);
 				}
 				else {
-					player.update(gc, sb, delta);
+					player.update(gc, sb, delta, vp);
 				}
 			}
 		}

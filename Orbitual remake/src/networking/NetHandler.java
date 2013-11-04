@@ -4,6 +4,7 @@ import game.Game;
 import game.MessageBox;
 import game.Player;
 import gamestates.ClientLobbyState;
+import gamestates.ClientMultiplayerState;
 import gamestates.MultiplayerState;
 
 import java.io.DataInputStream;
@@ -127,9 +128,12 @@ public class NetHandler {
 					}
 					else if(parts[0].equals("names")) {
 						players.clear();
+						ClientMultiplayerState.names.clear();
 						for(int i = 1; i < parts.length; i++) {
-							if(!parts[i].equals(""))
+							if(!parts[i].equals("")) {
 								players.add(parts[i]);
+								ClientMultiplayerState.names.add(parts[i]);
+							}
 						}
 					}
 					else if(parts[0].equals("chat")) {

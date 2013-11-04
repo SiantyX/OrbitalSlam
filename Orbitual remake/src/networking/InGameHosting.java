@@ -90,6 +90,13 @@ public class InGameHosting extends Hosting {
 		for(String s : players) {
 			if(s.split("\\@")[1].equals(ipaddr)) {
 				players.remove(s);
+				ipplayermap.remove(ipaddr);
+				for(String s2 : MultiplayerState.names) {
+					if(s2.split("\\@")[1].equals(ipaddr)) {
+						MultiplayerState.players.remove(MultiplayerState.names.indexOf(s2));
+						MultiplayerState.names.remove(s2);
+					}
+				}
 				key.cancel();
 				setAllKeys("name");
 				return true;
