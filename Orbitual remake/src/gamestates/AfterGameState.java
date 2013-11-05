@@ -22,40 +22,40 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class AfterGameState extends BasicGameState implements Comparator<Player> {
+public class AfterGameState extends ResumableState implements Comparator<Player> {
 	private final int ID;
 	private TrueTypeFont bigText;
 	private TrueTypeFont scoreFont;
 	private ArrayList<Player> scoreList;
-	
+
 	private ArrayList<MenuButton> buttons;
 	private MenuButton playButton, backButton;
-	
+
 	public AfterGameState(int id) {
 		ID = id;
 	}
-	
+
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb)
 			throws SlickException {
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		bigText = new TrueTypeFont(f, true);
-		
+
 		f = new Font("Arial", Font.BOLD, 20);
 		scoreFont = new TrueTypeFont(f, true);
-		
+
 		scoreList = new ArrayList<Player>();
 		for(Player player : InGameState.players) {
 			scoreList.add(player);
 		}
 		Collections.sort(scoreList, this);
-		
+
 		f = new Font("Arial", Font.PLAIN, 18);
 		TrueTypeFont ttf = new TrueTypeFont(f, true);
-		
+
 		playButton = new MenuButton("play", new Rectangle(Game.centerWidth - 250, Game.centerHeight + 200, 200, 50), Color.white, "Play Again", ttf);
 		backButton = new MenuButton("back", new Rectangle(Game.centerWidth + 50, Game.centerHeight + 200, 200, 50), Color.white, "Back to Menu", ttf);
-		
+
 		buttons = new ArrayList<MenuButton>();
 		buttons.add(playButton);
 		buttons.add(backButton);
@@ -64,18 +64,26 @@ public class AfterGameState extends BasicGameState implements Comparator<Player>
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
-		
-		sb.getState(Game.State.INGAMESTATE.ordinal()).render(gc, sb, g);
-		
+		super.render(gc, sb, g);
+
+		if(Game.UPDATE_BACKGROUND == 0) {
+			sb.getState(Game.State.INGAMESTATE.ordinal()).render(gc, sb, g);
+		}
+
 		g.setColor(new Color(0, 0, 0, 180));
 		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-		
+
 		for(MenuButton b : buttons) {
+			if(Game.UPDATE_BACKGROUND == Game.State.CLIENTMULTIPLAYERSTATE.ordinal()) {
+				if(b.equals(playButton)) {
+					continue;
+				}
+			}
 			b.render(gc, sb, g);
 		}
-		
+
 		FontUtils.drawCenter(bigText, scoreList.get(0).toString() + " Wins!", Game.centerWidth - 200, 150, 400, scoreList.get(0).myColor);
-		
+
 		for(int i = 0; i < scoreList.size(); i++) {
 			FontUtils.drawCenter(scoreFont, (i+1) + ".  " + scoreList.get(i).toString() + "                     " + scoreList.get(i).getScore(), Game.centerWidth - 200, 300 + (i * ((Game.HEIGHT - 600) / (Game.MAX_PLAYERS-1))), 400, scoreList.get(i).myColor);
 		}
@@ -85,25 +93,40 @@ public class AfterGameState extends BasicGameState implements Comparator<Player>
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
 		for(MenuButton b : buttons) {
+			if(Game.UPDATE_BACKGROUND == Game.State.CLIENTMULTIPLAYERSTATE.ordinal()) {
+				if(b.equals(playButton)) {
+					continue;
+				}
+			}
 			b.update(gc, sb, delta);
 		}
-		
+
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
 			Game.LASTID = getID();
 			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
+			Game.UPDATE_BACKGROUND = 0;
 		}
-		
+
 		if (playButton.isMousePressed()) {
 			Game.LASTID = getID();
-			InGameState.finished = true;
-			sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
-			Game.INGAME_MUSIC.loop();
-			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-			sb.enterState(Game.State.INGAMESTATE.ordinal());
+			if(Game.UPDATE_BACKGROUND > 0) {
+				Game.INGAME_MUSIC.loop();
+				Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
+				((MultiplayerState) sb.getState(Game.UPDATE_BACKGROUND)).finished = true;
+				sb.enterState(Game.UPDATE_BACKGROUND);
+			}
+			else {
+				InGameState.finished = true;
+				sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
+				Game.INGAME_MUSIC.loop();
+				Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
+				sb.enterState(Game.State.INGAMESTATE.ordinal());
+			}
 		}
 	}
+
 
 	@Override
 	public int compare(Player p1, Player p2) {		
@@ -117,8 +140,8 @@ public class AfterGameState extends BasicGameState implements Comparator<Player>
 			return 0;
 		}
 	}
-	
-	
+
+
 	@Override
 	public int getID() {
 		return ID;

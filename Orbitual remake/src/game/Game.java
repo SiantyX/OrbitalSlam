@@ -38,6 +38,7 @@ public class Game extends StateBasedGame {
 	public static int centerWidth;
 
 	public static int LASTID;
+	public static int UPDATE_BACKGROUND;
 
 	public static final int MAX_PLAYERS = 4;//8;
 

@@ -40,7 +40,7 @@ public abstract class MultiplayerState extends BasicGameState {
 	private GameMap map;
 	public static ArrayList<Player> players;
 
-	private boolean finished;
+	public static boolean finished = true;
 	private TrueTypeFont ttf;
 	private TrueTypeFont scoreFont;
 
@@ -65,7 +65,7 @@ public abstract class MultiplayerState extends BasicGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
-		if(!InGameState.finished) {
+		if(!finished) {
 			reInit(gc, sb);
 			return;
 		}
@@ -115,6 +115,7 @@ public abstract class MultiplayerState extends BasicGameState {
 			e.setScale(Player.stdScale*Game.WIDTH);
 		}
 
+		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
 		ArrayList<Entity> anchors = map.getAnchors();
 		for(Entity e : anchors) {
 			Vector2f v = new Vector2f(e.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
@@ -289,11 +290,6 @@ public abstract class MultiplayerState extends BasicGameState {
 		return playersAlive;
 	}
 	
-	public void setControls(int keyBinds[]) {
-		this.keyBinds = keyBinds;
-		players.get(0).KEYBIND = keyBinds[8];
-	}
-	
 	public void setKeyBinds(int keyBinds[]) {
 		this.keyBinds = keyBinds;
 	}
@@ -306,4 +302,6 @@ public abstract class MultiplayerState extends BasicGameState {
 	public int getID() {
 		return ID;
 	}
+	
+	public abstract void close();
 }

@@ -20,7 +20,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class AudioSettingsState extends BasicGameState {
+public class AudioSettingsState extends ResumableState {
 	private final int ID;
 	
 	private ArrayList<MenuButton> buttons;
@@ -87,6 +87,8 @@ public class AudioSettingsState extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		super.render(gc, sb, g);
+		
 		FontUtils.drawCenter(bigText, "Audio", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
 		for (MenuButton button : buttons) {
@@ -106,6 +108,8 @@ public class AudioSettingsState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
+		super.update(gc, sb, delta);
+		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}

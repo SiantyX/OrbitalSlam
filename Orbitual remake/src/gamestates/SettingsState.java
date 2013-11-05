@@ -20,7 +20,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class SettingsState extends BasicGameState implements KeyListener{
+public class SettingsState extends ResumableState implements KeyListener{
 	private final int ID;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton backButton, videoButton, controlsButton, audioButton;
@@ -57,6 +57,8 @@ public class SettingsState extends BasicGameState implements KeyListener{
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		super.render(gc, sb, g);
+		
 		FontUtils.drawCenter(bigText, "Settings", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
 		for (MenuButton button : buttons) {
@@ -69,6 +71,8 @@ public class SettingsState extends BasicGameState implements KeyListener{
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
+		super.update(gc, sb, delta);
+		
 		Input input = gc.getInput();
 		
 		for (MenuButton button : buttons) {

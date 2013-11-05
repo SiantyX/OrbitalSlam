@@ -20,7 +20,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class ControlsSettingsState extends BasicGameState implements KeyListener {
+public class ControlsSettingsState extends ResumableState implements KeyListener {
 	private final int ID;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton okButton, cancelButton;
@@ -80,6 +80,8 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		super.render(gc, sb, g);
+		
 		FontUtils.drawCenter(bigText, "Controls", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
 		g.setColor(Color.white);
@@ -101,6 +103,8 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
+		super.update(gc, sb, delta);
+		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}
@@ -109,9 +113,7 @@ public class ControlsSettingsState extends BasicGameState implements KeyListener
 
 		if(pressed != lastPressed) {
 			if (okButton.isMousePressed()) {
-				for(int i = 0; i < Game.MAX_PLAYERS; i++) {
-					keyBinds[i] = keyBindChanges[i];
-				}
+				keyBinds = keyBindChanges;
 				sb.enterState(Game.State.SETTINGSSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 						100));
 				((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setControls(keyBinds);

@@ -112,6 +112,7 @@ public class InGameState extends BasicGameState {
 			e.setScale(Player.stdScale*Game.WIDTH);
 		}
 
+		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
 		ArrayList<Entity> anchors = map.getAnchors();
 		for(Entity e : anchors) {
 			Vector2f v = new Vector2f(e.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
@@ -169,6 +170,8 @@ public class InGameState extends BasicGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
+		Game.UPDATE_BACKGROUND = 0;
+		
 		if(finished)
 			return;
 		Input input = gc.getInput();

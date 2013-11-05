@@ -65,6 +65,8 @@ public class ServerMultiplayerState extends MultiplayerState {
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
+		
+		Game.UPDATE_BACKGROUND = Game.State.SERVERMULTIPLAYERSTATE.ordinal();
 
 		hooked = players.get(0).isHooked();
 		if(hooked != oldHooked) {
@@ -81,5 +83,19 @@ public class ServerMultiplayerState extends MultiplayerState {
 
 	public void setHoster(InGameHosting hosted) {
 		this.hosted = hosted;
+	}
+	
+	public void setControls(int keyBinds[]) {
+		players.get(0).KEYBIND = keyBinds[8];
+	}
+	
+	public void close() {
+		hosted.close();
+		try {
+			hosted.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		hosted = null;
 	}
 }

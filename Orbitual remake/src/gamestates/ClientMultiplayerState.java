@@ -32,11 +32,22 @@ public class ClientMultiplayerState extends MultiplayerState implements KeyListe
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
+		
+		Game.UPDATE_BACKGROUND = Game.State.CLIENTMULTIPLAYERSTATE.ordinal();
 	}
 	
 	public void keyPressed(int key, char c) {
 		if(key == keyBind && !onCountDown) {
 			hndlr.sendHookUpdate();
 		}
+	}
+	
+	public void setControls(int keyBinds[]) {
+		keyBind = keyBinds[8];
+	}
+	
+	public void close() {
+		hndlr.close();
+		hndlr = null;
 	}
 }

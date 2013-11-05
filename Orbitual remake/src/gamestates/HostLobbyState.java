@@ -88,6 +88,10 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 		}
 	}
 	
+	public void close() {
+		hosted.close();
+	}
+	
 	public void sendText(String str) {
 		hosted.addToBox(Game.username + ": " + str);
 		hosted.setAllKeys("chat\n" + Game.username + ": " + str);

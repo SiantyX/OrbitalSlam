@@ -20,7 +20,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class PauseMenuState extends BasicGameState {
+public class PauseMenuState extends ResumableState {
 	private final int ID;
 	private ArrayList<MenuButton> buttons;
 	private MenuButton continueButton, settingsButton, exitButton;
@@ -52,10 +52,13 @@ public class PauseMenuState extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
-		sb.getState(Game.State.INGAMESTATE.ordinal()).render(gc, sb, g);
+		super.render(gc, sb, g);
 		
-		g.setColor(new Color(0, 0, 0, 125));
-		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
+		if(Game.UPDATE_BACKGROUND == 0) {
+			sb.getState(Game.State.INGAMESTATE.ordinal()).render(gc, sb, g);
+			g.setColor(new Color(0, 0, 0, 125));
+			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
+		}
 		
 		FontUtils.drawCenter(ttf, "Paused", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
@@ -67,6 +70,8 @@ public class PauseMenuState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
+		super.update(gc, sb, delta);
+		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}
@@ -78,9 +83,15 @@ public class PauseMenuState extends BasicGameState {
 			Game.MENU_MUSIC.stop();
 			Game.INGAME_MUSIC.resume();
 			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-			sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			if(Game.UPDATE_BACKGROUND > 0) {
+				sb.enterState(Game.UPDATE_BACKGROUND, new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
-			InGameState.startCountDown();
+			}
+			else {
+				sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+						100));
+				InGameState.startCountDown();
+			}
 		}
 		
 		if (settingsButton.isMousePressed()) {
@@ -91,8 +102,13 @@ public class PauseMenuState extends BasicGameState {
 		
 		if (exitButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
+			sb.enterState(Game.State.MENUSTATE.ordinal());
+			
+			if(Game.UPDATE_BACKGROUND > 0) {
+				((MultiplayerState) sb.getState(Game.UPDATE_BACKGROUND)).close();
+			}
+			
+			Game.UPDATE_BACKGROUND = 0;
 		}
 	}
 

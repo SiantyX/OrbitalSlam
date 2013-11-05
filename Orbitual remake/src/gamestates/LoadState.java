@@ -48,7 +48,7 @@ public class LoadState extends BasicGameState{
 	
 	public void loadNext(GameContainer gc, StateBasedGame sb) {
 		try {
-			sb.getState(allStates[nextLoad].ordinal()).init(gc, sb);
+			sb.getState(nextLoad).init(gc, sb);
 			nextLoad++;
 		} catch (SlickException e) {
 			e.printStackTrace();

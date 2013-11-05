@@ -27,7 +27,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public class DisplayModeState extends BasicGameState implements Comparator<DisplayMode> {
+public class DisplayModeState extends ResumableState implements Comparator<DisplayMode> {
 	private final int ID;
 	private LinkedList<DisplayMode> resolutions;
 	private int index, currentResIndex;
@@ -113,6 +113,8 @@ public class DisplayModeState extends BasicGameState implements Comparator<Displ
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
+		super.render(gc, sb, g);
+		
 		FontUtils.drawCenter(bigText, "Video", Game.centerWidth - 300, Game.centerHeight/3, 600);
 		
 		g.setColor(Color.white);
@@ -128,6 +130,8 @@ public class DisplayModeState extends BasicGameState implements Comparator<Displ
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
+		super.update(gc, sb, delta);
+		
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}
