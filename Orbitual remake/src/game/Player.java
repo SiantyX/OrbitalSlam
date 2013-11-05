@@ -142,6 +142,7 @@ public class Player {
 		// check if dead
 		if (dead)
 			return;
+		
 		resting = false;
 
 		// defaultImage.setRotation((float) dDegrees);
@@ -206,7 +207,7 @@ public class Player {
 		dx = dx / (1920 / Game.WIDTH);
 		dy = dy / (1080 / Game.HEIGHT);
 		// move
-		speed = Math.hypot(dx, dy);
+		speed = Math.hypot(dx, dy) * delta / TIME_CONST;
 		entity.translate((float) (dx * delta / TIME_CONST),
 				(float) (dy * delta / TIME_CONST));
 	}
@@ -579,6 +580,8 @@ public class Player {
 		speed = 0;
 
 		wSpeed = 0;
+		dDegrees = 0;
+		oldDegrees = 0;
 		degrees = 0;
 		hookLength = 0;
 
