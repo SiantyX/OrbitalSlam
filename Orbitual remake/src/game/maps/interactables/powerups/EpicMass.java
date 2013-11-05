@@ -40,7 +40,7 @@ public class EpicMass extends PowerUp {
 	@Override
 	public void collision(Player player) {
 		if (exists == true)
-			player.setMass(player.getMass()*5);
+			player.setMass(player.getMass()*2);
 		exists = false;
 		this.clear();
 		
@@ -57,7 +57,7 @@ public class EpicMass extends PowerUp {
 
 	@Override
 	public void powerDown(Player player) {
-		player.setMass(player.getMass()/5);
+		player.setMass(player.getMass()/2);
 		
 	}
 	

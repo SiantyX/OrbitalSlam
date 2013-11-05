@@ -53,32 +53,45 @@ public class Brick extends Interactable {
 	@Override
 	public void collision(Player player) {
 
-		boolean hitTopOrBottom = (Math.abs(this.getCenterPositionRectangle().x
-				- player.getEntity().getCenterPosition().x)) < (this.getWidth() / 2 - 15f + player
-				.getEntity().getRadius());
+		boolean hitTop = (Math.abs(this.getCenterPositionRectangle().x
+				- player.getEntity().getCenterPosition().x) < (this.getWidth() / 2 - 15f + player
+				.getEntity().getRadius()) && (player.getEntity()
+				.getCenterPosition().y < this.getCenterPositionRectangle().y));
+
+		boolean hitBottom = (Math.abs(this.getCenterPositionRectangle().x
+				- player.getEntity().getCenterPosition().x) < (this.getWidth() / 2 - 15f + player
+				.getEntity().getRadius()) && (player.getEntity()
+				.getCenterPosition().y > this.getCenterPositionRectangle().y));
 
 		float directionX;
 		float directionY;
 
-		if (hitTopOrBottom) {
+		if (hitTop) {
 
 			if (player.getVelocity().y < 0.5f && player.getVelocity().y > -1f) {
-				directionY = -0.5f;
+				directionY = -.3f;
 			} else {
-				directionY = -player.getVelocity().y * 1;
-
+				directionY = -Math.abs(player.getVelocity().y * bounciness);
 			}
-			player.getEntity().setCenterPosition(
-					new Vector2f(player.getEntity().getCenterPosition().x,
-							-player.getEntity().getRadius() - this.getHeight()
-									/ 2 + this.getCenterPosition().y));
+			directionX = player.getVelocity().x * slipperyness;
 
 			player.setDy(directionY);
-			player.setDx(player.getVelocity().x * slipperyness);
+			player.setDx(directionX);
+			player.rest();
+			
+			
+
+		} else if (hitBottom) {
+			directionY = Math.abs(player.getVelocity().y * bounciness);
+			directionX = player.getVelocity().x * bounciness;
+
+			player.setDy(directionY);
+			player.setDx(directionX);
 
 		} else {
 			directionX = -player.getVelocity().x * bounciness;
 			player.setDx(directionX);
+
 		}
 
 		player.setHooked(false);

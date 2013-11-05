@@ -20,6 +20,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import components.ImageRenderComponent;
 
 public class Player {
+	private boolean resting;
 	private boolean dead;
 	private boolean wasKeyDown;
 	private Entity entity;
@@ -84,6 +85,7 @@ public class Player {
 	// --------------------------
 
 	public Player(int num, GameMap map) throws SlickException {
+		resting = false;
 		entity = new Entity(playerImg[num]);
 		activePowerUps = new ArrayList<PowerUp>();
 
@@ -135,12 +137,14 @@ public class Player {
 		this.ipaddr = ipaddr;
 	}
 
-	public void update(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp) {
+	public void update(GameContainer gc, StateBasedGame sb, int delta,
+			ViewPort vp) {
 		// check if dead
 		if (dead)
 			return;
+		resting = false;
 
-		//defaultImage.setRotation((float) dDegrees);
+		// defaultImage.setRotation((float) dDegrees);
 		entity.setAllRotation((float) dDegrees);
 		entity.update(gc, sb, delta, vp);
 
@@ -172,7 +176,7 @@ public class Player {
 		// fall
 		if (!hooked) {
 			dy += gravity * delta;
-			dDegrees -= (degrees - oldDegrees)/200;
+			dDegrees -= (degrees - oldDegrees) / 200;
 		}
 
 		// spin
@@ -183,7 +187,7 @@ public class Player {
 			} else {
 				degrees += wSpeed * delta / TIME_CONST;
 			}
-			
+
 			dDegrees -= degrees - oldDegrees;
 			dx = hookedTo.getCenterPosition().x
 					+ Math.cos(degrees * Math.PI / 180) * hookLength
@@ -538,6 +542,17 @@ public class Player {
 			player.setStunTime(dSpeed * STUN_LENGTH);
 		}
 
+		if (this.resting) {
+			otherNewV = new Vector2f(otherNewV.x, -Math.abs(newV.getY())
+					- Math.abs(otherNewV.getY()));
+			newV = new Vector2f(newV.x, 0);
+		} else if (player.resting) {
+			newV = new Vector2f(this.getVelocity().x, -Math.abs(newV.getY())
+					- Math.abs(otherNewV.getY()));
+			otherNewV = new Vector2f(otherNewV.x, 0);
+
+		}
+
 		setVelocity(newV);
 		player.setVelocity(otherNewV);
 
@@ -573,8 +588,13 @@ public class Player {
 		centriAcc = 0;
 
 		wasKeyDown = false;
-		
+
 		entity.setAllRotation(0);
 		entity.changeImage(defaultImage);
+	}
+
+	public void rest() {
+		resting = true;
+
 	}
 }
