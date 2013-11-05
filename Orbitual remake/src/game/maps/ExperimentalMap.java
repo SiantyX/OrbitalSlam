@@ -2,16 +2,13 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
-import game.Player;
 import game.ViewPort;
 import game.maps.interactables.Brick;
 import game.maps.interactables.powerups.EpicMass;
 
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
-import components.ImageRenderComponent;
 
 public class ExperimentalMap extends GameMap {
 	private int numAncPerRow;

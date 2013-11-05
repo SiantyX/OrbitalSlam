@@ -2,10 +2,8 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
-import game.Player;
 import game.ViewPort;
 import game.maps.interactables.*;
-import gamestates.BeforeGameState;
 
 import java.util.ArrayList;
 

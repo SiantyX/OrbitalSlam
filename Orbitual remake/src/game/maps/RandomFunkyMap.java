@@ -2,22 +2,17 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
-import game.Player;
 import game.ViewPort;
 import game.maps.interactables.Mine;
-import game.maps.interactables.powerups.EpicMass;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
-import components.ImageRenderComponent;
 
 public class RandomFunkyMap extends GameMap {
 	// extra deluxe funk edition

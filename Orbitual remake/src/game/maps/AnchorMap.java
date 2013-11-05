@@ -2,19 +2,13 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
-import game.Player;
 import game.ViewPort;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.state.StateBasedGame;
 
-import components.ImageRenderComponent;
 
 public class AnchorMap extends GameMap {
 	
@@ -52,13 +46,10 @@ public class AnchorMap extends GameMap {
 	public void createMap(ViewPort vp) throws SlickException {
 		anchors.clear();
 		
-		this.numPlayers = numPlayers;
-		
 		for(int i = 0; i < numAnc; i++) {
 			Vector2f pos = new Vector2f(startPosX + (i%numAncPerRow) * (((Game.WIDTH-(2*startPosX))/(numAncPerRow-1))), startPosY + (i%numAncPerColumn) * (((Game.HEIGHT-(2*startPosY))/(numAncPerColumn-1))));
 			addAnchor(i, pos, vp);
 		}
-		
 		
 		Vector2f tmp = new Vector2f(startPosX, startPosY);
 		tmp = vp.toAbsolute(tmp);
@@ -71,21 +62,6 @@ public class AnchorMap extends GameMap {
 		return anchors;
 	}
 	
-	public int getNumAncPerRow() {
-		return numAncPerRow;
-	}
-	
-	public int getStartPosX() {
-		return startPosX;
-	}
-	
-	public int getStartPosY() {
-		return startPosY;
-	}
-	
-	public int getNumPlayers() {
-		return numPlayers;
-	}
 
 	@Override
 	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {

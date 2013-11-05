@@ -62,6 +62,8 @@ public class Brick extends Interactable {
 				- player.getEntity().getCenterPosition().x) < (this.getWidth() / 2 - 15f + player
 				.getEntity().getRadius()) && (player.getEntity()
 				.getCenterPosition().y > this.getCenterPositionRectangle().y));
+		
+		boolean hitLeft = (!hitTop && !hitBottom && this.getCenterPositionRectangle().x < player.getEntity().getCenterPosition().x);
 
 		float directionX;
 		float directionY;
@@ -88,15 +90,22 @@ public class Brick extends Interactable {
 			player.setDy(directionY);
 			player.setDx(directionX);
 
-		} else {
-			directionX = -player.getVelocity().x * bounciness;
+		} else if (hitLeft) {
+			directionX = Math.abs(player.getVelocity().x * bounciness);
 			player.setDx(directionX);
 
+		}
+		
+		else {
+			directionX = -Math.abs(player.getVelocity().x * bounciness);
+			player.setDx(directionX);
+			
 		}
 
 		player.setHooked(false);
 
 	}
+	
 
 	@Override
 	public void reset() {
