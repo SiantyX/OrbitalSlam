@@ -3,9 +3,11 @@ package gamestates;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.QuadTree;
 import game.ViewPort;
 import game.maps.AnchorMap;
 import game.maps.GameMap;
+import game.maps.interactables.Interactable;
 
 import java.awt.Font;
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ public abstract class MultiplayerState extends BasicGameState {
 	private Image bg;
 	
 	private ViewPort vp;
+	private QuadTree qt;
 
 	public MultiplayerState(int id) {
 		ID = id;
@@ -77,7 +80,7 @@ public abstract class MultiplayerState extends BasicGameState {
 		
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
-		map.createMap(vp);
+		map.setBoundsAndCreateMap(vp);
 		players = new ArrayList<Player>();
 		
 		bg = new Image("res/orbitalbg1.jpg");
@@ -91,6 +94,8 @@ public abstract class MultiplayerState extends BasicGameState {
 			players.add(p);
 			playersAlive.add(players.get(i));
 		}
+		
+		qt = new QuadTree(0, map.getBounds());
 
 		// font for winner
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
@@ -256,17 +261,37 @@ public abstract class MultiplayerState extends BasicGameState {
 		}
 
 		// check for collision
-		if(!playersAlive.isEmpty() && playersAlive.size() > 1) {
-			for(int i = 0; i < playersAlive.size() - 1; i++) {
-				for(int j = i+1; j < playersAlive.size(); j++) {
-					if(playersAlive.get(i).collisionCircle(playersAlive.get(j))) {
-						playersAlive.get(i).collision(playersAlive.get(j));
-					}
+		qt.clear();
+		ArrayList<Interactable> allInters = getAllInteractables();
+		for(Interactable i : allInters) {
+			qt.insert(i);
+		}
+		ArrayList<Interactable> rObj = new ArrayList<Interactable>();
+		for(Interactable i : allInters) {
+			rObj.clear();
+			qt.retrieve(rObj, i);
+			
+			for(Interactable j : rObj) {
+				if(i.collisionCheck(j)) {
+					i.collision(j);
 				}
+				
 			}
 		}
+		// -------> to here
 	}
-
+	
+	private ArrayList<Interactable> getAllInteractables() {
+		ArrayList<Interactable> inter = new ArrayList<Interactable>();
+		for(Player player : playersAlive) {
+			inter.add(player);
+		}
+		for(Interactable i : map.getInteractables()) {
+			inter.add(i);
+		}
+		
+		return inter;
+	}
 
 	private void deathCheck() {
 		// check if dead

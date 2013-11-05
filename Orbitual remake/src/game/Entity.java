@@ -10,9 +10,11 @@ import org.newdawn.slick.state.StateBasedGame;
 import components.Component;
 
 public class Entity extends Node {
-	protected double speed;
-	protected double dx;
-	protected double dy;
+	protected float speed;
+	protected float dx;
+	protected float dy;
+
+	protected static final float TIME_CONST = 16.6f;
 
 	private String id;
 	private float rotation;
@@ -53,7 +55,7 @@ public class Entity extends Node {
 		return new Vector2f(getPosition().x + getRadius(), getPosition().y
 				+ getRadius());
 	}
-	
+
 	public Vector2f getCenterPositionRectangle(){
 		return new Vector2f(getPosition().x + getWidth()/2,getPosition().y + getHeight()/2 );
 	}
@@ -69,7 +71,7 @@ public class Entity extends Node {
 	public void setCenterPosition(Vector2f vector2f) {
 		moveTo(vector2f.x - getRadius(), vector2f.y - getRadius());
 	}
-	
+
 	public float getAllRotation() {
 		return rotation;
 	}
@@ -87,7 +89,7 @@ public class Entity extends Node {
 
 		return getComponent(id).getRotation();
 	}
-	
+
 	public void setAllRotation(float rotate) {
 		this.rotation = rotate;
 	}
@@ -135,12 +137,28 @@ public class Entity extends Node {
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
+		if(dx != 0 || dy != 0) {
+			speed = (float) (Math.hypot(dx, dy) * delta / TIME_CONST);
+			translate(dx * delta / TIME_CONST, dy * delta / TIME_CONST);
+		}
+		else {
+			speed = 0;
+		}
+
 		for (Component component : components) {
 			component.update(gc, sb, delta);
 		}
 	}
-	
+
 	public void update(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp) {
+		if(dx != 0 || dy != 0) {
+			speed = (float) (Math.hypot(dx, dy) * delta / TIME_CONST);
+			translate(dx * delta / TIME_CONST, dy * delta / TIME_CONST);
+		}
+		else {
+			speed = 0;
+		}
+
 		for (Component component : components) {
 			component.update(gc, sb, delta, vp);
 		}
@@ -151,7 +169,7 @@ public class Entity extends Node {
 			component.render(gc, sb, g);
 		}
 	}
-	
+
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
 		for (Component component : components) {
 			component.render(gc, sb, g, vp);
@@ -188,18 +206,30 @@ public class Entity extends Node {
 
 
 	public float getWidth() {
+		if(components.isEmpty())
+			return -1;
+
 		return components.get(0).getWidth();
 	}
 
 	public float getWidth(String id) {
+		if(components.isEmpty())
+			return -1;
+
 		return getComponent(id).getWidth();
 	}
 
 	public float getHeight() {
+		if(components.isEmpty())
+			return -1;
+
 		return components.get(0).getHeight();
 	}
 
 	public float getHeight(String id) {
+		if(components.isEmpty())
+			return -1;
+
 		return getComponent(id).getHeight();
 	}
 
@@ -224,14 +254,13 @@ public class Entity extends Node {
 		return (Math.abs((e1.getPosition().getX() - pos.x)) < getRadius()
 				&& Math.abs(e1.getPosition().getY() - pos.y) < getRadius());
 	}
-	
+
 	public boolean collisionRectangle(Entity e1){
 		float distanceX = Math.abs(e1.getCenterPositionRectangle().x - getCenterPositionRectangle().x);
 		float distanceY = Math.abs(e1.getCenterPositionRectangle().y - getCenterPositionRectangle().y);
 		float sizeOfHitboxX = e1.getRadius() + getWidth()/2;
 		float sizeOfHitboxY = e1.getRadius() + getHeight()/2;
 		return (distanceX < sizeOfHitboxX && distanceY < sizeOfHitboxY);
-		
 	}
 
 	public void clear() {
@@ -248,29 +277,29 @@ public class Entity extends Node {
 			changeImage(component);
 		}
 	}
-	
+
 	// Dx,Dy
-	public double getDx() {
+	public float getDx() {
 		return dx;
 	}
 
-	public double getDy() {
+	public float getDy() {
 		return dy;
 	}
 
-	public void setDx(double dx) {
+	public void setDx(float dx) {
 		this.dx = dx;
 	}
 
-	public void setDy(double dy) {
+	public void setDy(float dy) {
 		this.dy = dy;
 	}
 
-	public void increaseDy(double increment) {
+	public void increaseDy(float increment) {
 		dy += increment;
 	}
 
-	public void increaseDx(double increment) {
+	public void increaseDx(float increment) {
 		dx += increment;
 	}
 }

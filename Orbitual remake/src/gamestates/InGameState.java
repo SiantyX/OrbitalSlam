@@ -3,10 +3,12 @@ package gamestates;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.QuadTree;
 import game.ViewPort;
 import game.maps.AnchorMap;
 import game.maps.GameMap;
 import game.maps.RandomFunkyMap;
+import game.maps.interactables.Interactable;
 
 import java.awt.Font;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class InGameState extends BasicGameState {
 	private Image bg;
 	
 	private ViewPort vp;
+	private QuadTree qt;
 
 	public InGameState(int id) {
 		ID = id;
@@ -63,12 +66,10 @@ public class InGameState extends BasicGameState {
 		bg = new Image("res/orbitalbg1.jpg");
 		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
 		vp.setZoom(numLocalPlayers);
-		//vp.setZoom(1 - 0.25f*(numLocalPlayers-2));
-		
 
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
-		map.createMap(vp);
+		map.setBoundsAndCreateMap(vp);
 		players = new ArrayList<Player>();
 
 		if(numLocalPlayers > map.getNumPlayers()) numLocalPlayers = map.getNumPlayers();
@@ -84,6 +85,8 @@ public class InGameState extends BasicGameState {
 			playersAlive.add(players.get(i));
 		}
 
+		qt = new QuadTree(0, map.getBounds());
+		
 		// font for winner
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
@@ -123,8 +126,8 @@ public class InGameState extends BasicGameState {
 	private void newRound(StateBasedGame sb) throws SlickException {
 		playersAlive.clear();
 		for(int i = 0; i < players.size(); i++) {
-			Vector2f startPos = map.getStartPos(i, players.get(i), vp);
 			players.get(i).reset();
+			Vector2f startPos = map.getStartPos(i, players.get(i), vp);
 			players.get(i).setCenterPosition(startPos);
 			playersAlive.add(players.get(i));
 		}
@@ -211,12 +214,6 @@ public class InGameState extends BasicGameState {
 			}
 		}
 		
-//		if(vp.getZoom() < 2) {
-//			vp.setZoom(vp.getZoom()+delta/10000.0f);
-//		}
-		
-//		System.out.println(vp.getZoom());
-		
 		map.update(gc, sb, delta);
 		deathCheck();
 
@@ -251,15 +248,36 @@ public class InGameState extends BasicGameState {
 		}
 
 		// check for collision
-		if(!playersAlive.isEmpty() && playersAlive.size() > 1) {
-			for(int i = 0; i < playersAlive.size() - 1; i++) {
-				for(int j = i+1; j < playersAlive.size(); j++) {
-					if(playersAlive.get(i).collisionCircle(playersAlive.get(j))) {
-						playersAlive.get(i).collision(playersAlive.get(j));
-					}
+		qt.clear();
+		ArrayList<Interactable> allInters = getAllInteractables();
+		for(Interactable i : allInters) {
+			qt.insert(i);
+		}
+		ArrayList<Interactable> rObj = new ArrayList<Interactable>();
+		for(Interactable i : allInters) {
+			rObj.clear();
+			qt.retrieve(rObj, i);
+			
+			for(Interactable j : rObj) {
+				if(i.collisionCheck(j)) {
+					i.collision(j);
 				}
+				
 			}
 		}
+		// -------> to here
+	}
+	
+	private ArrayList<Interactable> getAllInteractables() {
+		ArrayList<Interactable> inter = new ArrayList<Interactable>();
+		for(Player player : playersAlive) {
+			inter.add(player);
+		}
+		for(Interactable i : map.getInteractables()) {
+			inter.add(i);
+		}
+		
+		return inter;
 	}
 
 

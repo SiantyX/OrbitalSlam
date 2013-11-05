@@ -25,15 +25,15 @@ public class Player extends Interactable {
 	private boolean dead;
 	private boolean wasKeyDown;
 	private static final String[] playerImg = new String[] { "res/sprites/smiley1",
-			"res/sprites/smiley2", "res/sprites/smiley3",
-			"res/sprites/smiley4", "res/sprites/smiley5",
-			"res/sprites/smiley6", "res/sprites/smiley7.png",
-			"res/sprites/smiley8" };
+		"res/sprites/smiley2", "res/sprites/smiley3",
+		"res/sprites/smiley4", "res/sprites/smiley5",
+		"res/sprites/smiley6", "res/sprites/smiley7.png",
+	"res/sprites/smiley8" };
 	public static final float stdScale = 0.0005208f;
 	public static final Color[] PLAYER_COLORS = new Color[] { Color.red,
-			Color.blue, new Color(25, 235, 184), new Color(84, 0, 140),
-			Color.yellow, Color.orange, Color.green, Color.pink, Color.gray,
-			new Color(89, 42, 4) };
+		Color.blue, new Color(25, 235, 184), new Color(84, 0, 140),
+		Color.yellow, Color.orange, Color.green, Color.pink, Color.gray,
+		new Color(89, 42, 4) };
 	public Color myColor;
 	private int num;
 	private int score;
@@ -43,30 +43,27 @@ public class Player extends Interactable {
 	private ImageRenderComponent defaultImage;
 	private ImageRenderComponent stunnedImage;
 
-	private double dx;
-	private double dy;
-	private double dDegrees;
-	private double oldDegrees;
+	private float dDegrees;
+	private float oldDegrees;
 
-	private double speed;
-	private double mass;
+	private float speed;
+	private float mass;
 
-	private double stunTime;
+	private float stunTime;
 
 	// hook variables
 	private boolean hooked;
 	private Entity hookedTo;
 
-	private double wSpeed;
-	private double degrees;
-	private double hookLength;
+	private float wSpeed;
+	private float degrees;
+	private float hookLength;
 
 	private boolean clockWise;
 
-	private double centriAcc;
-	private final double MAXSPINSPEED = 16;
-	private final double ACC_CONST = 600;
-	private final double TIME_CONST = 16.6;
+	private float centriAcc;
+	private final float MAXSPINSPEED = 16;
+	private final float ACC_CONST = 600;
 	// -----------------------
 
 	public static ArrayList<Entity> anchorList;
@@ -75,7 +72,7 @@ public class Player extends Interactable {
 
 	private final float gravity = 0.015f;
 	private final float SPEED_LOST = 0.6f;
-	private final double STUN_LENGTH = 50;
+	private final float STUN_LENGTH = 50;
 
 	// -------------------------
 	// Online multiplayer
@@ -86,7 +83,7 @@ public class Player extends Interactable {
 
 	public Player(int num, GameMap map) throws SlickException {
 		super(playerImg[num]);
-		
+
 		defaultImage = new ImageRenderComponent(playerImg[num], new Image(
 				playerImg[num] + ".png"));
 		stunnedImage = new ImageRenderComponent(playerImg[num] + "xd",
@@ -94,7 +91,7 @@ public class Player extends Interactable {
 
 		defaultImage.setScale(stdScale * Game.WIDTH);
 		stunnedImage.setScale(stdScale * Game.WIDTH);
-		
+
 		activePowerUps = new ArrayList<PowerUp>();
 
 		addComponent(defaultImage);
@@ -144,12 +141,10 @@ public class Player extends Interactable {
 		// check if dead
 		if (dead)
 			return;
-		
+
 		resting = false;
 
-		// defaultImage.setRotation((float) dDegrees);
 		setAllRotation((float) dDegrees);
-		super.update(gc, sb, delta, vp);
 
 		if (stunTime != 0) {
 			changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);
@@ -192,12 +187,12 @@ public class Player extends Interactable {
 			}
 
 			dDegrees -= degrees - oldDegrees;
-			dx = hookedTo.getCenterPosition().x
+			dx = (float) (hookedTo.getCenterPosition().x
 					+ Math.cos(degrees * Math.PI / 180) * hookLength
-					- getCenterPosition().x;
-			dy = hookedTo.getCenterPosition().y
+					- getCenterPosition().x);
+			dy = (float) (hookedTo.getCenterPosition().y
 					- Math.sin(degrees * Math.PI / 180) * hookLength
-					- getCenterPosition().y;
+					- getCenterPosition().y);
 
 			if (wSpeed >= MAXSPINSPEED) {
 				wSpeed = MAXSPINSPEED;
@@ -206,12 +201,7 @@ public class Player extends Interactable {
 			}
 		}
 
-		dx = dx / (1920 / Game.WIDTH);
-		dy = dy / (1080 / Game.HEIGHT);
-		// move
-		speed = Math.hypot(dx, dy) * delta / TIME_CONST;
-		translate((float) (dx * delta / TIME_CONST),
-				(float) (dy * delta / TIME_CONST));
+		super.update(gc, sb, delta, vp);
 	}
 
 	public boolean acceptHook() {
@@ -233,7 +223,7 @@ public class Player extends Interactable {
 		// get closest anchor
 		hookLength = 10000;
 		for (Entity e : anchorList) {
-			double eHypot = Math.hypot(
+			float eHypot = (float) Math.hypot(
 					e.getCenterPosition().x - getCenterPosition().x,
 					e.getCenterPosition().y - getCenterPosition().y);
 			if (eHypot < hookLength) {
@@ -242,11 +232,11 @@ public class Player extends Interactable {
 			}
 		}
 
-		degrees = Math
+		degrees = (float) (Math
 				.atan2(hookedTo.getCenterPosition().y
 						- getCenterPosition().y, -(hookedTo
-						.getCenterPosition().x - getCenterPosition().x))
-				* 180 / Math.PI;
+								.getCenterPosition().x - getCenterPosition().x))
+								* 180 / Math.PI);
 
 		// --------------
 		// clockwise
@@ -271,9 +261,9 @@ public class Player extends Interactable {
 		}
 		// ----------
 		// speed reduction at weird angles
-		double tmpSpeed = Math.hypot(Math.cos(degrees * Math.PI / 180) * dy,
+		float tmpSpeed = (float) Math.hypot(Math.cos(degrees * Math.PI / 180) * dy,
 				Math.sin(degrees * Math.PI / 180) * dx);
-		wSpeed = tmpSpeed / hookLength * 180 / Math.PI;
+		wSpeed = (float) (tmpSpeed / hookLength * 180 / Math.PI);
 
 		p1x = hookedTo.getCenterPosition().x;
 		p1y = hookedTo.getCenterPosition().y;
@@ -290,9 +280,9 @@ public class Player extends Interactable {
 		e2x = p2x - p3x;
 		e2y = p2y - p3y;
 
-		double test = ((e1x * e2x) + (e1y * e2y))
-				/ (Math.hypot(e1x, e1y) * Math.hypot(e2x, e2y));
-		test = Math.acos(test) * 180 / Math.PI;
+		float test = (float) (((e1x * e2x) + (e1y * e2y))
+				/ (Math.hypot(e1x, e1y) * Math.hypot(e2x, e2y)));
+		test = (float) (Math.acos(test) * 180 / Math.PI);
 		if (test > 90) {
 			test = Math.abs(test - 180);
 		}
@@ -330,23 +320,23 @@ public class Player extends Interactable {
 		return dead;
 	}
 
-	public void setdDegrees(double dDegrees) {
+	public void setdDegrees(float dDegrees) {
 		this.dDegrees = dDegrees;
 	}
 
-	public double getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 
-	public double getDegSpeed(double deg) {
-		return Math.hypot(dx * Math.cos(deg), dy * Math.sin(deg));
+	public float getDegSpeed(float deg) {
+		return (float) Math.hypot(dx * Math.cos(deg), dy * Math.sin(deg));
 	}
 
-	public double getMass() {
+	public float getMass() {
 		return mass;
 	}
 
-	public void setMass(double mass) {
+	public void setMass(float mass) {
 		this.mass = mass;
 	}
 
@@ -364,12 +354,12 @@ public class Player extends Interactable {
 	}
 
 	public void turnAround() {
-		dx = dx - Math.PI;
-		dy = dy - Math.PI;
+		dx = (float) (dx - Math.PI);
+		dy = (float) (dy - Math.PI);
 
 	}
 
-	public void setStunTime(double time) {
+	public void setStunTime(float time) {
 		stunTime = time;
 	}
 
@@ -421,113 +411,118 @@ public class Player extends Interactable {
 	}
 
 	// COLLISION PHYSICS
-	public void collision(Player player) {
-		// ------------------------------------------------------------------------------------------------------
-		// TAKEN FROM
-		// http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
-		// user Simucal
-		// ------------------------------------------------------------------------------------------------------
-		Vector2f delta = new Vector2f(getCenterPosition().x
-				- player.getCenterPosition().x,
-				getCenterPosition().y
-						- player.getCenterPosition().y);
-		float r = getRadius() + player.getRadius();
-		float dist2 = delta.dot(delta);
+	@Override
+	public void collision(Interactable inter) {
+		if(inter instanceof Player) {
+			Player player = (Player) inter;
 
-		if (dist2 > r * r)
-			return;
+			// ------------------------------------------------------------------------------------------------------
+			// TAKEN FROM
+			// http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
+			// user Simucal
+			// ------------------------------------------------------------------------------------------------------
+			Vector2f delta = new Vector2f(getCenterPosition().x
+					- player.getCenterPosition().x,
+					getCenterPosition().y
+					- player.getCenterPosition().y);
+			float r = getRadius() + player.getRadius();
+			float dist2 = delta.dot(delta);
 
-		float d = delta.length();
+			if (dist2 > r * r)
+				return;
 
-		Vector2f mtd;
-		if (d == 0.0f) {
-			d = player.getRadius() + getRadius() - 1;
-			delta = new Vector2f(
-					player.getRadius() + getRadius(), 0);
+			float d = delta.length();
+
+			Vector2f mtd;
+			if (d == 0.0f) {
+				d = player.getRadius() + getRadius() - 1;
+				delta = new Vector2f(
+						player.getRadius() + getRadius(), 0);
+			}
+
+			mtd = new Vector2f(
+					delta.x
+					* (((getRadius() + player.getRadius()) - d) / d),
+					delta.y
+					* (((getRadius() + player.getRadius()) - d) / d));
+
+			float im1 = (float) (1 / getMass());
+			float im2 = (float) (1 / player.getMass());
+
+			Vector2f mtdScaled1 = new Vector2f(mtd.x * (im1 / (im1 + im2)), mtd.y
+					* (im1 / (im1 + im2)));
+			Vector2f mtdScaled2 = new Vector2f(mtd.x * (im2 / (im1 + im2)), mtd.y
+					* (im2 / (im1 + im2)));
+			setCenterPosition(new Vector2f(getCenterPosition().x
+					+ mtdScaled1.x, getCenterPosition().y + mtdScaled1.y));
+			player.setCenterPosition(
+					new Vector2f(player.getCenterPosition().x
+							+ mtdScaled2.x, player.getCenterPosition().y + mtdScaled2.y));
+
+			Vector2f v = new Vector2f((float) dx - player.getVelocity().x,
+					(float) dy - player.getVelocity().y);
+
+			float vn = v.dot(mtd.normalise());
+
+			if (vn > 0.0f)
+				return;
+
+			// impulse
+			float i = (-(1.0f + SPEED_LOST) * vn) / (im1 + im2);
+			Vector2f impulse = new Vector2f(mtd.x * i, mtd.y * i);
+
+			// momentum
+			Vector2f dim1 = new Vector2f(impulse.x * im1, impulse.y * im1);
+			Vector2f dim2 = new Vector2f(impulse.x * im2, impulse.y * im2);
+			Vector2f newV = new Vector2f((float) dx + dim1.x, (float) dy + dim1.y);
+			Vector2f otherNewV = new Vector2f(player.getVelocity().x - dim2.x,
+					player.getVelocity().y - dim2.y);
+			// ------------------------------------------------------------------------------------------------------
+			// ------------------------------------------------------------------------------------------------------
+
+			hooked = false;
+			player.setHooked(false);
+
+			float dSpeed = 0;
+			float deg1 = (float) (Math.atan2(
+					player.getCenterPosition().y
+					- getCenterPosition().y, -(player.getCenterPosition().x - getCenterPosition().x))
+					* 180 / Math.PI);
+
+			float deg2 = (float) (Math.atan2(
+					getCenterPosition().y
+					- player.getCenterPosition().y, -(
+							getCenterPosition().x - player.getCenterPosition().x))
+							* 180 / Math.PI);
+			if (getDegSpeed(deg1) < player.getDegSpeed(deg2)) {
+				// this stunnad
+				// stunduration i skillnad
+				dSpeed = Math.abs(getDegSpeed(deg1) - player.getDegSpeed(deg2));
+				stunTime = dSpeed * STUN_LENGTH;
+			} else if (getDegSpeed(deg1) > player.getDegSpeed(deg2)) {
+				// player stunnad
+				// stunduration i skillnad
+				dSpeed = Math.abs(getDegSpeed(deg1) - player.getDegSpeed(deg2));
+				player.setStunTime(dSpeed * STUN_LENGTH);
+			}
+
+			if (this.resting) {
+				otherNewV = new Vector2f(otherNewV.x, -Math.abs(newV.getY())
+						- Math.abs(otherNewV.getY()));
+				newV = new Vector2f(newV.x, 0);
+			} else if (player.resting) {
+				newV = new Vector2f(this.getVelocity().x, -Math.abs(newV.getY())
+						- Math.abs(otherNewV.getY()));
+				otherNewV = new Vector2f(otherNewV.x, 0);
+
+			}
+
+			setVelocity(newV);
+			player.setVelocity(otherNewV);
+
+			sound.play(1, AudioSettingsState.SOUND_LEVEL
+					* AudioSettingsState.MASTER_LEVEL);
 		}
-
-		mtd = new Vector2f(
-				delta.x
-						* (((getRadius() + player.getRadius()) - d) / d),
-				delta.y
-						* (((getRadius() + player.getRadius()) - d) / d));
-
-		float im1 = (float) (1 / getMass());
-		float im2 = (float) (1 / player.getMass());
-
-		Vector2f mtdScaled1 = new Vector2f(mtd.x * (im1 / (im1 + im2)), mtd.y
-				* (im1 / (im1 + im2)));
-		Vector2f mtdScaled2 = new Vector2f(mtd.x * (im2 / (im1 + im2)), mtd.y
-				* (im2 / (im1 + im2)));
-		setCenterPosition(new Vector2f(getCenterPosition().x
-				+ mtdScaled1.x, getCenterPosition().y + mtdScaled1.y));
-		player.setCenterPosition(
-						new Vector2f(player.getCenterPosition().x
-								+ mtdScaled2.x, player.getCenterPosition().y + mtdScaled2.y));
-
-		Vector2f v = new Vector2f((float) dx - player.getVelocity().x,
-				(float) dy - player.getVelocity().y);
-
-		float vn = v.dot(mtd.normalise());
-
-		if (vn > 0.0f)
-			return;
-
-		// impulse
-		float i = (-(1.0f + SPEED_LOST) * vn) / (im1 + im2);
-		Vector2f impulse = new Vector2f(mtd.x * i, mtd.y * i);
-
-		// momentum
-		Vector2f dim1 = new Vector2f(impulse.x * im1, impulse.y * im1);
-		Vector2f dim2 = new Vector2f(impulse.x * im2, impulse.y * im2);
-		Vector2f newV = new Vector2f((float) dx + dim1.x, (float) dy + dim1.y);
-		Vector2f otherNewV = new Vector2f(player.getVelocity().x - dim2.x,
-				player.getVelocity().y - dim2.y);
-		// ------------------------------------------------------------------------------------------------------
-		// ------------------------------------------------------------------------------------------------------
-
-		hooked = false;
-		player.setHooked(false);
-
-		double dSpeed = 0;
-		double deg1 = Math.atan2(
-				player.getCenterPosition().y
-						- getCenterPosition().y, -(player.getCenterPosition().x - getCenterPosition().x))
-				* 180 / Math.PI;
-
-		double deg2 = Math.atan2(
-				getCenterPosition().y
-						- player.getCenterPosition().y, -(
-						getCenterPosition().x - player.getCenterPosition().x))
-				* 180 / Math.PI;
-		if (getDegSpeed(deg1) < player.getDegSpeed(deg2)) {
-			// this stunnad
-			// stunduration i skillnad
-			dSpeed = Math.abs(getDegSpeed(deg1) - player.getDegSpeed(deg2));
-			stunTime = dSpeed * STUN_LENGTH;
-		} else if (getDegSpeed(deg1) > player.getDegSpeed(deg2)) {
-			// player stunnad
-			// stunduration i skillnad
-			dSpeed = Math.abs(getDegSpeed(deg1) - player.getDegSpeed(deg2));
-			player.setStunTime(dSpeed * STUN_LENGTH);
-		}
-
-		if (this.resting) {
-			otherNewV = new Vector2f(otherNewV.x, -Math.abs(newV.getY())
-					- Math.abs(otherNewV.getY()));
-			newV = new Vector2f(newV.x, 0);
-		} else if (player.resting) {
-			newV = new Vector2f(this.getVelocity().x, -Math.abs(newV.getY())
-					- Math.abs(otherNewV.getY()));
-			otherNewV = new Vector2f(otherNewV.x, 0);
-
-		}
-
-		setVelocity(newV);
-		player.setVelocity(otherNewV);
-
-		sound.play(1, AudioSettingsState.SOUND_LEVEL
-				* AudioSettingsState.MASTER_LEVEL);
 	}
 
 	public void reset() {
@@ -542,7 +537,7 @@ public class Player extends Interactable {
 		dead = false;
 		hookedTo = null;
 		resting = false;
-		
+
 		stunTime = 0;
 
 		speed = 0;
@@ -569,8 +564,7 @@ public class Player extends Interactable {
 	}
 
 	@Override
-	public void collisionCheck(StateBasedGame sb) {
-		// TODO Auto-generated method stub
-		
+	public boolean collisionCheck(Interactable inter) {
+		return collisionCircle(inter);
 	}
 }

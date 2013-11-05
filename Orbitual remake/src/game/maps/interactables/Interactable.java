@@ -14,8 +14,8 @@ public abstract class Interactable extends Entity {
 		super(id);
 	}
 	
-	public abstract void collisionCheck(StateBasedGame sb);
-	public abstract void collision(Player player);
+	public abstract boolean collisionCheck(Interactable inter);
+	public abstract void collision(Interactable inter);
 	public abstract void reset();
 }
 /*public abstract class Interactable extends Entity {

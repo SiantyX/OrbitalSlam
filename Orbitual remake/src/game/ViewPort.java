@@ -45,6 +45,7 @@ public class ViewPort {
 	public void setZoom(int players) {
 		float factor = 1;
 		factor = 2/(float)players;
+		factor = factor > 1 ? 1 : factor;
 		setZoom(factor);
 	}
 

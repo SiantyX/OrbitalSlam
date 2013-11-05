@@ -11,6 +11,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -22,6 +23,7 @@ public abstract class GameMap {
 	protected int numAnc;
 
 	protected int numPlayers;
+	protected Rectangle bounds;
 
 	protected final String anchorPath = "res/sprites/interactables/anchorstar.png";
 	protected final float stdScale = 0.00002f;
@@ -39,7 +41,6 @@ public abstract class GameMap {
 		anchors = new ArrayList<Entity>();
 		interactables = new ArrayList<Interactable>();
 		numPlayers = 4;
-		
 	}
 	
 
@@ -58,12 +59,29 @@ public abstract class GameMap {
 
 	}
 	
+	public ArrayList<Interactable> getInteractables() {
+		return interactables;
+	}
+	
+	public void setBoundsAndCreateMap(ViewPort vp) throws SlickException {
+		bounds = new Rectangle(vp.getPosX(), vp.getPosY(), vp.getResX(), vp.getResY());
+		createMap(vp);
+	}
+	
 	public abstract void createMap(ViewPort vp) throws SlickException;
 	
 	public void reset(){
 		for (Interactable i : interactables)
 			i.reset();
 		
+	}
+	
+	public Rectangle getBounds() {
+		return bounds;
+	}
+	
+	public void setBounds(Rectangle rect) {
+		bounds = rect;
 	}
 	
 
@@ -102,7 +120,7 @@ public abstract class GameMap {
 	}
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException{
 		for (Interactable i : interactables){
-			i.collisionCheck(sb);
+			//i.collisionCheck(sb);
 			i.update(gc, sb, delta);
 		}
 		mapSpecificChange();

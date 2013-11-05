@@ -10,6 +10,7 @@ import components.ImageRenderComponent;
 
 import game.Game;
 import game.Player;
+import game.maps.interactables.Interactable;
 import gamestates.InGameState;
 
 public class EpicMass extends PowerUp {
@@ -24,42 +25,46 @@ public class EpicMass extends PowerUp {
 	}
 
 	@Override
-	public void collisionCheck(StateBasedGame sb) {
+	public boolean collisionCheck(Interactable inter) {
+		return collisionCircle(inter);
+
+		/*
 		ArrayList<Player> playerlist = new ArrayList<Player>();
 		playerlist = ((InGameState) sb.getState(Game.State.INGAMESTATE
 				.ordinal())).getPlayers();
-		
+
 		for (Player e : playerlist) {
 			if (this.collisionCircle(e)) {
 				collision(e);
 			}
-		}
-
+		}*/
 	}
 
 	@Override
-	public void collision(Player player) {
-		if (exists == true)
-			player.setMass(player.getMass()*2);
-		exists = false;
-		this.clear();
-		
+	public void collision(Interactable inter) {
+		if(inter instanceof Player) {
+			Player player = (Player) inter;
 
+			if (exists == true)
+				player.setMass(player.getMass()*2);
+			exists = false;
+			this.clear();
+		}
 	}
 
 	@Override
 	public void reset() {
 		exists = true;
 		this.changeImage(epicMassRender);
-		
+
 
 	}
 
 	@Override
 	public void powerDown(Player player) {
 		player.setMass(player.getMass()/2);
-		
+
 	}
-	
-	
+
+
 }

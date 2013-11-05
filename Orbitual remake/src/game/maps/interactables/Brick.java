@@ -37,8 +37,10 @@ public class Brick extends Interactable {
 	}
 
 	@Override
-	public void collisionCheck(StateBasedGame sb) {
-
+	public boolean collisionCheck(Interactable inter) {
+		return collisionRectangle(inter);
+		
+		/*
 		ArrayList<Player> playerlist = new ArrayList<Player>();
 		playerlist = ((InGameState) sb.getState(Game.State.INGAMESTATE
 				.ordinal())).getPlayers();
@@ -47,62 +49,64 @@ public class Brick extends Interactable {
 			if (this.collisionRectangle(e)) {
 				collision(e);
 			}
-		}
-
+		}*/
 	}
 
 	@Override
-	public void collision(Player player) {
+	public void collision(Interactable inter) {
+		if(inter instanceof Player) {
+			Player player = (Player) inter;
 
-		boolean hitTop = (Math.abs(this.getCenterPositionRectangle().x
-				- player.getCenterPosition().x) < (this.getWidth() / 2 - 15f + player.getRadius()) && (player.getCenterPosition().y < this.getCenterPositionRectangle().y));
+			boolean hitTop = (Math.abs(this.getCenterPositionRectangle().x
+					- player.getCenterPosition().x) < (this.getWidth() / 2 - 15f + player.getRadius()) && (player.getCenterPosition().y < this.getCenterPositionRectangle().y));
 
-		boolean hitBottom = (Math.abs(this.getCenterPositionRectangle().x
-				- player.getCenterPosition().x) < (this.getWidth() / 2 - 15f + player.getRadius()) && (player.getCenterPosition().y > this.getCenterPositionRectangle().y));
-		
-		boolean hitLeft = (!hitTop && !hitBottom && this.getCenterPositionRectangle().x < player.getCenterPosition().x);
+			boolean hitBottom = (Math.abs(this.getCenterPositionRectangle().x
+					- player.getCenterPosition().x) < (this.getWidth() / 2 - 15f + player.getRadius()) && (player.getCenterPosition().y > this.getCenterPositionRectangle().y));
 
-		float directionX;
-		float directionY;
+			boolean hitLeft = (!hitTop && !hitBottom && this.getCenterPositionRectangle().x < player.getCenterPosition().x);
 
-		if (hitTop) {
+			float directionX;
+			float directionY;
 
-			if (player.getVelocity().y < 0.5f && player.getVelocity().y > -1f) {
-				directionY = -.3f;
-			} else {
-				directionY = -Math.abs(player.getVelocity().y * bounciness);
+			if (hitTop) {
+
+				if (player.getVelocity().y < 0.5f && player.getVelocity().y > -1f) {
+					directionY = -.3f;
+				} else {
+					directionY = -Math.abs(player.getVelocity().y * bounciness);
+				}
+				directionX = player.getVelocity().x * slipperyness;
+
+				player.setDy(directionY);
+				player.setDx(directionX);
+				player.rest();
+
+
+
+			} else if (hitBottom) {
+				directionY = Math.abs(player.getVelocity().y * bounciness);
+				directionX = player.getVelocity().x * bounciness;
+
+				player.setDy(directionY);
+				player.setDx(directionX);
+
+			} else if (hitLeft) {
+				directionX = Math.abs(player.getVelocity().x * bounciness);
+				player.setDx(directionX);
+
 			}
-			directionX = player.getVelocity().x * slipperyness;
 
-			player.setDy(directionY);
-			player.setDx(directionX);
-			player.rest();
-			
-			
+			else {
+				directionX = -Math.abs(player.getVelocity().x * bounciness);
+				player.setDx(directionX);
 
-		} else if (hitBottom) {
-			directionY = Math.abs(player.getVelocity().y * bounciness);
-			directionX = player.getVelocity().x * bounciness;
+			}
 
-			player.setDy(directionY);
-			player.setDx(directionX);
-
-		} else if (hitLeft) {
-			directionX = Math.abs(player.getVelocity().x * bounciness);
-			player.setDx(directionX);
+			player.setHooked(false);
 
 		}
-		
-		else {
-			directionX = -Math.abs(player.getVelocity().x * bounciness);
-			player.setDx(directionX);
-			
-		}
-
-		player.setHooked(false);
-
 	}
-	
+
 
 	@Override
 	public void reset() {
