@@ -70,13 +70,13 @@ public class ServerMultiplayerState extends MultiplayerState {
 
 		hooked = players.get(0).isHooked();
 		if(hooked != oldHooked) {
-			hosted.setAllKeys("hook" + "\n" + "0" + "\n" + new Boolean(hooked).toString() + "\n" + players.get(0).getEntity().getPosition().x + "\n" + players.get(0).getEntity().getPosition().y + "\n" + players.get(0).getDx() + "\n" + players.get(0).getDy());
+			hosted.setAllKeys("hook" + "\n" + "0" + "\n" + new Boolean(hooked).toString() + "\n" + players.get(0).getPosition().x + "\n" + players.get(0).getPosition().y + "\n" + players.get(0).getDx() + "\n" + players.get(0).getDy());
 			oldHooked = hooked;
 		}
 
 		if(updatePosTimer.isTriggered() >= 0) {
 			for(Player p : players) {
-				hosted.setAllKeys("pos" + "\n" + players.indexOf(p) + "\n" + p.getEntity().getPosition().x + "\n" + p.getEntity().getPosition().y + "\n" + p.getDx() + "\n" + p.getDy());
+				hosted.setAllKeys("pos" + "\n" + players.indexOf(p) + "\n" + p.getPosition().x + "\n" + p.getPosition().y + "\n" + p.getDx() + "\n" + p.getDy());
 			}
 		}
 	}

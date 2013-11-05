@@ -10,6 +10,9 @@ import org.newdawn.slick.state.StateBasedGame;
 import components.Component;
 
 public class Entity extends Node {
+	protected double speed;
+	protected double dx;
+	protected double dy;
 
 	private String id;
 	private float rotation;
@@ -19,11 +22,12 @@ public class Entity extends Node {
 		super(0, 0);
 		this.id = id;
 		rotation = 0;
+		dx = dy = speed = 0;
 
 		components = new ArrayList<Component>();
 	}
 
-	public void AddComponent(Component component) {
+	public void addComponent(Component component) {
 		component.setOwnerEntity(this);
 		components.add(component);
 	}
@@ -236,12 +240,37 @@ public class Entity extends Node {
 
 	public void changeImage(Component component) {
 		clear();
-		AddComponent(component);
+		addComponent(component);
 	}
 
 	public void changeImageOnNotEqual(String id, Component component) {
 		if (getComponent(id) == null) {
 			changeImage(component);
 		}
+	}
+	
+	// Dx,Dy
+	public double getDx() {
+		return dx;
+	}
+
+	public double getDy() {
+		return dy;
+	}
+
+	public void setDx(double dx) {
+		this.dx = dx;
+	}
+
+	public void setDy(double dy) {
+		this.dy = dy;
+	}
+
+	public void increaseDy(double increment) {
+		dy += increment;
+	}
+
+	public void increaseDx(double increment) {
+		dx += increment;
 	}
 }

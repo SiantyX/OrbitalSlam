@@ -34,7 +34,7 @@ public class Mine extends Interactable {
 		this.setRadius(radius);
 			
 		mineRender = new ImageRenderComponent("Mine", new Image(minePath));
-		this.AddComponent(mineRender);
+		this.addComponent(mineRender);
 		setScale(scale*Game.WIDTH);
 		
 		sound = new Sound(mineSound);
@@ -50,7 +50,7 @@ public class Mine extends Interactable {
 		playerlist = ((InGameState)sb.getState(Game.State.INGAMESTATE.ordinal())).getPlayers();
 
 		for (Player e : playerlist){
-			if (this.collisionCircle(e.getEntity())){
+			if (this.collisionCircle(e)){
 				collision(e);
 			}
 		}
@@ -62,8 +62,8 @@ public class Mine extends Interactable {
 			return;
 		sound.play(1, AudioSettingsState.SOUND_LEVEL*AudioSettingsState.MASTER_LEVEL);
 		
-		float degreeOfImpactX = (this.getCenterPosition().x - player.getEntity().getCenterPosition().x);
-		float degreeOfImpactY = (this.getCenterPosition().y - player.getEntity().getCenterPosition().y);
+		float degreeOfImpactX = (this.getCenterPosition().x - player.getCenterPosition().x);
+		float degreeOfImpactY = (this.getCenterPosition().y - player.getCenterPosition().y);
 		
 		float directionX = - degreeOfImpactX*power;
 		float directionY = - degreeOfImpactY*power;

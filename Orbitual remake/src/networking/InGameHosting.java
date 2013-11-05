@@ -48,10 +48,10 @@ public class InGameHosting extends Hosting {
 					Player tmp = ipplayermap.get(((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
 					if(tmp.acceptHook()) {
 						if(tmp.hook()) {
-							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "true" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "true" + "\n" + tmp.getPosition().x + "\n" + tmp.getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
 						}
 						else {
-							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "false" + "\n" + tmp.getEntity().getPosition().x + "\n" + tmp.getEntity().getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
+							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "false" + "\n" + tmp.getPosition().x + "\n" + tmp.getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy());
 						}
 					}
 				}

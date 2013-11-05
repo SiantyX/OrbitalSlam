@@ -65,7 +65,7 @@ public class MenuButton extends Entity {
 		this.image = image;
 		w = image.getWidth();
 		h = image.getHeight();
-		AddComponent(new ImageRenderComponent("button_image", image));
+		addComponent(new ImageRenderComponent("button_image", image));
 		mousePressed = false;
 		this.shape = null;
 		sound = new Sound("res/audio/sound/klick.ogg");

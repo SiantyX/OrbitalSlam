@@ -8,8 +8,19 @@ import game.Entity;
 import game.Player;
 
 public abstract class Interactable extends Entity {
-	protected Vector2f vector;
 	protected final float scale = 0.2f/1920;
+	
+	public Interactable(String id) {
+		super(id);
+	}
+	
+	public abstract void collisionCheck(StateBasedGame sb);
+	public abstract void collision(Player player);
+	public abstract void reset();
+}
+/*public abstract class Interactable extends Entity {
+	protected Vector2f vector;
+
 	protected Image img;
 
 	public Interactable(String id) {
@@ -28,4 +39,4 @@ public abstract class Interactable extends Entity {
 	
 	public abstract void reset();
 
-}
+}*/

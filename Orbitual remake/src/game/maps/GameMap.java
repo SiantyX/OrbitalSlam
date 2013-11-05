@@ -71,7 +71,7 @@ public abstract class GameMap {
 		Entity e = new Entity("Anchor " + Integer.toString(i));
 		Image img = new Image(anchorPath);
 		ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
-		e.AddComponent(c);
+		e.addComponent(c);
 		// homemade
 		e.setScale(stdScale*Game.WIDTH); 
 		pos = vp.toAbsolute(pos);

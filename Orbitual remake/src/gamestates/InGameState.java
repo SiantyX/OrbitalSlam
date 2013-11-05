@@ -77,8 +77,8 @@ public class InGameState extends BasicGameState {
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
 			Player p = new Player(i, map);
-			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
-			p.getEntity().setCenterPosition(startPos);
+			Vector2f startPos = map.getStartPos(i, p, vp);
+			p.setCenterPosition(startPos);
 			p.KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[i];
 			players.add(p);
 			playersAlive.add(players.get(i));
@@ -107,10 +107,9 @@ public class InGameState extends BasicGameState {
 	 */
 	private void reInit(GameContainer gc, StateBasedGame sb) throws SlickException {
 		for(Player player : players) {
-			Entity e = player.getEntity();
-			Vector2f v = new Vector2f(e.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, e.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
-			e.setCenterPosition(v);
-			e.setScale(Player.stdScale*Game.WIDTH);
+			Vector2f v = new Vector2f(player.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, player.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
+			player.setCenterPosition(v);
+			player.setScale(Player.stdScale*Game.WIDTH);
 		}
 
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
@@ -124,8 +123,9 @@ public class InGameState extends BasicGameState {
 	private void newRound(StateBasedGame sb) throws SlickException {
 		playersAlive.clear();
 		for(int i = 0; i < players.size(); i++) {
-			Vector2f startPos = map.getStartPos(i, players.get(i).getEntity(), vp);
-			players.get(i).reset(startPos);
+			Vector2f startPos = map.getStartPos(i, players.get(i), vp);
+			players.get(i).reset();
+			players.get(i).setCenterPosition(startPos);
 			playersAlive.add(players.get(i));
 		}
 		
@@ -254,7 +254,7 @@ public class InGameState extends BasicGameState {
 		if(!playersAlive.isEmpty() && playersAlive.size() > 1) {
 			for(int i = 0; i < playersAlive.size() - 1; i++) {
 				for(int j = i+1; j < playersAlive.size(); j++) {
-					if(playersAlive.get(i).getEntity().collisionCircle(playersAlive.get(j).getEntity())) {
+					if(playersAlive.get(i).collisionCircle(playersAlive.get(j))) {
 						playersAlive.get(i).collision(playersAlive.get(j));
 					}
 				}

@@ -2,6 +2,7 @@ package game;
 
 import game.maps.AnchorMap;
 import game.maps.GameMap;
+import game.maps.interactables.Interactable;
 import game.maps.interactables.powerups.PowerUp;
 import gamestates.AudioSettingsState;
 
@@ -19,12 +20,11 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import components.ImageRenderComponent;
 
-public class Player {
+public class Player extends Interactable {
 	private boolean resting;
 	private boolean dead;
 	private boolean wasKeyDown;
-	private Entity entity;
-	private final String[] playerImg = new String[] { "res/sprites/smiley1",
+	private static final String[] playerImg = new String[] { "res/sprites/smiley1",
 			"res/sprites/smiley2", "res/sprites/smiley3",
 			"res/sprites/smiley4", "res/sprites/smiley5",
 			"res/sprites/smiley6", "res/sprites/smiley7.png",
@@ -85,17 +85,19 @@ public class Player {
 	// --------------------------
 
 	public Player(int num, GameMap map) throws SlickException {
-		entity = new Entity(playerImg[num]);
-		activePowerUps = new ArrayList<PowerUp>();
-
+		super(playerImg[num]);
+		
 		defaultImage = new ImageRenderComponent(playerImg[num], new Image(
 				playerImg[num] + ".png"));
 		stunnedImage = new ImageRenderComponent(playerImg[num] + "xd",
 				new Image(playerImg[num] + "xd.png"));
+
 		defaultImage.setScale(stdScale * Game.WIDTH);
 		stunnedImage.setScale(stdScale * Game.WIDTH);
+		
+		activePowerUps = new ArrayList<PowerUp>();
 
-		entity.AddComponent(defaultImage);
+		addComponent(defaultImage);
 
 		dead = false;
 		resting = false;
@@ -146,18 +148,18 @@ public class Player {
 		resting = false;
 
 		// defaultImage.setRotation((float) dDegrees);
-		entity.setAllRotation((float) dDegrees);
-		entity.update(gc, sb, delta, vp);
+		setAllRotation((float) dDegrees);
+		super.update(gc, sb, delta, vp);
 
 		if (stunTime != 0) {
-			entity.changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);
+			changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);
 
 			stunTime -= delta;
 			if (stunTime < 0) {
 				stunTime = 0;
 			}
 		} else {
-			entity.changeImageOnNotEqual(playerImg[num], defaultImage);
+			changeImageOnNotEqual(playerImg[num], defaultImage);
 
 			// hook button
 			Input input = gc.getInput();
@@ -192,10 +194,10 @@ public class Player {
 			dDegrees -= degrees - oldDegrees;
 			dx = hookedTo.getCenterPosition().x
 					+ Math.cos(degrees * Math.PI / 180) * hookLength
-					- entity.getCenterPosition().x;
+					- getCenterPosition().x;
 			dy = hookedTo.getCenterPosition().y
 					- Math.sin(degrees * Math.PI / 180) * hookLength
-					- entity.getCenterPosition().y;
+					- getCenterPosition().y;
 
 			if (wSpeed >= MAXSPINSPEED) {
 				wSpeed = MAXSPINSPEED;
@@ -208,7 +210,7 @@ public class Player {
 		dy = dy / (1080 / Game.HEIGHT);
 		// move
 		speed = Math.hypot(dx, dy) * delta / TIME_CONST;
-		entity.translate((float) (dx * delta / TIME_CONST),
+		translate((float) (dx * delta / TIME_CONST),
 				(float) (dy * delta / TIME_CONST));
 	}
 
@@ -232,8 +234,8 @@ public class Player {
 		hookLength = 10000;
 		for (Entity e : anchorList) {
 			double eHypot = Math.hypot(
-					e.getCenterPosition().x - entity.getCenterPosition().x,
-					e.getCenterPosition().y - entity.getCenterPosition().y);
+					e.getCenterPosition().x - getCenterPosition().x,
+					e.getCenterPosition().y - getCenterPosition().y);
 			if (eHypot < hookLength) {
 				hookLength = eHypot;
 				hookedTo = e;
@@ -242,18 +244,18 @@ public class Player {
 
 		degrees = Math
 				.atan2(hookedTo.getCenterPosition().y
-						- entity.getCenterPosition().y, -(hookedTo
-						.getCenterPosition().x - entity.getCenterPosition().x))
+						- getCenterPosition().y, -(hookedTo
+						.getCenterPosition().x - getCenterPosition().x))
 				* 180 / Math.PI;
 
 		// --------------
 		// clockwise
 		double e1x, e1y, e2x, e2y;
 		double p1x, p1y, p2x, p2y, p3x, p3y;
-		p1x = entity.getCenterPosition().x;
-		p1y = entity.getCenterPosition().y;
-		p2x = entity.getCenterPosition().x + 99999 * dx;
-		p2y = entity.getCenterPosition().y + 99999 * dy;
+		p1x = getCenterPosition().x;
+		p1y = getCenterPosition().y;
+		p2x = getCenterPosition().x + 99999 * dx;
+		p2y = getCenterPosition().y + 99999 * dy;
 		p3x = hookedTo.getCenterPosition().x;
 		p3y = hookedTo.getCenterPosition().y;
 
@@ -276,11 +278,11 @@ public class Player {
 		p1x = hookedTo.getCenterPosition().x;
 		p1y = hookedTo.getCenterPosition().y;
 
-		p2x = entity.getCenterPosition().x;
-		p2y = entity.getCenterPosition().y;
+		p2x = getCenterPosition().x;
+		p2y = getCenterPosition().y;
 
-		p3x = entity.getCenterPosition().x + 100 * dx;
-		p3y = entity.getCenterPosition().y + 100 * dy;
+		p3x = getCenterPosition().x + 100 * dx;
+		p3y = getCenterPosition().y + 100 * dy;
 
 		e1x = p2x - p1x;
 		e1y = p2y - p1y;
@@ -309,10 +311,10 @@ public class Player {
 
 		if (hooked) {
 			g.setColor(Color.white);
-			vp.drawLine(g, entity.getCenterPosition(),
+			vp.drawLine(g, getCenterPosition(),
 					hookedTo.getCenterPosition());
 		}
-		entity.render(gc, sb, g, vp);
+		super.render(gc, sb, g, vp);
 
 		// debug stun time
 		// g.drawString(new Double(stunTime).toString(), entity.getPosition().x,
@@ -326,35 +328,6 @@ public class Player {
 
 	public boolean isDead() {
 		return dead;
-	}
-
-	public Entity getEntity() {
-		return entity;
-	}
-
-	// Dx,Dy
-	public double getDx() {
-		return dx;
-	}
-
-	public double getDy() {
-		return dy;
-	}
-
-	public void setDx(double dx) {
-		this.dx = dx;
-	}
-
-	public void setDy(double dy) {
-		this.dy = dy;
-	}
-
-	public void increaseDy(double increment) {
-		dy += increment;
-	}
-
-	public void increaseDx(double increment) {
-		dx += increment;
 	}
 
 	public void setdDegrees(double dDegrees) {
@@ -409,7 +382,7 @@ public class Player {
 	}
 
 	public boolean deathCheck(ViewPort vp) {
-		Vector2f tmp = vp.toRelative(getEntity().getCenterPosition());
+		Vector2f tmp = vp.toRelative(getCenterPosition());
 		if (tmp.x < 0 || tmp.x > Game.WIDTH || tmp.y < 0 || tmp.y > Game.HEIGHT) {
 			die();
 			return true;
@@ -454,11 +427,11 @@ public class Player {
 		// http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
 		// user Simucal
 		// ------------------------------------------------------------------------------------------------------
-		Vector2f delta = new Vector2f(entity.getCenterPosition().x
-				- player.getEntity().getCenterPosition().x,
-				entity.getCenterPosition().y
-						- player.getEntity().getCenterPosition().y);
-		float r = entity.getRadius() + player.entity.getRadius();
+		Vector2f delta = new Vector2f(getCenterPosition().x
+				- player.getCenterPosition().x,
+				getCenterPosition().y
+						- player.getCenterPosition().y);
+		float r = getRadius() + player.getRadius();
 		float dist2 = delta.dot(delta);
 
 		if (dist2 > r * r)
@@ -468,16 +441,16 @@ public class Player {
 
 		Vector2f mtd;
 		if (d == 0.0f) {
-			d = player.entity.getRadius() + entity.getRadius() - 1;
+			d = player.getRadius() + getRadius() - 1;
 			delta = new Vector2f(
-					player.entity.getRadius() + entity.getRadius(), 0);
+					player.getRadius() + getRadius(), 0);
 		}
 
 		mtd = new Vector2f(
 				delta.x
-						* (((entity.getRadius() + player.entity.getRadius()) - d) / d),
+						* (((getRadius() + player.getRadius()) - d) / d),
 				delta.y
-						* (((entity.getRadius() + player.entity.getRadius()) - d) / d));
+						* (((getRadius() + player.getRadius()) - d) / d));
 
 		float im1 = (float) (1 / getMass());
 		float im2 = (float) (1 / player.getMass());
@@ -486,13 +459,11 @@ public class Player {
 				* (im1 / (im1 + im2)));
 		Vector2f mtdScaled2 = new Vector2f(mtd.x * (im2 / (im1 + im2)), mtd.y
 				* (im2 / (im1 + im2)));
-		entity.setCenterPosition(new Vector2f(entity.getCenterPosition().x
-				+ mtdScaled1.x, entity.getCenterPosition().y + mtdScaled1.y));
-		player.getEntity()
-				.setCenterPosition(
-						new Vector2f(player.getEntity().getCenterPosition().x
-								+ mtdScaled2.x, player.getEntity()
-								.getCenterPosition().y + mtdScaled2.y));
+		setCenterPosition(new Vector2f(getCenterPosition().x
+				+ mtdScaled1.x, getCenterPosition().y + mtdScaled1.y));
+		player.setCenterPosition(
+						new Vector2f(player.getCenterPosition().x
+								+ mtdScaled2.x, player.getCenterPosition().y + mtdScaled2.y));
 
 		Vector2f v = new Vector2f((float) dx - player.getVelocity().x,
 				(float) dy - player.getVelocity().y);
@@ -520,16 +491,14 @@ public class Player {
 
 		double dSpeed = 0;
 		double deg1 = Math.atan2(
-				player.entity.getCenterPosition().y
-						- entity.getCenterPosition().y, -(player.entity
-						.getCenterPosition().x - entity.getCenterPosition().x))
+				player.getCenterPosition().y
+						- getCenterPosition().y, -(player.getCenterPosition().x - getCenterPosition().x))
 				* 180 / Math.PI;
 
 		double deg2 = Math.atan2(
-				entity.getCenterPosition().y
-						- player.entity.getCenterPosition().y, -(entity
-						.getCenterPosition().x - player.entity
-						.getCenterPosition().x))
+				getCenterPosition().y
+						- player.getCenterPosition().y, -(
+						getCenterPosition().x - player.getCenterPosition().x))
 				* 180 / Math.PI;
 		if (getDegSpeed(deg1) < player.getDegSpeed(deg2)) {
 			// this stunnad
@@ -561,13 +530,12 @@ public class Player {
 				* AudioSettingsState.MASTER_LEVEL);
 	}
 
-	public void reset(Vector2f startPos) {
+	public void reset() {
 		for (PowerUp p : activePowerUps) {
 			p.powerDown(this);
 		}
 		activePowerUps.clear();
 
-		getEntity().setCenterPosition(startPos);
 		dx = 0;
 		dy = 0;
 		hooked = false;
@@ -591,12 +559,18 @@ public class Player {
 
 		wasKeyDown = false;
 
-		entity.setAllRotation(0);
-		entity.changeImage(defaultImage);
+		setAllRotation(0);
+		changeImage(defaultImage);
 	}
 
 	public void rest() {
 		resting = true;
 
+	}
+
+	@Override
+	public void collisionCheck(StateBasedGame sb) {
+		// TODO Auto-generated method stub
+		
 	}
 }

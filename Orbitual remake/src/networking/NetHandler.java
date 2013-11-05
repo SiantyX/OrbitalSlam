@@ -154,8 +154,8 @@ public class NetHandler {
 						}
 						p.setDx(Float.parseFloat(parts[5]));
 						p.setDy(Float.parseFloat(parts[6]));
-						p.getEntity().getPosition().x = Float.parseFloat(parts[3]);
-						p.getEntity().getPosition().y = Float.parseFloat(parts[4]);
+						p.getPosition().x = Float.parseFloat(parts[3]);
+						p.getPosition().y = Float.parseFloat(parts[4]);
 					}
 
 					else if(parts[0].equals("pos")) {
@@ -163,8 +163,8 @@ public class NetHandler {
 							Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
 							p.setDx(Float.parseFloat(parts[4]));
 							p.setDy(Float.parseFloat(parts[5]));
-							p.getEntity().getPosition().x = Float.parseFloat(parts[2]);
-							p.getEntity().getPosition().y = Float.parseFloat(parts[3]);
+							p.getPosition().x = Float.parseFloat(parts[2]);
+							p.getPosition().y = Float.parseFloat(parts[3]);
 						}
 					}
 				}
@@ -197,8 +197,8 @@ public class NetHandler {
 		Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
 		p.setDx(Float.parseFloat(parts[4]));
 		p.setDy(Float.parseFloat(parts[5]));
-		p.getEntity().getPosition().x = Float.parseFloat(parts[2]);
-		p.getEntity().getPosition().y = Float.parseFloat(parts[3]);
+		p.getPosition().x = Float.parseFloat(parts[2]);
+		p.getPosition().y = Float.parseFloat(parts[3]);
 	}
 
 	public boolean connectToMainServer() throws IOException {

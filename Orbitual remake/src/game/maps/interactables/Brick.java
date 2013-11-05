@@ -18,12 +18,13 @@ public class Brick extends Interactable {
 	protected static final String brickPath = "res/sprites/interactables/brick.png";
 	private final float bounciness = 0.9f;
 	private final float slipperyness = 0.95f;
+	private Image img;
 
 	public Brick(String id) throws SlickException {
 		super(id);
 		this.img = new Image(brickPath);
 		ImageRenderComponent brick = new ImageRenderComponent("Brick", img);
-		this.AddComponent(brick);
+		this.addComponent(brick);
 
 	}
 
@@ -43,7 +44,7 @@ public class Brick extends Interactable {
 				.ordinal())).getPlayers();
 
 		for (Player e : playerlist) {
-			if (this.collisionRectangle(e.getEntity())) {
+			if (this.collisionRectangle(e)) {
 				collision(e);
 			}
 		}
@@ -54,16 +55,12 @@ public class Brick extends Interactable {
 	public void collision(Player player) {
 
 		boolean hitTop = (Math.abs(this.getCenterPositionRectangle().x
-				- player.getEntity().getCenterPosition().x) < (this.getWidth() / 2 - 15f + player
-				.getEntity().getRadius()) && (player.getEntity()
-				.getCenterPosition().y < this.getCenterPositionRectangle().y));
+				- player.getCenterPosition().x) < (this.getWidth() / 2 - 15f + player.getRadius()) && (player.getCenterPosition().y < this.getCenterPositionRectangle().y));
 
 		boolean hitBottom = (Math.abs(this.getCenterPositionRectangle().x
-				- player.getEntity().getCenterPosition().x) < (this.getWidth() / 2 - 15f + player
-				.getEntity().getRadius()) && (player.getEntity()
-				.getCenterPosition().y > this.getCenterPositionRectangle().y));
+				- player.getCenterPosition().x) < (this.getWidth() / 2 - 15f + player.getRadius()) && (player.getCenterPosition().y > this.getCenterPositionRectangle().y));
 		
-		boolean hitLeft = (!hitTop && !hitBottom && this.getCenterPositionRectangle().x < player.getEntity().getCenterPosition().x);
+		boolean hitLeft = (!hitTop && !hitBottom && this.getCenterPositionRectangle().x < player.getCenterPosition().x);
 
 		float directionX;
 		float directionY;

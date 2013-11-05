@@ -20,7 +20,7 @@ public class EpicMass extends PowerUp {
 	public EpicMass(String id) throws SlickException {
 		super(id);
 		epicMassRender = new ImageRenderComponent("Epic Mass", new Image(epicMassPath));
-		this.AddComponent(epicMassRender);
+		this.addComponent(epicMassRender);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class EpicMass extends PowerUp {
 				.ordinal())).getPlayers();
 		
 		for (Player e : playerlist) {
-			if (this.collisionCircle(e.getEntity())) {
+			if (this.collisionCircle(e)) {
 				collision(e);
 			}
 		}

@@ -2,6 +2,7 @@ package game.maps.interactables.powerups;
 
 import org.newdawn.slick.state.StateBasedGame;
 
+import game.Entity;
 import game.Player;
 import game.maps.interactables.Interactable;
 
