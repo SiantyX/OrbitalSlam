@@ -85,7 +85,6 @@ public class Player {
 	// --------------------------
 
 	public Player(int num, GameMap map) throws SlickException {
-		resting = false;
 		entity = new Entity(playerImg[num]);
 		activePowerUps = new ArrayList<PowerUp>();
 
@@ -99,6 +98,7 @@ public class Player {
 		entity.AddComponent(defaultImage);
 
 		dead = false;
+		resting = false;
 
 		dDegrees = 0;
 		oldDegrees = 0;
@@ -570,11 +570,10 @@ public class Player {
 		dx = 0;
 		dy = 0;
 		hooked = false;
-
 		dead = false;
-
 		hookedTo = null;
-
+		resting = false;
+		
 		stunTime = 0;
 
 		speed = 0;

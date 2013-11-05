@@ -41,6 +41,12 @@ public class ViewPort {
 	public float getZoom() {
 		return Game.WIDTH / res.x;
 	}
+	
+	public void setZoom(int players) {
+		float factor = 1;
+		factor = 2/(float)players;
+		setZoom(factor);
+	}
 
 	public void setPosition(int x, int y) {
 		setPosition(new Vector2f(Math.round(x), Math.round(y)));

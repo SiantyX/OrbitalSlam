@@ -62,7 +62,8 @@ public class InGameState extends BasicGameState {
 
 		bg = new Image("res/orbitalbg1.jpg");
 		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
-		vp.setZoom(1 - 0.25f*(numLocalPlayers-2));
+		vp.setZoom(numLocalPlayers);
+		//vp.setZoom(1 - 0.25f*(numLocalPlayers-2));
 		
 
 		playersAlive = new ArrayList<Player>();
