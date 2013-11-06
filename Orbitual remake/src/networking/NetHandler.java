@@ -156,8 +156,9 @@ public class NetHandler {
 						}
 						p.setDx(Float.parseFloat(parts[5]));
 						p.setDy(Float.parseFloat(parts[6]));
-						p.getPosition().x = Float.parseFloat(parts[3]);
-						p.getPosition().y = Float.parseFloat(parts[4]);
+						p.setPosition(new Vector2f(Float.parseFloat(parts[3]), Float.parseFloat(parts[4])));
+						p.setDegrees(Double.parseDouble(parts[6]));
+						p.setWSpeed(Double.parseDouble(parts[7]));
 					}
 
 					else if(parts[0].equals("pos")) {
@@ -166,6 +167,8 @@ public class NetHandler {
 							p.setDx(Float.parseFloat(parts[4]));
 							p.setDy(Float.parseFloat(parts[5]));
 							p.setPosition(new Vector2f(Float.parseFloat(parts[2]), Float.parseFloat(parts[3])));
+							p.setDegrees(Double.parseDouble(parts[6]));
+							p.setWSpeed(Double.parseDouble(parts[7]));
 						}
 					}
 				}

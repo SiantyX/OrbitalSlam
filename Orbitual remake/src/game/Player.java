@@ -55,6 +55,8 @@ public class Player extends Interactable {
 	private boolean hooked;
 	private Entity hookedTo;
 
+	private final Object wSpeedLock = new Object();
+	private final Object degreesLock = new Object();
 	private double wSpeed;
 	private double degrees;
 	private double hookLength;
@@ -173,30 +175,30 @@ public class Player extends Interactable {
 		// fall
 		if (!hooked) {
 			increaseDy(gravity * delta);
-			dDegrees -= (degrees - oldDegrees) / 200;
+			dDegrees -= (getDegrees() - oldDegrees) / 200;
 		}
 
 		// spin
 		else {
 			double oldDegrees = degrees;
 			if (clockWise) {
-				degrees -= wSpeed * delta / TIME_CONST;
+				setDegrees(getDegrees() - wSpeed * delta / TIME_CONST);
 			} else {
-				degrees += wSpeed * delta / TIME_CONST;
+				setDegrees(getDegrees() + wSpeed * delta / TIME_CONST);
 			}
 
-			dDegrees -= degrees - oldDegrees;
+			dDegrees -= getDegrees() - oldDegrees;
 			setDx((float) (hookedTo.getCenterPosition().x
-					+ Math.cos(degrees * Math.PI / 180) * hookLength
+					+ Math.cos(getDegrees() * Math.PI / 180) * hookLength
 					- getCenterPosition().x));
 			setDy((float) (hookedTo.getCenterPosition().y
-					- Math.sin(degrees * Math.PI / 180) * hookLength
+					- Math.sin(getDegrees() * Math.PI / 180) * hookLength
 					- getCenterPosition().y));
 
-			if (wSpeed >= MAXSPINSPEED) {
-				wSpeed = MAXSPINSPEED;
+			if (getWSpeed() >= MAXSPINSPEED) {
+				setWSpeed( MAXSPINSPEED);
 			} else {
-				wSpeed += centriAcc * delta / TIME_CONST;
+				setWSpeed(getWSpeed() + centriAcc * delta / TIME_CONST);
 			}
 		}
 
@@ -239,7 +241,7 @@ public class Player extends Interactable {
 
 		float dx = getDx();
 		float dy = getDy();
-		
+
 		// --------------
 		// clockwise
 		double e1x, e1y, e2x, e2y;
@@ -324,6 +326,30 @@ public class Player extends Interactable {
 
 	public void setdDegrees(float dDegrees) {
 		this.dDegrees = dDegrees;
+	}
+
+	public void setDegrees(double d) {
+		synchronized (degreesLock) {
+			degrees = d;
+		}
+	}
+
+	public double getDegrees() {
+		synchronized (degreesLock) {
+			return degrees;
+		}
+	}
+
+	public void setWSpeed(double w) {
+		synchronized (wSpeedLock) {
+			wSpeed = w;
+		}
+	}
+
+	public double getWSpeed() {
+		synchronized (wSpeedLock) {
+			return wSpeed;
+		}
 	}
 
 	public double getSpeed() {
@@ -457,7 +483,7 @@ public class Player extends Interactable {
 
 			float dx = getDx();
 			float dy = getDy();
-			
+
 			Vector2f v = new Vector2f((float) dx - player.getVelocity().x,
 					dy - player.getVelocity().y);
 
