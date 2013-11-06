@@ -40,7 +40,7 @@ public abstract class MultiplayerState extends BasicGameState {
 	// INGAME SPECIFIC
 	private int keyBinds[];
 	private GameMap map;
-	public static ArrayList<Player> players;
+	public static CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();;
 
 	public static boolean finished = true;
 	private TrueTypeFont ttf;
@@ -81,7 +81,6 @@ public abstract class MultiplayerState extends BasicGameState {
 		playersAlive = new ArrayList<Player>();
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
 		map.setBoundsAndCreateMap(vp);
-		players = new ArrayList<Player>();
 		
 		bg = new Image("res/orbitalbg1.jpg");
 	

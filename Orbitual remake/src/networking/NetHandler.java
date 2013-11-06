@@ -27,6 +27,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.newdawn.slick.geom.Vector2f;
+
 public class NetHandler {
 	private final int port = 7661;
 	private final String ipaddr = "siantyxserver.servegame.com";
@@ -163,8 +165,7 @@ public class NetHandler {
 							Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
 							p.setDx(Float.parseFloat(parts[4]));
 							p.setDy(Float.parseFloat(parts[5]));
-							p.getPosition().x = Float.parseFloat(parts[2]);
-							p.getPosition().y = Float.parseFloat(parts[3]);
+							p.setPosition(new Vector2f(Float.parseFloat(parts[2]), Float.parseFloat(parts[3])));
 						}
 					}
 				}

@@ -89,7 +89,7 @@ public abstract class GameMap {
 	
 
 	protected void addAnchor(int i, Vector2f pos, ViewPort vp) throws SlickException{
-		Entity e = new Entity("Anchor " + Integer.toString(i));
+		Entity e = new Entity("Anchor " + i);
 		Image img = new Image(anchorPath);
 		ImageRenderComponent c = new ImageRenderComponent("Anchor " + Integer.toString(i), img);
 		e.addComponent(c);

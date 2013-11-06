@@ -11,8 +11,7 @@ import components.Component;
 
 public class Entity extends Node {
 	protected float speed;
-	protected float dx;
-	protected float dy;
+	private Vector2f dpos;
 
 	protected static final float TIME_CONST = 16.6f;
 
@@ -24,7 +23,8 @@ public class Entity extends Node {
 		super(0, 0);
 		this.id = id;
 		rotation = 0;
-		dx = dy = speed = 0;
+		speed = 0;
+		dpos = new Vector2f();
 
 		components = new ArrayList<Component>();
 	}
@@ -137,9 +137,9 @@ public class Entity extends Node {
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
-		if(dx != 0 || dy != 0) {
-			speed = (float) (Math.hypot(dx, dy) * delta / TIME_CONST);
-			translate(dx * delta / TIME_CONST, dy * delta / TIME_CONST);
+		if(getDx() != 0 || getDy() != 0) {
+			speed = (float) (Math.hypot(getDx(), getDy()) * delta / TIME_CONST);
+			translate(getDx() * delta / TIME_CONST, getDy() * delta / TIME_CONST);
 		}
 		else {
 			speed = 0;
@@ -151,9 +151,9 @@ public class Entity extends Node {
 	}
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp) {
-		if(dx != 0 || dy != 0) {
-			speed = (float) (Math.hypot(dx, dy) * delta / TIME_CONST);
-			translate(dx * delta / TIME_CONST, dy * delta / TIME_CONST);
+		if(getDx() != 0 || getDy() != 0) {
+			speed = (float) (Math.hypot(getDx(), getDy()) * delta / TIME_CONST);
+			translate(getDx() * delta / TIME_CONST, getDy() * delta / TIME_CONST);
 		}
 		else {
 			speed = 0;
@@ -280,27 +280,39 @@ public class Entity extends Node {
 
 	// Dx,Dy
 	public float getDx() {
-		return dx;
+		synchronized (dpos) {
+			return dpos.x;
+		}
 	}
 
 	public float getDy() {
-		return dy;
+		synchronized (dpos) {
+			return dpos.y;
+		}
 	}
 
 	public void setDx(float dx) {
-		this.dx = dx;
+		synchronized (dpos) {
+			dpos.x = dx;
+		}
 	}
 
 	public void setDy(float dy) {
-		this.dy = dy;
+		synchronized (dpos) {
+			dpos.y = dy;
+		}
 	}
 
 	public void increaseDy(float increment) {
-		dy += increment;
+		synchronized (dpos) {
+			dpos.y += increment;
+		}
 	}
 
 	public void increaseDx(float increment) {
-		dx += increment;
+		synchronized (dpos) {
+			dpos.x += increment;
+		}
 	}
 
 	@Override

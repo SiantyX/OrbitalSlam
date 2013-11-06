@@ -101,8 +101,6 @@ public class Player extends Interactable {
 
 		dDegrees = 0;
 		oldDegrees = 0;
-		dx = 0;
-		dy = 0;
 		speed = 0;
 		mass = 1;
 		stunTime = 0;
@@ -174,7 +172,7 @@ public class Player extends Interactable {
 
 		// fall
 		if (!hooked) {
-			dy += gravity * delta;
+			increaseDy(gravity * delta);
 			dDegrees -= (degrees - oldDegrees) / 200;
 		}
 
@@ -188,12 +186,12 @@ public class Player extends Interactable {
 			}
 
 			dDegrees -= degrees - oldDegrees;
-			dx = (float) (hookedTo.getCenterPosition().x
+			setDx((float) (hookedTo.getCenterPosition().x
 					+ Math.cos(degrees * Math.PI / 180) * hookLength
-					- getCenterPosition().x);
-			dy = (float) (hookedTo.getCenterPosition().y
+					- getCenterPosition().x));
+			setDy((float) (hookedTo.getCenterPosition().y
 					- Math.sin(degrees * Math.PI / 180) * hookLength
-					- getCenterPosition().y);
+					- getCenterPosition().y));
 
 			if (wSpeed >= MAXSPINSPEED) {
 				wSpeed = MAXSPINSPEED;
@@ -239,6 +237,9 @@ public class Player extends Interactable {
 								.getCenterPosition().x - getCenterPosition().x))
 								* 180 / Math.PI);
 
+		float dx = getDx();
+		float dy = getDy();
+		
 		// --------------
 		// clockwise
 		double e1x, e1y, e2x, e2y;
@@ -263,7 +264,7 @@ public class Player extends Interactable {
 		// ----------
 		// speed reduction at weird angles
 		float tmpSpeed = (float) Math.hypot(Math.cos(degrees * Math.PI / 180) * dy,
-				Math.sin(degrees * Math.PI / 180) * dx);
+				Math.sin(degrees * Math.PI / 180) * getDx());
 		wSpeed = (float) (tmpSpeed / hookLength * 180 / Math.PI);
 
 		p1x = hookedTo.getCenterPosition().x;
@@ -330,7 +331,7 @@ public class Player extends Interactable {
 	}
 
 	public double getDegSpeed(float deg) {
-		return Math.hypot(dx * Math.cos(deg), dy * Math.sin(deg));
+		return Math.hypot(getDx() * Math.cos(deg), getDy() * Math.sin(deg));
 	}
 
 	public double getMass() {
@@ -346,18 +347,12 @@ public class Player extends Interactable {
 	}
 
 	public Vector2f getVelocity() {
-		return new Vector2f((float) dx, (float) dy);
+		return new Vector2f(getDx(), getDy());
 	}
 
 	public void setVelocity(Vector2f v) {
-		dx = v.x;
-		dy = v.y;
-	}
-
-	// wtf
-	public void turnAround() {
-		dx = (float) (dx - Math.PI);
-		dy = (float) (dy - Math.PI);
+		setDx(v.x);
+		setDy(v.y);
 	}
 
 	public void setStunTime(double time) {
@@ -460,6 +455,9 @@ public class Player extends Interactable {
 					new Vector2f(player.getCenterPosition().x
 							+ mtdScaled2.x, player.getCenterPosition().y + mtdScaled2.y));
 
+			float dx = getDx();
+			float dy = getDy();
+			
 			Vector2f v = new Vector2f((float) dx - player.getVelocity().x,
 					dy - player.getVelocity().y);
 
@@ -532,8 +530,8 @@ public class Player extends Interactable {
 		}
 		activePowerUps.clear();
 
-		dx = 0;
-		dy = 0;
+		setDx(0);
+		setDy(0);
 		hooked = false;
 		dead = false;
 		hookedTo = null;
