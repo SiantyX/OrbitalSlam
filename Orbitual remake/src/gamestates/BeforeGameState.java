@@ -11,6 +11,7 @@ import game.WriteBox;
 import game.WriteBoxWithLabel;
 import game.maps.AnchorMap;
 import game.maps.BrickMap;
+import game.maps.DissapearingAnchorsMap;
 import game.maps.EverChangingMap;
 import game.maps.ExperimentalMap;
 import game.maps.GameMap;
@@ -57,6 +58,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		maplist.add(new ExperimentalMap());
 		maplist.add(new EverChangingMap());
 		maplist.add(new BrickMap());
+		maplist.add(new DissapearingAnchorsMap());
 		
 		selectedMap = (GameMap) maplist.poll();
 		maplist.addLast(selectedMap);
