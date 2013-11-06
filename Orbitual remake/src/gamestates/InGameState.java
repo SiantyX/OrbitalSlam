@@ -78,7 +78,7 @@ public class InGameState extends BasicGameState {
 		// players
 		for(int i = 0; i < numLocalPlayers; i++) {
 			Player p = new Player(i, map);
-			Vector2f startPos = map.getStartPos(i, p, vp);
+			Vector2f startPos = map.getStartPos(p, vp);
 			p.setCenterPosition(startPos);
 			p.KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[i];
 			players.add(p);
@@ -127,7 +127,7 @@ public class InGameState extends BasicGameState {
 		playersAlive.clear();
 		for(int i = 0; i < players.size(); i++) {
 			players.get(i).reset();
-			Vector2f startPos = map.getStartPos(i, players.get(i), vp);
+			Vector2f startPos = map.getStartPos(players.get(i), vp);
 			players.get(i).setCenterPosition(startPos);
 			playersAlive.add(players.get(i));
 		}

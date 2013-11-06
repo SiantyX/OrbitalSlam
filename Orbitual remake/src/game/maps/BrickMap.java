@@ -2,6 +2,7 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
+import game.Player;
 import game.ViewPort;
 import game.maps.interactables.Brick;
 
@@ -23,8 +24,8 @@ public class BrickMap extends GameMap {
 	}
 
 	@Override
-	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
-		return standardStartPosition(i, vp);
+	public Vector2f getStartPos(Player p, ViewPort vp) {
+		return standardStartPosition(p.getNum(), vp);
 	}
 
 	@Override
@@ -36,28 +37,28 @@ public class BrickMap extends GameMap {
 		Brick brick = new Brick("Brick1");
 		vector = new Vector2f(0, 0);
 		vp.toAbsolute(vector);
-		brick.setPosition(vector);
+		brick.setCenterPosition(vector);
 		brick.setScaleWidth(10);
 		interactables.add(brick);
 		
 		brick = new Brick("Brick2");
 		vector = new Vector2f(0, 0);
 		vp.toAbsolute(vector);
-		brick.setPosition(vector);
+		brick.setCenterPosition(vector);
 		brick.setScaleHeight(10);
 		interactables.add(brick);
 		
 		brick = new Brick("Brick3");
 		vector = new Vector2f(Game.WIDTH, 0);
 		vp.toAbsolute(vector);
-		brick.setPosition(vector);
+		brick.setCenterPosition(vector);
 		brick.setScaleHeight(10);
 		interactables.add(brick);
 		
 		brick = new Brick("Brick4");
 		vector = new Vector2f(0, Game.HEIGHT);
 		vp.toAbsolute(vector);
-		brick.setPosition(vector);
+		brick.setCenterPosition(vector);
 		brick.setScaleWidth(10);
 		interactables.add(brick);
 

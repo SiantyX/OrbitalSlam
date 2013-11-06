@@ -27,9 +27,9 @@ public class Mine extends Interactable {
 
 	private ImageRenderComponent mineRender;
 
-	public Mine() throws SlickException{
+	public Mine(String id) throws SlickException{
 
-		super("Mine");
+		super(id);
 		detonated = false;
 		this.setRadius(radius);
 

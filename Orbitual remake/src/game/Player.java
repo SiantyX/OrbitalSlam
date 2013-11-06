@@ -46,24 +46,24 @@ public class Player extends Interactable {
 	private float dDegrees;
 	private float oldDegrees;
 
-	private float speed;
-	private float mass;
+	private double speed;
+	private double mass;
 
-	private float stunTime;
+	private double stunTime;
 
 	// hook variables
 	private boolean hooked;
 	private Entity hookedTo;
 
-	private float wSpeed;
-	private float degrees;
-	private float hookLength;
+	private double wSpeed;
+	private double degrees;
+	private double hookLength;
 
 	private boolean clockWise;
 
-	private float centriAcc;
-	private final float MAXSPINSPEED = 16;
-	private final float ACC_CONST = 600;
+	private double centriAcc;
+	private final double MAXSPINSPEED = 16;
+	private final double ACC_CONST = 600;
 	// -----------------------
 
 	public static ArrayList<Entity> anchorList;
@@ -72,7 +72,7 @@ public class Player extends Interactable {
 
 	private final float gravity = 0.015f;
 	private final float SPEED_LOST = 0.6f;
-	private final float STUN_LENGTH = 50;
+	private final double STUN_LENGTH = 50;
 
 	// -------------------------
 	// Online multiplayer
@@ -144,7 +144,7 @@ public class Player extends Interactable {
 
 		resting = false;
 
-		setAllRotation((float) dDegrees);
+		setAllRotation(dDegrees);
 
 		if (stunTime != 0) {
 			changeImageOnNotEqual(playerImg[num] + "xd", stunnedImage);
@@ -167,8 +167,9 @@ public class Player extends Interactable {
 			}
 		}
 
-		if (!anchorList.contains(hookedTo)) {
+		if (!anchorList.contains(hookedTo) || hookedTo.getWidth() == 0) {
 			hooked = false;
+			hookedTo = null;
 		}
 
 		// fall
@@ -280,9 +281,9 @@ public class Player extends Interactable {
 		e2x = p2x - p3x;
 		e2y = p2y - p3y;
 
-		float test = (float) (((e1x * e2x) + (e1y * e2y))
+		double test = (((e1x * e2x) + (e1y * e2y))
 				/ (Math.hypot(e1x, e1y) * Math.hypot(e2x, e2y)));
-		test = (float) (Math.acos(test) * 180 / Math.PI);
+		test = (Math.acos(test) * 180 / Math.PI);
 		if (test > 90) {
 			test = Math.abs(test - 180);
 		}
@@ -324,19 +325,19 @@ public class Player extends Interactable {
 		this.dDegrees = dDegrees;
 	}
 
-	public float getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 
-	public float getDegSpeed(float deg) {
-		return (float) Math.hypot(dx * Math.cos(deg), dy * Math.sin(deg));
+	public double getDegSpeed(float deg) {
+		return Math.hypot(dx * Math.cos(deg), dy * Math.sin(deg));
 	}
 
-	public float getMass() {
+	public double getMass() {
 		return mass;
 	}
 
-	public void setMass(float mass) {
+	public void setMass(double mass) {
 		this.mass = mass;
 	}
 
@@ -353,13 +354,13 @@ public class Player extends Interactable {
 		dy = v.y;
 	}
 
+	// wtf
 	public void turnAround() {
 		dx = (float) (dx - Math.PI);
 		dy = (float) (dy - Math.PI);
-
 	}
 
-	public void setStunTime(float time) {
+	public void setStunTime(double time) {
 		stunTime = time;
 	}
 
@@ -460,7 +461,7 @@ public class Player extends Interactable {
 							+ mtdScaled2.x, player.getCenterPosition().y + mtdScaled2.y));
 
 			Vector2f v = new Vector2f((float) dx - player.getVelocity().x,
-					(float) dy - player.getVelocity().y);
+					dy - player.getVelocity().y);
 
 			float vn = v.dot(mtd.normalise());
 
@@ -474,7 +475,7 @@ public class Player extends Interactable {
 			// momentum
 			Vector2f dim1 = new Vector2f(impulse.x * im1, impulse.y * im1);
 			Vector2f dim2 = new Vector2f(impulse.x * im2, impulse.y * im2);
-			Vector2f newV = new Vector2f((float) dx + dim1.x, (float) dy + dim1.y);
+			Vector2f newV = new Vector2f(dx + dim1.x, dy + dim1.y);
 			Vector2f otherNewV = new Vector2f(player.getVelocity().x - dim2.x,
 					player.getVelocity().y - dim2.y);
 			// ------------------------------------------------------------------------------------------------------
@@ -483,7 +484,7 @@ public class Player extends Interactable {
 			hooked = false;
 			player.setHooked(false);
 
-			float dSpeed = 0;
+			double dSpeed = 0;
 			float deg1 = (float) (Math.atan2(
 					player.getCenterPosition().y
 					- getCenterPosition().y, -(player.getCenterPosition().x - getCenterPosition().x))
@@ -566,5 +567,9 @@ public class Player extends Interactable {
 	@Override
 	public boolean collisionCheck(Interactable inter) {
 		return collisionCircle(inter);
+	}
+
+	public int getNum() {
+		return num;
 	}
 }

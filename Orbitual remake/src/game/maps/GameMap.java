@@ -2,10 +2,13 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
+import game.Player;
 import game.ViewPort;
 import game.maps.interactables.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -19,7 +22,7 @@ import components.ImageRenderComponent;
 
 public abstract class GameMap {
 	protected ArrayList<Entity> anchors;
-	protected ArrayList<Interactable> interactables;
+	protected Set<Interactable> interactables;
 	protected int numAnc;
 
 	protected int numPlayers;
@@ -39,12 +42,12 @@ public abstract class GameMap {
 
 	public GameMap() {
 		anchors = new ArrayList<Entity>();
-		interactables = new ArrayList<Interactable>();
+		interactables = new HashSet<Interactable>();
 		numPlayers = 4;
 	}
 	
 
-	public abstract Vector2f getStartPos(int i, Entity e, ViewPort vp);
+	public abstract Vector2f getStartPos(Player p, ViewPort vp);
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g, ViewPort vp) {
 		for (Entity e : anchors) {
@@ -59,7 +62,7 @@ public abstract class GameMap {
 
 	}
 	
-	public ArrayList<Interactable> getInteractables() {
+	public Set<Interactable> getInteractables() {
 		return interactables;
 	}
 	

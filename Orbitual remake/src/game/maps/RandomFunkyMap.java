@@ -2,13 +2,16 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
+import game.Player;
 import game.ViewPort;
+import game.maps.interactables.Interactable;
 import game.maps.interactables.Mine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
@@ -17,9 +20,6 @@ import org.newdawn.slick.geom.Vector2f;
 public class RandomFunkyMap extends GameMap {
 	// extra deluxe funk edition
 	private Random rand;
-	private Map<Integer, Vector2f> startPositions;
-	private Map<Integer, Entity> mapPlayers;
-	protected int mapnr = 0;
 	private int numMines;
 
 
@@ -27,8 +27,6 @@ public class RandomFunkyMap extends GameMap {
 	public RandomFunkyMap() throws SlickException {
 		
 		super();
-		startPositions = new HashMap<Integer, Vector2f>();
-		mapPlayers = new HashMap<Integer, Entity>();
 		
 		rand = new Random();
 		numAnc = rand.nextInt(32) + 25;
@@ -37,8 +35,6 @@ public class RandomFunkyMap extends GameMap {
 
 	public void createMap(ViewPort vp) throws SlickException {
 		anchors.clear();
-		startPositions.clear();
-		mapPlayers.clear();
 		interactables.clear();
 		
 		for (int i = 0; i < numAnc; i++) {
@@ -51,19 +47,18 @@ public class RandomFunkyMap extends GameMap {
 		Mine a;
 		Vector2f vector;
 		for (int i = 0; i < numMines;i++){
-			a = new Mine();
+			a = new Mine("Mine " + i);
 			vector = new Vector2f(rand.nextFloat() * Game.WIDTH,
 					rand.nextFloat() * Game.HEIGHT);
 			vector = vp.toAbsolute(vector);
 			a.setCenterPosition(vector);
-			mapPlayers.put(100+i, a);
 			interactables.add(a);
 		}
 	}
 
-	private boolean collisionCheck(Entity e2) {
-		for(Entry<Integer, Entity> e : mapPlayers.entrySet()) {
-			if(e2.collisionCircle(e.getValue())) {
+	private boolean collisionCheck(Interactable e2) {
+		for(Interactable i : interactables) {
+			if(e2.collisionCircle(i)) {
 				return true;
 			}
 		}
@@ -71,20 +66,20 @@ public class RandomFunkyMap extends GameMap {
 	}
 
 	// handlar om att de inte skall spawna i varandra
-	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
+	public Vector2f getStartPos(Player p, ViewPort vp) {
 		int x, y;
 		Vector2f vector;
+		interactables.remove(p);
 		do {
 			x = (int) Math.round(rand.nextFloat() * (Game.WIDTH / 2)
 					+ Game.WIDTH / 4);
 			y = (int) Math.round(rand.nextFloat() * (Game.HEIGHT / 2));
 			vector = new Vector2f(x, y);
 			vector = vp.toAbsolute(vector);
-			e.setCenterPosition(vector);
-		} while(collisionCheck(e));
+			p.setCenterPosition(vector);
+		} while(collisionCheck(p));
 		
-		startPositions.put(i, vector);
-		mapPlayers.put(i, e);
+		interactables.add(p);
 
 		return vector;
 

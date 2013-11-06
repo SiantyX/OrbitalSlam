@@ -2,6 +2,7 @@ package game.maps;
 
 import game.Entity;
 import game.Game;
+import game.Player;
 import game.ViewPort;
 
 import java.util.ArrayList;
@@ -64,8 +65,8 @@ public class AnchorMap extends GameMap {
 	
 
 	@Override
-	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
-		return standardStartPosition(i, vp);
+	public Vector2f getStartPos(Player p, ViewPort vp) {
+		return standardStartPosition(p.getNum(), vp);
 	}
 
 	@Override

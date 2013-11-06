@@ -4,6 +4,7 @@ import java.util.Random;
 
 import game.Entity;
 import game.Game;
+import game.Player;
 import game.ViewPort;
 
 import org.newdawn.slick.SlickException;
@@ -21,9 +22,9 @@ public class EverChangingMap extends GameMap {
 	}
 
 	@Override
-	public Vector2f getStartPos(int i, Entity e, ViewPort vp) {
+	public Vector2f getStartPos(Player p, ViewPort vp) {
 		this.vp = vp;
-		return standardStartPosition(i, vp);
+		return standardStartPosition(p.getNum(), vp);
 		
 	}
 
@@ -41,8 +42,10 @@ public class EverChangingMap extends GameMap {
 
 	@Override
 	public void mapSpecificChange() throws SlickException {
-		anchors.remove(rand.nextInt(numAnc));
-		addAnchor(1, new Vector2f(rand.nextFloat() * Game.WIDTH,
+		int removed = rand.nextInt(numAnc);
+		anchors.get(removed).clear();
+		anchors.remove(removed);
+		addAnchor(removed, new Vector2f(rand.nextFloat() * Game.WIDTH,
 					rand.nextFloat() * Game.HEIGHT), vp);
 		
 	}
