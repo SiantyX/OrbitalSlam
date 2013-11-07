@@ -29,7 +29,7 @@ import components.SXTimer;
 public class ServerMultiplayerState extends MultiplayerState {
 	private InGameHosting hosted;
 	private SXTimer updatePosTimer;
-	private static final float tickRate = 64;
+	private static final float tickRate = 128;
 
 	public ServerMultiplayerState(int id) {
 		super(id);

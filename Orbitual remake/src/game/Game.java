@@ -70,7 +70,7 @@ public class Game extends StateBasedGame {
 			app.setDisplayMode(WIDTH, HEIGHT, fullscreen);
 			centerHeight = app.getHeight()/2;
 			centerWidth = app.getWidth()/2;
-			app.setTargetFrameRate(120);
+			app.setTargetFrameRate(200);
 			app.setShowFPS(false);
 			app.setSmoothDeltas(false);
 			app.setUpdateOnlyWhenVisible(false);

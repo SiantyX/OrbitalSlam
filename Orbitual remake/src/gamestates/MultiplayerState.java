@@ -221,7 +221,7 @@ public abstract class MultiplayerState extends BasicGameState {
 					playersAlive.remove(player);
 				}
 				else {
-					player.update(gc, sb, delta, vp);
+					//player.update(gc, sb, delta, vp);
 				}
 			}
 		}
