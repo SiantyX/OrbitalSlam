@@ -3,6 +3,7 @@ package gamestates;
 import game.Entity;
 import game.Game;
 import game.Player;
+import game.ViewPort;
 import game.maps.AnchorMap;
 
 import java.awt.Font;
@@ -65,7 +66,7 @@ public class ServerMultiplayerState extends MultiplayerState {
 
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		super.update(gc, sb, delta);
-		
+
 		Game.UPDATE_BACKGROUND = Game.State.SERVERMULTIPLAYERSTATE.ordinal();
 
 		hooked = players.get(0).isHooked();
@@ -84,11 +85,15 @@ public class ServerMultiplayerState extends MultiplayerState {
 	public void setHoster(InGameHosting hosted) {
 		this.hosted = hosted;
 	}
-	
+
 	public void setControls(int keyBinds[]) {
 		players.get(0).KEYBIND = keyBinds[8];
 	}
-	
+
+	public void updatePlayer(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp, Player player) {
+		player.update(gc, sb, delta, vp);
+	}
+
 	public void close() {
 		hosted.close();
 		try {

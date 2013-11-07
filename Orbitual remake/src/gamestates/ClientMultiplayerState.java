@@ -1,6 +1,8 @@
 package gamestates;
 
 import game.Game;
+import game.Player;
+import game.ViewPort;
 import networking.Lobby;
 import networking.NetHandler;
 
@@ -44,6 +46,10 @@ public class ClientMultiplayerState extends MultiplayerState implements KeyListe
 	
 	public void setControls(int keyBinds[]) {
 		keyBind = keyBinds[8];
+	}
+	
+	public void updatePlayer(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp, Player player) {
+		//player.update(gc, sb, delta, vp);
 	}
 	
 	public void close() {

@@ -221,7 +221,7 @@ public abstract class MultiplayerState extends BasicGameState {
 					playersAlive.remove(player);
 				}
 				else {
-					//player.update(gc, sb, delta, vp);
+					updatePlayer(gc, sb, delta, vp, player);
 				}
 			}
 		}
@@ -326,6 +326,8 @@ public abstract class MultiplayerState extends BasicGameState {
 	public int getID() {
 		return ID;
 	}
+	
+	public abstract void updatePlayer(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp, Player player);
 	
 	public abstract void close();
 }
