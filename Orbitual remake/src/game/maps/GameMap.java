@@ -73,7 +73,7 @@ public abstract class GameMap {
 	
 	public abstract void createMap(ViewPort vp) throws SlickException;
 	
-	public void reset(){
+	public void reset() throws SlickException{
 		for (Interactable i : interactables)
 			i.reset();
 		

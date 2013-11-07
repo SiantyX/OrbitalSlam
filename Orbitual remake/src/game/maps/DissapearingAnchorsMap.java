@@ -3,6 +3,7 @@ package game.maps;
 import java.util.ArrayList;
 import java.util.Random;
 
+import game.Entity;
 import game.Game;
 import game.Player;
 import game.ViewPort;
@@ -10,10 +11,9 @@ import game.maps.interactables.Interactable;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.tests.xml.Entity;
 
 public class DissapearingAnchorsMap extends GameMap {
-	
+	private ViewPort vp;
 	private Random rand;
 	private float dist;
 	private int counter;
@@ -27,12 +27,17 @@ public class DissapearingAnchorsMap extends GameMap {
 		super();
 		this.dist = 0;
 	}
+	
+	private void anchorPlacement(){
+		
+	}
 
 	
 	public void createMap(ViewPort vp) throws SlickException {
 		anchors.clear();
 		interactables.clear();
 		counter = 0;
+		this.vp = vp;
 		
 		backupAnchors = new ArrayList<Entity>();
 		
@@ -73,7 +78,7 @@ public class DissapearingAnchorsMap extends GameMap {
 			addAnchor(i, pos, vp);
 		}
 		
-		backupAnchors = (ArrayList<Entity>) anchors.clone();
+		backupAnchors =  (ArrayList<Entity>) anchors.clone();
 		
 	}
 
@@ -100,8 +105,11 @@ public class DissapearingAnchorsMap extends GameMap {
 
 	}
 	
-	public void reset(){
-		anchors = (ArrayList<game.Entity>) backupAnchors.clone();
+	public void reset() throws SlickException{
+		for (Entity e : backupAnchors){
+			anchors.add(e);
+		}
+			
 	}
 
 	
