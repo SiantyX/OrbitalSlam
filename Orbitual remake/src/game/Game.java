@@ -2,28 +2,12 @@ package game;
 
 import java.io.File;
 
-import gamestates.AfterGameState;
-import gamestates.AudioSettingsState;
-import gamestates.BeforeGameState;
-import gamestates.BrowserState;
-import gamestates.ClientLobbyState;
-import gamestates.ClientMultiplayerState;
-import gamestates.ControlsSettingsState;
-import gamestates.DisplayModeState;
-import gamestates.HostLobbyState;
-import gamestates.InGameState;
 import gamestates.LoadState;
-import gamestates.MenuState;
-import gamestates.MultiplayerState;
-import gamestates.PauseMenuState;
-import gamestates.ServerMultiplayerState;
-import gamestates.SettingsState;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Game extends StateBasedGame {

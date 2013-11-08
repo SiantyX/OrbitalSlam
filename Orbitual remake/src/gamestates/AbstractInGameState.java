@@ -5,15 +5,12 @@ import game.Game;
 import game.Player;
 import game.QuadTree;
 import game.ViewPort;
-import game.maps.AnchorMap;
 import game.maps.GameMap;
 import game.maps.interactables.Interactable;
 
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import networking.Lobby;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -29,42 +26,35 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
-public abstract class MultiplayerState extends BasicGameState {
-	private final int ID;
+public abstract class AbstractInGameState extends BasicGameState {
+	protected final int ID;
 
-	public static CopyOnWriteArrayList<String> names = new CopyOnWriteArrayList<String>();
-	
-	protected boolean oldHooked;
-	protected boolean hooked;
-
-	// INGAME SPECIFIC
-	private int keyBinds[];
-	private GameMap map;
-	public static CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();;
+	protected GameMap map;
+	public static CopyOnWriteArrayList<Player> players;
+	static int numLocalPlayers = 2;
 
 	public static boolean finished = true;
-	private TrueTypeFont ttf;
-	private TrueTypeFont scoreFont;
 
-	private ArrayList<Player> playersAlive;
+	protected TrueTypeFont ttf;
+	protected TrueTypeFont scoreFont;
 
-	private static double countDown;
+	protected ArrayList<Player> playersAlive;
+
+	protected static double countDown;
 	protected static boolean onCountDown;
 	
-	private int scoreLimit;
+	protected int scoreLimit;
 
-	private Image bg;
+	protected Image bg;
 	
-	private ViewPort vp;
-	private QuadTree qt;
+	protected ViewPort vp;
+	protected QuadTree qt;
 
-	public MultiplayerState(int id) {
+	protected int[] keyBinds;
+
+	public AbstractInGameState(int id) {
 		ID = id;
-		scoreLimit = 20;
-		oldHooked = false;
-		hooked = false;
 	}
-	
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
@@ -73,36 +63,31 @@ public abstract class MultiplayerState extends BasicGameState {
 			return;
 		}
 
-		if(names.isEmpty()) return;
-		
+		bg = new Image("res/orbitalbg1.jpg");
 		vp = new ViewPort(new Vector2f(Game.WIDTH, Game.HEIGHT));
-		vp.setZoom(names.size());
-		
-		playersAlive = new ArrayList<Player>();
+		vp.setZoom(numberOfPlayers());
+
 		map = ((BeforeGameState)sb.getState(Game.State.BEFOREGAMESTATE.ordinal())).getMap();
 		map.setBoundsAndCreateMap(vp);
 		
-		bg = new Image("res/orbitalbg1.jpg");
-	
+		playersAlive = new ArrayList<Player>();
+		players = new CopyOnWriteArrayList<Player>();
 		Player.anchorList = map.getAnchors();
-		// players
-		for(int i = 0; i < names.size(); i++) {
-			Player p = new Player(i, map);
+		for(int i = 0; i < numberOfPlayers(); i++) {
+			Player p = createPlayer(i, map);
 			Vector2f startPos = map.getStartPos(p, vp);
 			p.setCenterPosition(startPos);
 			players.add(p);
 			playersAlive.add(players.get(i));
 		}
 		
-		qt = new QuadTree(0, map.getBounds());
-
+		specificInit(gc, sb);
+		
 		// font for winner
 		Font f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
 
 		scoreFont = new TrueTypeFont(new Font("Arial", Font.BOLD, 18), true);
-
-		finished = false;
 
 		DisplayModeState.OLD_WIDTH = Game.WIDTH;
 		DisplayModeState.OLD_HEIGHT = Game.HEIGHT;
@@ -110,7 +95,15 @@ public abstract class MultiplayerState extends BasicGameState {
 		countDown = 3 * 1000;
 		onCountDown = true;
 	}
-	
+
+	/**
+	 * Runs if the game is initiated when not finished.
+	 * Happens if you change resolution.
+	 * 
+	 * @param gc
+	 * @param sb
+	 * @throws SlickException
+	 */
 	private void reInit(GameContainer gc, StateBasedGame sb) throws SlickException {
 		for(Player player : players) {
 			Vector2f v = new Vector2f(player.getCenterPosition().x/DisplayModeState.OLD_WIDTH * Game.WIDTH, player.getCenterPosition().y/DisplayModeState.OLD_HEIGHT * Game.HEIGHT);
@@ -127,21 +120,10 @@ public abstract class MultiplayerState extends BasicGameState {
 	}
 
 	protected void newRound(StateBasedGame sb) throws SlickException {
-		// players
-
-		/*players.clear();
-		for(int i = 0; i < names.size(); i++) {
-			Player p = new Player(i, map);
-			Vector2f startPos = map.getStartPos(i, p.getEntity(), vp);
-			p.getEntity().setCenterPosition(startPos);
-			p.setScore(tmpAL.get(i));
-			players.add(p);
-			playersAlive.add(players.get(i));
-		}*/		
 		playersAlive.clear();
 		for(int i = 0; i < players.size(); i++) {
-			Vector2f startPos = map.getStartPos(players.get(i), vp);
 			players.get(i).reset();
+			Vector2f startPos = map.getStartPos(players.get(i), vp);
 			players.get(i).setCenterPosition(startPos);
 			playersAlive.add(players.get(i));
 		}
@@ -163,7 +145,7 @@ public abstract class MultiplayerState extends BasicGameState {
 
 		FontUtils.drawCenter(scoreFont, "Score limit: " + scoreLimit, 10, 10, 200);
 
-		for(int i = 0; i < names.size(); i++) {
+		for(int i = 0; i < numberOfPlayers(); i++) {
 			FontUtils.drawCenter(scoreFont, "Player " + (i+1) + ": " + players.get(i).getScore(),map.getScorePlacementX(i), map.getScorePlacementY(), 100, Player.PLAYER_COLORS[i]);
 		}
 
@@ -188,6 +170,8 @@ public abstract class MultiplayerState extends BasicGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
+		Game.UPDATE_BACKGROUND = 0;
+		
 		if(finished)
 			return;
 		Input input = gc.getInput();
@@ -225,13 +209,13 @@ public abstract class MultiplayerState extends BasicGameState {
 				}
 			}
 		}
-	
+		
 		map.update(gc, sb, delta);
 		deathCheck();
 
 		ArrayList<Player> winners = new ArrayList<Player>();
 
-		if((playersAlive.size() == 1 && names.size() > 1) || (playersAlive.size() < 1)) {
+		if((playersAlive.size() == 1 && numberOfPlayers() > 1) || (playersAlive.size() < 1)) {
 			for(Player player : players) {
 				if(player.getScore() >= scoreLimit) {
 					winners.add(player);
@@ -259,28 +243,10 @@ public abstract class MultiplayerState extends BasicGameState {
 			}
 		}
 
-		// check for collision
-		qt.clear();
-		ArrayList<Interactable> allInters = getAllInteractables();
-		for(Interactable i : allInters) {
-			qt.insert(i);
-		}
-		ArrayList<Interactable> rObj = new ArrayList<Interactable>();
-		for(Interactable i : allInters) {
-			rObj.clear();
-			qt.retrieve(rObj, i);
-			
-			for(Interactable j : rObj) {
-				if(i.collisionCheck(j)) {
-					i.collision(j);
-				}
-				
-			}
-		}
-		// -------> to here
+		collisionCheck();
 	}
-	
-	private ArrayList<Interactable> getAllInteractables() {
+
+	protected ArrayList<Interactable> getAllInteractables() {
 		ArrayList<Interactable> inter = new ArrayList<Interactable>();
 		for(Player player : playersAlive) {
 			inter.add(player);
@@ -291,6 +257,7 @@ public abstract class MultiplayerState extends BasicGameState {
 		
 		return inter;
 	}
+
 
 	private void deathCheck() {
 		// check if dead
@@ -314,20 +281,38 @@ public abstract class MultiplayerState extends BasicGameState {
 		return playersAlive;
 	}
 	
-	public void setKeyBinds(int keyBinds[]) {
-		this.keyBinds = keyBinds;
-	}
-	
 	public void setScoreLimit(int score) {
 		scoreLimit = score;
+	}
+	
+	public void setNumPlayers(int num) {
+		numLocalPlayers = num;
 	}
 	
 	@Override
 	public int getID() {
 		return ID;
 	}
+
+	public void setControls(int[] keyBinds) {
+		for(int i = 0; i < players.size(); i++) {
+			players.get(i).KEYBIND = keyBinds[i];
+		}
+	}
 	
-	public abstract void updatePlayer(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp, Player player);
+	public void setKeyBinds(int keyBinds[]) {
+		this.keyBinds = keyBinds;
+	}
 	
-	public abstract void close();
+	protected abstract void close();
+	
+	protected abstract void specificInit(GameContainer gc, StateBasedGame sb);
+	
+	protected abstract int numberOfPlayers();
+	
+	protected abstract Player createPlayer(int i, GameMap map) throws SlickException;
+	
+	protected abstract void collisionCheck();
+	
+	protected abstract void updatePlayer(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp, Player player);
 }

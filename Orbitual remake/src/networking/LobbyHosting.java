@@ -9,7 +9,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import components.SXTimer;
@@ -104,7 +103,7 @@ public class LobbyHosting extends Hosting {
 							players.remove(s);
 						}
 					}
-					players.add(wholemsg + "@" + ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
+					players.add(parts[1] + "@" + ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
 
 					setAllKeys(makePlayerList());
 				}

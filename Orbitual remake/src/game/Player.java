@@ -1,6 +1,5 @@
 package game;
 
-import game.maps.AnchorMap;
 import game.maps.GameMap;
 import game.maps.interactables.Interactable;
 import game.maps.interactables.powerups.PowerUp;
@@ -22,9 +21,9 @@ import components.ImageRenderComponent;
 
 public class Player extends Interactable {
 	private boolean resting;
-	private boolean dead;
-	private boolean wasKeyDown;
-	private static final String[] playerImg = new String[] { "res/sprites/smiley1",
+	protected boolean dead;
+	protected boolean wasKeyDown;
+	protected static final String[] playerImg = new String[] { "res/sprites/smiley1",
 		"res/sprites/smiley2", "res/sprites/smiley3",
 		"res/sprites/smiley4", "res/sprites/smiley5",
 		"res/sprites/smiley6", "res/sprites/smiley7.png",
@@ -35,25 +34,26 @@ public class Player extends Interactable {
 		Color.yellow, Color.orange, Color.green, Color.pink, Color.gray,
 		new Color(89, 42, 4) };
 	public Color myColor;
-	private int num;
-	private int score;
-	private Sound sound;
-	private ArrayList<PowerUp> activePowerUps;
+	protected int num;
+	protected int score;
+	public static Sound sound;
+	protected ArrayList<PowerUp> activePowerUps;
 
-	private ImageRenderComponent defaultImage;
-	private ImageRenderComponent stunnedImage;
+	protected ImageRenderComponent defaultImage;
+	protected ImageRenderComponent stunnedImage;
 
-	private float dDegrees;
-	private float oldDegrees;
+	private final Object dDegreesLock = new Object();
+	protected float dDegrees;
+	protected float oldDegrees;
 
-	private double speed;
-	private double mass;
+	protected double speed;
+	protected double mass;
 
-	private double stunTime;
+	protected double stunTime;
 
 	// hook variables
-	private boolean hooked;
-	private Entity hookedTo;
+	protected boolean hooked;
+	protected Entity hookedTo;
 
 	private final Object wSpeedLock = new Object();
 	private final Object degreesLock = new Object();
@@ -202,6 +202,10 @@ public class Player extends Interactable {
 			}
 		}
 
+		updateEntity(gc, sb, delta, vp);
+	}
+	
+	protected void updateEntity(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp) {
 		super.update(gc, sb, delta, vp);
 	}
 
@@ -213,10 +217,11 @@ public class Player extends Interactable {
 		return true;
 	}
 
-	public boolean hook() {
+	public int hook() {
 		if (!acceptHook() || hooked) {
 			hooked = false;
-			return false;
+			hookedTo = null;
+			return -1;
 		}
 
 		hooked = true;
@@ -295,7 +300,7 @@ public class Player extends Interactable {
 
 		centriAcc = ACC_CONST / (hookLength * hookLength);
 
-		return true;
+		return anchorList.indexOf(hookedTo);
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g,
@@ -309,10 +314,6 @@ public class Player extends Interactable {
 					hookedTo.getCenterPosition());
 		}
 		super.render(gc, sb, g, vp);
-
-		// debug stun time
-		// g.drawString(new Double(stunTime).toString(), entity.getPosition().x,
-		// entity.getPosition().y);
 	}
 
 	@Override
@@ -325,7 +326,15 @@ public class Player extends Interactable {
 	}
 
 	public void setdDegrees(float dDegrees) {
-		this.dDegrees = dDegrees;
+		synchronized (dDegreesLock) {
+			this.dDegrees = dDegrees;
+		}
+	}
+
+	public float getdDegrees() {
+		synchronized (dDegreesLock) {
+			return dDegrees;
+		}
 	}
 
 	public void setDegrees(double d) {
@@ -381,12 +390,19 @@ public class Player extends Interactable {
 		setDy(v.y);
 	}
 
-	public void setStunTime(double time) {
+	public double setStunTime(double time) {
+		double tmp = time;
 		stunTime = time;
+		return tmp;
+	}
+
+	public double getStunTime() {
+		return stunTime;
 	}
 
 	public void setHooked(boolean h) {
 		hooked = h;
+		if(!hooked) hookedTo = null;
 	}
 
 	public boolean isHooked() {
@@ -505,7 +521,7 @@ public class Player extends Interactable {
 			// ------------------------------------------------------------------------------------------------------
 			// ------------------------------------------------------------------------------------------------------
 
-			hooked = false;
+			setHooked(false);
 			player.setHooked(false);
 
 			double dSpeed = 0;
@@ -545,9 +561,13 @@ public class Player extends Interactable {
 			setVelocity(newV);
 			player.setVelocity(otherNewV);
 
-			sound.play(1, AudioSettingsState.SOUND_LEVEL
-					* AudioSettingsState.MASTER_LEVEL);
+			playSound();
 		}
+	}
+	
+	public static void playSound() {
+		sound.play(1, AudioSettingsState.SOUND_LEVEL
+				* AudioSettingsState.MASTER_LEVEL);
 	}
 
 	public void reset() {
@@ -595,5 +615,25 @@ public class Player extends Interactable {
 
 	public int getNum() {
 		return num;
+	}
+
+	public int getHookedTo() {
+		return anchorList.indexOf(hookedTo);
+	}
+
+	public void setHookedTo(int i) {
+		if(i < 0) {
+			hooked = false;
+			hookedTo = null;
+		}
+		else {
+			try {
+				hookedTo = anchorList.get(i);
+				hooked = true;
+			}
+			catch(IndexOutOfBoundsException e) {
+				System.out.println("Out of sync. Anchor lost.");
+			}
+		}
 	}
 }

@@ -1,7 +1,5 @@
 package game;
 
-import java.awt.Font;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -14,6 +12,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class WriteBoxWithLabel extends Node {
 	public WriteBox wb;
 	public Label label;
+	private static int nextId = 0;
 	
 	public WriteBoxWithLabel(TrueTypeFont ttf, Vector2f centerPos, boolean isBetween, float writeWidth, String labelText, String boxText, Color bgColor, Color txtColor) throws SlickException {
 		super(centerPos);
@@ -22,14 +21,16 @@ public class WriteBoxWithLabel extends Node {
 			float wholeWidth = Math.round(ttf.getWidth(labelText)) + writeWidth;
 			
 			label = new Label(labelText, ttf, Math.round(centerPos.x - wholeWidth/2), Math.round(centerPos.y), txtColor);
-			wb = new WriteBox(boxText, new Rectangle(label.getX() + label.getWidth(), centerPos.y, writeWidth, ttf.getHeight()), bgColor, boxText, ttf, txtColor);
+			wb = new WriteBox(boxText + nextId, new Rectangle(label.getX() + label.getWidth(), centerPos.y, writeWidth, ttf.getHeight()), bgColor, boxText, ttf, txtColor);
 		}
 		else {
 			label = new Label(labelText, ttf, Math.round(centerPos.x - ttf.getWidth(labelText)), Math.round(centerPos.y), txtColor);
-			wb = new WriteBox(boxText, new Rectangle(centerPos.x, centerPos.y, writeWidth, ttf.getHeight()), bgColor, boxText, ttf, txtColor);
+			wb = new WriteBox(boxText + nextId, new Rectangle(centerPos.x, centerPos.y, writeWidth, ttf.getHeight()), bgColor, boxText, ttf, txtColor);
 		}
 		
 		setFill(false);
+		
+		nextId++;
 	}
 	
 	public WriteBoxWithLabel(TrueTypeFont ttf, Vector2f pos, float wholeWidth, String labelText, String boxText, Color bgColor, Color txtColor) throws SlickException {
@@ -38,9 +39,11 @@ public class WriteBoxWithLabel extends Node {
 		float writeWidth = Math.round(wholeWidth - ttf.getWidth(labelText));
 		
 		label = new Label(labelText, ttf, Math.round(pos.x), Math.round(pos.y), txtColor);
-		wb = new WriteBox(boxText, new Rectangle(label.getX() + label.getWidth(), pos.y, writeWidth, ttf.getHeight()), bgColor, boxText, ttf, txtColor);
+		wb = new WriteBox(boxText + nextId, new Rectangle(label.getX() + label.getWidth(), pos.y, writeWidth, ttf.getHeight()), bgColor, boxText, ttf, txtColor);
 		
 		setFill(false);
+		
+		nextId++;
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {

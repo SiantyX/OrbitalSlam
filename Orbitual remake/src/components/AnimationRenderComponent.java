@@ -5,9 +5,6 @@ import game.ViewPort;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Collections;
-
-import javax.swing.filechooser.FileFilter;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

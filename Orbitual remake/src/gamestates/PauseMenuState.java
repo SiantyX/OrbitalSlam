@@ -14,7 +14,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
@@ -102,13 +101,10 @@ public class PauseMenuState extends ResumableState {
 		
 		if (exitButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.enterState(Game.State.MENUSTATE.ordinal());
-			
 			if(Game.UPDATE_BACKGROUND > 0) {
-				((MultiplayerState) sb.getState(Game.UPDATE_BACKGROUND)).close();
+				((AbstractInGameState) sb.getState(Game.UPDATE_BACKGROUND)).close();
 			}
-			
-			Game.UPDATE_BACKGROUND = 0;
+			sb.enterState(Game.State.MENUSTATE.ordinal());
 		}
 	}
 

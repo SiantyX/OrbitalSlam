@@ -1,45 +1,41 @@
 package gamestates;
 
-import game.Entity;
 import game.Game;
 import game.Player;
+import game.QuadTree;
 import game.ViewPort;
-import game.maps.AnchorMap;
+import game.maps.GameMap;
+import game.maps.interactables.Interactable;
 
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import networking.Hosting;
 import networking.InGameHosting;
-import networking.LobbyHosting;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
-import org.newdawn.slick.util.FontUtils;
 
 import components.SXTimer;
 
-public class ServerMultiplayerState extends MultiplayerState {
+public class ServerMultiplayerState extends AbstractInGameState {
 	private InGameHosting hosted;
 	private SXTimer updatePosTimer;
 	private static final float tickRate = 128;
+	public static CopyOnWriteArrayList<String> names = new CopyOnWriteArrayList<String>();
 
 	public ServerMultiplayerState(int id) {
 		super(id);
+		scoreLimit = 20;
 		updatePosTimer = new SXTimer(Math.round(1000/tickRate));
 	}
 
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
-		super.init(gc, sb);
+		if(names.isEmpty()) return;
 		if(hosted != null) {
+			super.init(gc, sb);
+
 			for(int i = 0; i < players.size(); i++) {
 				hosted.ipplayermap.put(names.get(i).split("\\@")[1], players.get(i));
 			}
@@ -58,6 +54,8 @@ public class ServerMultiplayerState extends MultiplayerState {
 		}
 
 		players.get(0).KEYBIND = ((ControlsSettingsState)sb.getState(Game.State.CONTROLSSETTINGSSTATE.ordinal())).getKeyBinds()[8];
+		
+		hosted.setAllKeys("newround");
 	}
 
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException {
@@ -69,15 +67,9 @@ public class ServerMultiplayerState extends MultiplayerState {
 
 		Game.UPDATE_BACKGROUND = Game.State.SERVERMULTIPLAYERSTATE.ordinal();
 
-		hooked = players.get(0).isHooked();
-		if(hooked != oldHooked) {
-			hosted.setAllKeys("hook" + "\n" + "0" + "\n" + new Boolean(hooked).toString() + "\n" + players.get(0).getPosition().x + "\n" + players.get(0).getPosition().y + "\n" + players.get(0).getDx() + "\n" + players.get(0).getDy() + "\n" + players.get(0).getDegrees() + "\n" + players.get(0).getWSpeed());
-			oldHooked = hooked;
-		}
-
 		if(updatePosTimer.isTriggered() >= 0) {
 			for(Player p : players) {
-				hosted.setAllKeys("pos" + "\n" + players.indexOf(p) + "\n" + p.getPosition().x + "\n" + p.getPosition().y + "\n" + p.getDx() + "\n" + p.getDy() + "\n" + p.getDegrees() + "\n" + p.getWSpeed());
+				hosted.sendPlayerUpdate("pos", p);
 			}
 		}
 	}
@@ -90,10 +82,6 @@ public class ServerMultiplayerState extends MultiplayerState {
 		players.get(0).KEYBIND = keyBinds[8];
 	}
 
-	public void updatePlayer(GameContainer gc, StateBasedGame sb, int delta, ViewPort vp, Player player) {
-		player.update(gc, sb, delta, vp);
-	}
-
 	public void close() {
 		hosted.close();
 		try {
@@ -102,5 +90,48 @@ public class ServerMultiplayerState extends MultiplayerState {
 			e.printStackTrace();
 		}
 		hosted = null;
+	}
+
+	@Override
+	protected void specificInit(GameContainer gc, StateBasedGame sb) {
+		qt = new QuadTree(0, map.getBounds());
+	}
+
+	@Override
+	protected int numberOfPlayers() {
+		return names.size();
+	}
+
+	@Override
+	protected Player createPlayer(int i, GameMap map) throws SlickException {
+		return new Player(i, map);
+	}
+
+	@Override
+	protected void collisionCheck() {
+		qt.clear();
+		ArrayList<Interactable> allInters = getAllInteractables();
+		for(Interactable i : allInters) {
+			qt.insert(i);
+		}
+		ArrayList<Interactable> rObj = new ArrayList<Interactable>();
+		for(Interactable i : allInters) {
+			rObj.clear();
+			qt.retrieve(rObj, i);
+
+			for(Interactable j : rObj) {
+				if(i.collisionCheck(j)) {
+					i.collision(j);
+				}
+
+			}
+		}
+		// -------> to here
+	}
+
+	@Override
+	protected void updatePlayer(GameContainer gc, StateBasedGame sb, int delta,
+			ViewPort vp, Player player) {
+		player.update(gc, sb, delta, vp);
 	}
 }

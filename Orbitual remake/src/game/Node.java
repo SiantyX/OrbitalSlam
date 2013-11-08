@@ -1,6 +1,5 @@
 package game;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.newdawn.slick.geom.Vector2f;

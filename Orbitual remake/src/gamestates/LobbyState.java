@@ -4,33 +4,24 @@ import game.Game;
 import game.Label;
 import game.MenuButton;
 import game.MessageBox;
-import game.Player;
 import game.WriteBoxWithLabel;
 
 import java.awt.Font;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import networking.Hosting;
 import networking.LobbyHosting;
 import networking.NetHandler;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.FontUtils;
 
 public abstract class LobbyState extends BasicGameState {
@@ -41,9 +32,7 @@ public abstract class LobbyState extends BasicGameState {
 	protected MenuButton startButton, cancelButton;
 	protected WriteBoxWithLabel chatWBWL;
 	protected TrueTypeFont ttf, bigText;
-	//private ArrayList<Player> players;
 	protected ArrayList<MenuButton> users;
-	//protected NetHandler hndlr;
 	protected int alpha;
 	protected LobbyHosting hosted;
 	protected CopyOnWriteArrayList<String> players;
@@ -58,7 +47,6 @@ public abstract class LobbyState extends BasicGameState {
 		hostname = NetHandler.getHostName();
 
 		buttons = new ArrayList<MenuButton>();
-		//players = new ArrayList<Player>();
 		users = new ArrayList<MenuButton>();
 		players = new CopyOnWriteArrayList<String>();
 
@@ -72,7 +60,7 @@ public abstract class LobbyState extends BasicGameState {
 		
 		chatWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth - (Game.WIDTH/5)/2, Game.centerHeight + 300), Game.WIDTH/5, "Say:", "", Color.lightGray, Color.white);
 		chatWBWL.wb.setInput(gc.getInput());
-		chatWBWL.wb.setDeselectOnEnter(false);
+		//chatWBWL.wb.setDeselectOnEnter(false);
 		
 		mbox = new MessageBox(Game.WIDTH/5, Game.HEIGHT/5, Game.centerWidth - Game.WIDTH/10, Game.centerHeight + Game.HEIGHT / 14, Color.lightGray, Color.white, ttf);
 

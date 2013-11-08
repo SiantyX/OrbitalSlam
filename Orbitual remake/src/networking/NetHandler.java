@@ -3,24 +3,17 @@ package networking;
 import game.Game;
 import game.MessageBox;
 import game.Player;
+import gamestates.AbstractInGameState;
 import gamestates.ClientLobbyState;
 import gamestates.ClientMultiplayerState;
-import gamestates.MultiplayerState;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.UnresolvedAddressException;
 import java.nio.charset.Charset;
@@ -145,30 +138,22 @@ public class NetHandler {
 						}
 						mbox.addMessage(wholemsg);
 					}
-					else if(parts[0].equals("hook")) {
-						Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
-						if(parts[2].equals("true")) {
-							p.setHooked(false);
-							p.hook();
-						}
-						else {
-							p.setHooked(false);
-						}
-						p.setDx(Float.parseFloat(parts[5]));
-						p.setDy(Float.parseFloat(parts[6]));
-						p.setPosition(new Vector2f(Float.parseFloat(parts[3]), Float.parseFloat(parts[4])));
-						p.setDegrees(Double.parseDouble(parts[7]));
-						p.setWSpeed(Double.parseDouble(parts[8]));
+					
+					else if(parts[0].equals("newround")) {
+						AbstractInGameState.startCountDown();
 					}
 
+					// prefix index anchor x y imgrotation stuntime
 					else if(parts[0].equals("pos")) {
-						if(!(MultiplayerState.players == null) && !MultiplayerState.players.isEmpty()) {
-							Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
-							p.setDx(Float.parseFloat(parts[4]));
-							p.setDy(Float.parseFloat(parts[5]));
-							p.setPosition(new Vector2f(Float.parseFloat(parts[2]), Float.parseFloat(parts[3])));
-							p.setDegrees(Double.parseDouble(parts[6]));
-							p.setWSpeed(Double.parseDouble(parts[7]));
+						if(!(ClientMultiplayerState.players == null) && !ClientMultiplayerState.players.isEmpty()) {
+							Player p = ClientMultiplayerState.players.get(Integer.parseInt(parts[1]));
+							p.setHookedTo(Integer.parseInt(parts[2]));
+							p.setPosition(new Vector2f(Float.parseFloat(parts[3]), Float.parseFloat(parts[4])));
+							p.setdDegrees(Float.parseFloat(parts[5]));
+							double oldTime = p.setStunTime(Double.parseDouble(parts[6]));
+							if(oldTime==0 && p.getStunTime() != 0) {
+								Player.playSound();
+							}
 						}
 					}
 				}
@@ -198,7 +183,7 @@ public class NetHandler {
 	}
 
 	public void handlePos(String[] parts) {
-		Player p = MultiplayerState.players.get(Integer.parseInt(parts[1]));
+		Player p = ClientMultiplayerState.players.get(Integer.parseInt(parts[1]));
 		p.setDx(Float.parseFloat(parts[4]));
 		p.setDy(Float.parseFloat(parts[5]));
 		p.getPosition().x = Float.parseFloat(parts[2]);

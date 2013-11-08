@@ -5,7 +5,6 @@ import game.maps.interactables.Interactable;
 import java.util.ArrayList;
 
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
 
 
 // http://gamedev.tutsplus.com/tutorials/implementation/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space/

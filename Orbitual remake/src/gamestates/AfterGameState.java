@@ -16,7 +16,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
@@ -114,7 +113,7 @@ public class AfterGameState extends ResumableState implements Comparator<Player>
 			if(Game.UPDATE_BACKGROUND > 0) {
 				Game.INGAME_MUSIC.loop();
 				Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-				((MultiplayerState) sb.getState(Game.UPDATE_BACKGROUND)).finished = true;
+				AbstractInGameState.finished = true;
 				sb.enterState(Game.UPDATE_BACKGROUND);
 			}
 			else {

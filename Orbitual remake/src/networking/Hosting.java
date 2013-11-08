@@ -3,11 +3,6 @@ package networking;
 import game.Game;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.CancelledKeyException;
@@ -17,7 +12,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -160,8 +154,10 @@ public abstract class Hosting extends Thread {
 					selector.close();
 					server.socket().close();
 					server.close();
+					System.out.println("Closed hosting");
 				}
 				catch (IOException e) {
+					System.out.println("Can't close");
 					e.printStackTrace();
 				}
 			}
@@ -175,6 +171,7 @@ public abstract class Hosting extends Thread {
 			server.socket().close();
 			server.close();
 			selector.close();
+			System.out.println("Closed hosting");
 		} catch (IOException e) {
 			System.out.println("Can't close");
 			e.printStackTrace();

@@ -1,18 +1,12 @@
 package networking;
 
-import game.MessageBox;
 import game.Player;
-import gamestates.MultiplayerState;
+import gamestates.ServerMultiplayerState;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.SocketAddress;
+import java.net.Socket;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -45,14 +39,9 @@ public class InGameHosting extends Hosting {
 				String[] parts = splitInfo(pak);
 
 				if(parts[0].equals("hook")) {
-					Player tmp = ipplayermap.get(((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress());
+					Player tmp = ipplayermap.get(((SocketChannel) key.channel()).socket().getInetAddress().getHostAddress());
 					if(tmp.acceptHook()) {
-						if(tmp.hook()) {
-							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "true" + "\n" + tmp.getPosition().x + "\n" + tmp.getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy() + "\n" + tmp.getDegrees() + "\n" + tmp.getWSpeed());
-						}
-						else {
-							setAllKeys(parts[0] + "\n" + MultiplayerState.players.indexOf(tmp) + "\n" + "false" + "\n" + tmp.getPosition().x + "\n" + tmp.getPosition().y + "\n" + tmp.getDx() + "\n" + tmp.getDy() + "\n" + tmp.getDegrees() + "\n" + tmp.getWSpeed());
-						}
+						tmp.hook();
 					}
 				}
 			}
@@ -86,15 +75,15 @@ public class InGameHosting extends Hosting {
 
 
 	protected boolean removePlayer(SelectionKey key) {
-		String ipaddr = ((SocketChannel)key.channel()).socket().getInetAddress().getHostAddress();
+		String ipaddr = ((SocketChannel) key.channel()).socket().getInetAddress().getHostAddress();
 		for(String s : players) {
 			if(s.split("\\@")[1].equals(ipaddr)) {
 				players.remove(s);
 				ipplayermap.remove(ipaddr);
-				for(String s2 : MultiplayerState.names) {
+				for(String s2 : ServerMultiplayerState.names) {
 					if(s2.split("\\@")[1].equals(ipaddr)) {
-						MultiplayerState.players.remove(MultiplayerState.names.indexOf(s2));
-						MultiplayerState.names.remove(s2);
+						ServerMultiplayerState.players.remove(ServerMultiplayerState.names.indexOf(s2));
+						ServerMultiplayerState.names.remove(s2);
 					}
 				}
 				key.cancel();
@@ -108,5 +97,19 @@ public class InGameHosting extends Hosting {
 
 	public CopyOnWriteArrayList<String> getPlayers() {
 		return players;
+	}
+	
+	// prefix index anchor x y imgrotation stuntime
+	public void sendPlayerUpdate(String prefix, Player p) {
+		sendTickUpdate(prefix, Integer.toString(ServerMultiplayerState.players.indexOf(p)), Integer.toString(p.getHookedTo()), Float.toString(p.getPosition().x), Float.toString(p.getPosition().y), Float.toString(p.getdDegrees()), Double.toString(p.getStunTime()));
+	}
+	
+	public void sendTickUpdate(String prefix, String ... data) {
+		String toSend = prefix;
+		for(String s : data) {
+			toSend += "\n" + s;
+		}
+		
+		setAllKeys(toSend);
 	}
 }

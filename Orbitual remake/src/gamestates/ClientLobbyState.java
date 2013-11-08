@@ -1,10 +1,7 @@
 package gamestates;
 
-import java.io.IOException;
-
 import game.Game;
 import game.MenuButton;
-import networking.LobbyHosting;
 import networking.NetHandler;
 
 import org.newdawn.slick.Color;
@@ -33,7 +30,7 @@ public class ClientLobbyState extends LobbyState {
 					hndlr.updateClientLobby(players, mbox);
 				}
 			};
-			Thread updateThread = new Thread(updateLobby);
+			updateThread = new Thread(updateLobby);
 			updateThread.start();
 		}
 	}
@@ -55,6 +52,11 @@ public class ClientLobbyState extends LobbyState {
 		if(cancelButton.isMousePressed() || hndlr == null) {
 			if(hndlr != null) {
 				hndlr.close();
+				try {
+					updateThread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				hndlr = null;
 			}
 			sb.enterState(Game.State.BROWSERSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,

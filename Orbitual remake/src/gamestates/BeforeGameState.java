@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import game.Game;
-import game.Label;
 import game.MenuButton;
-import game.WriteBox;
 import game.WriteBoxWithLabel;
 import game.maps.AnchorMap;
 import game.maps.BrickMap;

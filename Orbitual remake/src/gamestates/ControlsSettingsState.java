@@ -14,7 +14,6 @@ import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
@@ -28,7 +27,7 @@ public class ControlsSettingsState extends ResumableState implements KeyListener
 	private TrueTypeFont ttf;
 	private TrueTypeFont bigText;
 
-	private final int defualtKeyBinds[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
+	//private final int defualtKeyBinds[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
 	private static int keyBinds[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
 	private static int keyBindChanges[] = {Input.KEY_TAB, Input.KEY_D, Input.KEY_Y, Input.KEY_COMMA, Input.KEY_P, Input.KEY_ENTER, Input.KEY_UP, Input.KEY_NUMPAD5, Input.KEY_ENTER};
 
