@@ -289,6 +289,10 @@ public abstract class AbstractInGameState extends BasicGameState {
 		numLocalPlayers = num;
 	}
 	
+	public int getNumPlayers() {
+		return numLocalPlayers;
+	}
+	
 	@Override
 	public int getID() {
 		return ID;

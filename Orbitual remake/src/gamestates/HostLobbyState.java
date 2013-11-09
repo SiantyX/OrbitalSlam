@@ -29,9 +29,9 @@ public class HostLobbyState extends LobbyState implements KeyListener {
 		startButton = new MenuButton("start", new Rectangle(Game.centerWidth + 100, Game.centerHeight + 400, 200, 50), Color.white, "Start", ttf);
 		buttons.add(startButton);
 		
-		if(Game.LASTID == Game.State.BROWSERSTATE.ordinal()) {
+		if(Game.LASTID == Game.State.BEFOREGAMESTATE.ordinal()) {
 			try {
-				hosted = new LobbyHosting(hostname, 4, mbox);
+				hosted = new LobbyHosting(hostname, ((ServerMultiplayerState)sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal())).getNumPlayers(), mbox);
 				hosted.start();
 			} catch (IOException e) {
 				e.printStackTrace();

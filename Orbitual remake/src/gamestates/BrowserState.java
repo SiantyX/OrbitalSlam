@@ -110,8 +110,8 @@ public class BrowserState extends BasicGameState {
 
 		if(createButton.isMousePressed()) {
 			Game.LASTID = getID();
-			sb.getState(Game.State.HOSTLOBBYSTATE.ordinal()).init(gc, sb);
-			sb.enterState(Game.State.HOSTLOBBYSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+			//sb.getState(Game.State.HOSTLOBBYSTATE.ordinal()).init(gc, sb);
+			sb.enterState(Game.State.BEFOREGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
 					100));
 		}
 

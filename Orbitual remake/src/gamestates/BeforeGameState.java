@@ -32,7 +32,7 @@ import org.newdawn.slick.util.FontUtils;
 
 public class BeforeGameState extends BasicGameState implements KeyListener {
 	private final int ID;
-	
+
 	private ArrayList<MenuButton> buttons;
 	private MenuButton okButton, backButton, mapButton;
 	private ArrayList<WriteBoxWithLabel> wBWLs;
@@ -40,7 +40,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 	private TrueTypeFont ttf;
 	private GameMap selectedMap;
 	private LinkedList<GameMap> maplist;
-	
+
 	public BeforeGameState(int id) {
 		ID = id;
 	}
@@ -49,7 +49,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 			throws SlickException {
 		buttons = new ArrayList<MenuButton>();
 		wBWLs = new ArrayList<WriteBoxWithLabel>();
-		
+
 		maplist = new LinkedList<GameMap>();
 		maplist.add(new AnchorMap());
 		maplist.add(new RandomFunkyMap());
@@ -57,7 +57,7 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		maplist.add(new EverChangingMap());
 		maplist.add(new BrickMap());
 		maplist.add(new DissapearingAnchorsMap());
-		
+
 		selectedMap = (GameMap) maplist.poll();
 		maplist.addLast(selectedMap);
 
@@ -66,72 +66,83 @@ public class BeforeGameState extends BasicGameState implements KeyListener {
 		okButton = new MenuButton("Ok", new Rectangle(Game.centerWidth - 250, Game.centerHeight + 200, 200, 50), Color.white, "Ok", ttf);
 		backButton = new MenuButton("Back", new Rectangle(Game.centerWidth + 50, Game.centerHeight + 200, 200, 50), Color.white, "Back", ttf);
 		mapButton = new MenuButton(selectedMap.toString(), new Rectangle(Game.centerWidth - 100, Game.centerHeight - 150, 200, 50), Color.white, selectedMap.toString(), ttf);
-		
+
 		scoreLimitWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight - Game.HEIGHT/4.32f), true, 50, "Score limit:", "20", Color.lightGray, Color.white);
 		scoreLimitWBWL.wb.setInput(gc.getInput());
 		scoreLimitWBWL.wb.setAcceptable("1234567890");
-		
+
 		numPlayersWBWL = new WriteBoxWithLabel(ttf, new Vector2f(Game.centerWidth, Game.centerHeight), true, 50, "Number of players:", "2", Color.lightGray, Color.white);
 		numPlayersWBWL.wb.setInput(gc.getInput());
 		numPlayersWBWL.wb.setAcceptable("1234567890");
-		
+
 		wBWLs.add(scoreLimitWBWL);
 		wBWLs.add(numPlayersWBWL);
-		
+
 		buttons.add(okButton);
 		buttons.add(backButton);
 		buttons.add(mapButton);
 		//-------------------
-		
+
 		f = new Font("Comic Sans", Font.ITALIC, 50);
 		ttf = new TrueTypeFont(f, true);
-	
+
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g)
 			throws SlickException {
-		
+
 		FontUtils.drawCenter(ttf, "Game Settings", Game.centerWidth - 300, Game.centerHeight/3, 600);
-		
+
 		for (MenuButton button : buttons) {
 			button.render(gc, sb, g);
 		}
-		
+
 		for(WriteBoxWithLabel wbwl : wBWLs) {
 			wbwl.render(gc, sb, g);
 		}
-		
+
 	}
 	public GameMap getMap(){
 		return selectedMap;
-		
+
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 			throws SlickException {
 		Input input = gc.getInput();
-		
+
 		for (MenuButton button : buttons) {
 			button.update(gc, sb, delta);
 		}
-		
+
 		for(WriteBoxWithLabel wbwl : wBWLs) {
 			wbwl.update(gc, sb, delta);
 		}
-		
+
 		if (okButton.isMousePressed()) {
-			Game.LASTID = getID();
-			((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setScoreLimit(Integer.parseInt(scoreLimitWBWL.wb.getText()));
-			((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setNumPlayers(Integer.parseInt(numPlayersWBWL.wb.getText()));
-			InGameState.finished = true;
-			sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
-			InGameState.finished = false;
-			Game.INGAME_MUSIC.loop();
-			Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
-			sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
-					100));
+			
+			if(Game.LASTID == Game.State.BROWSERSTATE.ordinal()) {
+				Game.LASTID = getID();
+				((ServerMultiplayerState) sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal())).setScoreLimit(Integer.parseInt(scoreLimitWBWL.wb.getText()));
+				((ServerMultiplayerState) sb.getState(Game.State.SERVERMULTIPLAYERSTATE.ordinal())).setNumPlayers(Integer.parseInt(numPlayersWBWL.wb.getText()));
+				sb.getState(Game.State.HOSTLOBBYSTATE.ordinal()).init(gc, sb);
+				sb.enterState(Game.State.HOSTLOBBYSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+						100));
+			}
+			else {
+				Game.LASTID = getID();
+				((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setScoreLimit(Integer.parseInt(scoreLimitWBWL.wb.getText()));
+				((InGameState) sb.getState(Game.State.INGAMESTATE.ordinal())).setNumPlayers(Integer.parseInt(numPlayersWBWL.wb.getText()));
+				InGameState.finished = true;
+				sb.getState(Game.State.INGAMESTATE.ordinal()).init(gc, sb);
+				InGameState.finished = false;
+				Game.INGAME_MUSIC.loop();
+				Game.INGAME_MUSIC.setVolume(AudioSettingsState.MUSIC_LEVEL*AudioSettingsState.MASTER_LEVEL);
+				sb.enterState(Game.State.INGAMESTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
+						100));
+			}
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE) || backButton.isMousePressed()) {
 			sb.enterState(Game.State.MENUSTATE.ordinal(), new FadeOutTransition(Color.black, 100), new FadeInTransition(Color.black,
